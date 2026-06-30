@@ -90,6 +90,12 @@ class Person(BaseModel):
 # 空文字 → None に変換
 # -----------------------------
 def normalize_person(person: Person):
+    if isinstance(person.source, str):
+        if person.source.strip() == "":
+            person.source = []
+        else:
+            person.source = [s.strip() for s in person.source.split(",") if s.strip()]
+
     if person.yomi == "":
         person.yomi = None
     if person.birth == "":
