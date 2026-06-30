@@ -178,6 +178,18 @@ def create_person(person: Person = Body(...)):
     conn = get_db()
     cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
+    print(len((
+        person.name, person.yomi, person.birth, person.death,
+        person.childhood_name, person.imina, person.tsusho, person.hogou,
+        person.origin, person.category, person.affiliation, person.castle,
+        person.rank, person.office,
+        person.history, person.description, json.dumps(person.source),
+        person.memo1, person.memo2, person.memo3, person.memo4, person.memo5,
+        person.memo6, person.memo7, person.memo8, person.memo9, person.memo10,
+        person.father_id, person.mother_id, person.siblings
+    )))
+
+
     cur.execute("""
         INSERT INTO persons (
             name, yomi, birth, death,
@@ -189,8 +201,11 @@ def create_person(person: Person = Body(...)):
             memo6, memo7, memo8, memo9, memo10,
             father_id, mother_id, siblings
         )
-        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,  
-                %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s,
+                %s, %s, %s, %s, %s,
+                %s, %s,
+                %s, %s, %s, %s, %s, %s, %s, %s, %s,
+                %s, %s, %s)
     """, (
         person.name, person.yomi, person.birth, person.death,
         person.childhood_name, person.imina, person.tsusho, person.hogou,
