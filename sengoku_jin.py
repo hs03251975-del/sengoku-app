@@ -104,6 +104,10 @@ def normalize_person(person: Person):
         person.office = None
     if hasattr(person, "description") and person.description == "":
         person.description = None
+    if person.father_id == "":
+        person.father_id = None
+    if person.mother_id == "":
+        person.mother_id = None
     if hasattr(person, "history") and person.history == "":
         person.history = None
 
