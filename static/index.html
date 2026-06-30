@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>戦国人物データベース</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+body {
+  font-family: system-ui, sans-serif;
+  margin: 0;
+  padding: 10px;
+  font-size: 16px;
+  background: #f7f7f7;
+}
+
+/* カード */
+.card {
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 12px;
+  margin-bottom: 10px;
+  background: #fff;
+}
+.card-title {
+  font-weight: bold;
+  font-size: 18px;
+}
+
+/* ボタン */
+.btn {
+  padding: 10px;
+  margin-top: 6px;
+  width: 100%;
+  font-size: 16px;
+}
+
+/* 入力 */
+input, textarea, select {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  margin-bottom: 8px;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+/* モーダル */
+#detailModal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+#detailContent {
+  background: #fff;
+  padding: 16px;
+  border-radius: 12px;
+  width: 95%;
+  max-height: 90%;
+  overflow: auto;
+}
+
+/* 共通 */
+.link-like {
+  color: blue;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.autocomplete-box {
+  border: 1px solid #ccc;
+  background: #fff;
+  display: none;
+  max-height: 150px;
+  overflow-y: auto;
+}
+.autocomplete-item {
+  padding: 8px;
+  cursor: pointer;
+}
+.autocomplete-item:hover {
+  background: #eef;
+}
+
+/* 家系 */
+.children { display: none; margin-left: 20px; }
+.toggle { cursor: pointer; }
+
+/* ヘッダー固定 */
+h1 {
+  position: sticky;
+  top: 0;
+  background: #fff;
+  padding: 10px 0;
+}
+
+/* PC */
+@media (min-width: 768px) {
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .btn { width: auto; }
+}
+
+h3 {
+  margin-top: 12px;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 4px;
+}
+
+#filterBar, #filterAffiliation {
+  display: flex;
+  gap: 6px;
+  margin: 6px 0;
+}
+
+#filterBar button.active,
+#filterAffiliation button.active {
+  background: #555;
+  color: white;
+}
+
+/* ✅ オート補完用（ここに追加） */
+.autocomplete-box {
+  border: 1px solid #ccc;
+  background: #fff;
+  display: none;
+  max-height: 150px;
+  overflow-y: auto;
+}
+
+.autocomplete-item {
+  padding: 6px;
+  cursor: pointer;
+}
+
+.autocomplete-item:hover {
+  background: #eef;
+}
+
+</style>
+</head>
+
+<body>
+
+<h1>戦国人物データベース</h1>
+
+<input id="search" placeholder="検索">
+<button class="btn" onclick="searchPersons()">検索</button>
+
+<div id="filterBar">
+  <button onclick="filterCategory('', this)">すべて</button>
+  <button onclick="filterCategory('戦国大名', this)">戦国大名</button>
+  <button onclick="filterCategory('国衆', this)">国衆</button>
+  <button onclick="filterCategory('家臣', this)">家臣</button>
+  <button onclick="filterCategory('僧・文化人', this)">僧・文化人</button>
+  <button onclick="filterCategory('その他', this)">その他</button>
+</div>
+
+<div id="filterAffiliation">
+  <button onclick="filterAffiliation('', this)">全所属</button>
+  <button onclick="filterAffiliation('織田家', this)">織田家</button>
+  <button onclick="filterAffiliation('武田家', this)">武田家</button>
+  <button onclick="filterAffiliation('上杉家', this)">上杉家</button>
+</div>
+
+<button onclick="resetFilter()">全解除</button>
+
+<hr>
+
+<h2>登録</h2>
+<input id="personId" type="hidden">
+
+<div class="form-grid">
+  <input id="name" placeholder="名前">
+  <input id="yomi" placeholder="よみ">
+  <input id="birth" placeholder="生年">
+  <input id="death" placeholder="没年">
+  <input id="childhood_name" placeholder="幼名">
+  <input id="imina" placeholder="諱">
+  <input id="tsusho" placeholder="通称">
+  <input id="hogou" placeholder="法号">
+  <input id="origin" placeholder="出身">
+  <select id="category">
+    <option value="">--分類--</option>
+    <option>戦国大名</option>
+    <option>国衆</option>
+    <option>家臣</option>
+    <option>僧・文化人</option>
+    <option>その他</option>
+  </select>
+
+</div>
+
+<input id="affiliation" placeholder="所属（例：織田家）">
+<input id="castle" placeholder="居城（例：安土城）">
+<input id="rank" placeholder="官位">
+<input id="office" placeholder="官職">
+<textarea id="history" placeholder="戦歴（例：桶狭間の戦い）"></textarea>
+<textarea id="description" placeholder="説明"></textarea>
+<input id="source" placeholder="出典（カンマ区切り）">
+
+<input id="father_name" placeholder="父（名前で入力）" oninput="showFatherSuggestions(this.value)">
+<div id="fatherSuggestions" class="autocomplete-box"></div>
+<input id="mother_name" placeholder="母（名前で入力）">
+<input id="siblings_names" placeholder="兄弟姉妹（名前・カンマ区切り）"
+       oninput="showSiblingSuggestions(this.value)">
+<div id="siblingSuggestions" class="autocomplete-box"></div>
+
+<h3 onclick="toggleMemo()" style="cursor:pointer;">
+  メモ（クリックで開閉）
+</h3>
+
+<div id="memoSection" style="display:none;">
+
+  <textarea id="memo1" placeholder="メモ①（『戦国人名辞典』吉川弘文館）"></textarea>
+  <textarea id="memo2" placeholder="メモ②（『戦国人名事典』新人物往来社）"></textarea>
+  <textarea id="memo3" placeholder="メモ③（『戦国大名家臣団事典 東国編』新人物往来社）"></textarea>
+  <textarea id="memo4" placeholder="メモ④（『戦国大名家臣団事典 西国編』新人物往来社）"></textarea>
+  <textarea id="memo5" placeholder="メモ⑤"></textarea>
+  <textarea id="memo6" placeholder="メモ⑥"></textarea>
+  <textarea id="memo7" placeholder="メモ⑦"></textarea>
+  <textarea id="memo8" placeholder="メモ⑧"></textarea>
+  <textarea id="memo9" placeholder="メモ⑨"></textarea>
+  <textarea id="memo10" placeholder="メモ⑩"></textarea>
+
+</div>
+
+<button class="btn" onclick="savePerson()">保存</button>
+
+<hr>
+
+<div id="results"></div>
+
+<div id="detailModal" onclick="closeDetail()">
+  <div id="detailContent" onclick="event.stopPropagation()"></div>
+</div>
+
+<script>
+const API_BASE = "";
+
+let allPersonsCache = [];
+
+let currentAffiliation = "";
+
+
+function filterAffiliation(a) {
+  currentAffiliation = a;
+
+  document.querySelectorAll("#filterAffiliation button")
+    .forEach(btn => btn.classList.remove("active"));
+
+  event.target.classList.add("active");
+
+  searchPersons();
+}
+
+/* 全取得 */
+async function loadAllPersons() {
+  const res = await fetch("/persons");
+  allPersonsCache = await res.json();
+}
+
+/* 検索 */
+async function searchPersons() {
+  const q = document.getElementById("search").value.trim();
+
+  await loadAllPersons();
+
+  let list = allPersonsCache;
+
+  if (q) {
+    list = list.filter(p =>
+      (p.name && p.name.includes(q)) ||
+      (p.yomi && p.yomi.includes(q)) ||
+      (p.origin && p.origin.includes(q)) ||
+      (p.description && p.description.includes(q))
+    );
+  }
+  
+  if (currentCategory) {
+      list = list.filter(p => p.category === currentCategory);
+    }
+
+  if (currentAffiliation) {
+      list = list.filter(p => p.affiliation === currentAffiliation);
+    }
+
+
+  renderResults(list);
+}
+
+/* 描画 */
+function renderResults(list) {
+  const box = document.getElementById("results");
+  box.innerHTML = "";
+
+  list.forEach(p => {
+    const div = document.createElement("div");
+    div.className = "card";
+
+    div.onclick = () => showDetail(p.id);
+
+    div.innerHTML = `
+      <div class="card-title">${p.name}</div>
+      <div style="color:#666;">${p.yomi || ""}</div>
+
+      <div style="margin-top:8px;">
+        生年：${p.birth || "-"} / 没年：${p.death || "-"}
+      </div>
+
+      <button class="btn" onclick="event.stopPropagation(); showDetail(${p.id})">詳細</button>
+      <button class="btn" onclick="event.stopPropagation(); editPerson(${p.id})">編集</button>
+      <button class="btn" onclick="event.stopPropagation(); deletePerson(${p.id})">削除</button>
+    `;
+    box.appendChild(div);
+  });
+}
+
+async function showDetail(id) {
+  const res = await fetch(`/person/${id}`);
+  const p = await res.json();
+
+  // ✅ 兄弟姉妹
+  let siblingsHtml = "";
+  if (p.siblings) {
+    siblingsHtml = p.siblings.split(",")
+      .map(i => {
+        const name = getNameById(i.trim());
+        return `<span class="link-like" onclick="showDetail(${i.trim()})">${name}</span>`;
+      })
+      .join("、");
+  }
+
+  // ✅ 父・母（名前＋クリック化）
+  let fatherHtml = "-";
+  if (p.father_id) {
+    const name = getNameById(p.father_id);
+    fatherHtml = `<span class="link-like" onclick="showDetail(${p.father_id})">${name}</span>`;
+  }
+
+  let motherHtml = "-";
+  if (p.mother_id) {
+    const name = getNameById(p.mother_id);
+    motherHtml = `<span class="link-like" onclick="showDetail(${p.mother_id})">${name}</span>`;
+  }
+
+  // ✅ 表示
+  document.getElementById("detailContent").innerHTML = `
+    <h2>${p.name}</h2>
+    <p style="color:#666;">${p.yomi || ""}</p>
+
+    <hr>
+
+    <p>生年：${p.birth || "-"}　没年：${p.death || "-"}</p>
+
+    <h3>名前</h3>
+    <p>
+      幼名：${p.childhood_name || "-"}<br>
+      諱：${p.imina || "-"}<br>
+      通称：${p.tsusho || "-"}<br>
+      法号：${p.hogou || "-"}
+    </p>
+
+    <h3>情報</h3>
+    <p>
+      出身：${p.origin || "-"}<br>
+      分類：${p.category || "-"}<br>
+      官位：${p.rank || "-"}<br>
+      官職：${p.office || "-"}
+    </p>
+
+    <h3>家族</h3>
+    <p>
+      父：${fatherHtml}<br>
+      母：${motherHtml}<br>
+      ${siblingsHtml ? "兄弟姉妹：" + siblingsHtml : ""}
+    </p>
+
+    <h3>戦歴</h3>
+    <p>
+      ${(p.history || "")
+        .split("\\n")
+        .map(line => "・" + line)
+        .join("<br>")}
+    </p>
+
+    <h3>説明</h3>
+    <p>${(p.description || "").replace(/\\n/g, "<br>")}</p>
+
+    <button class="btn" onclick="event.stopPropagation(); closeDetail()">閉じる</button>
+  `;
+
+  document.getElementById("detailModal").style.display = "flex";
+}
+
+// ✅ ★ここに追加！！！！
+async function editPerson(id) {
+  const res = await fetch(`/person/${id}`);
+  const p = await res.json();
+
+  document.getElementById("personId").value = p.id;
+  document.getElementById("name").value = p.name || "";
+  document.getElementById("yomi").value = p.yomi || "";
+  document.getElementById("birth").value = p.birth || "";
+  document.getElementById("death").value = p.death || "";
+  document.getElementById("childhood_name").value = p.childhood_name || "";
+  document.getElementById("imina").value = p.imina || "";
+  document.getElementById("tsusho").value = p.tsusho || "";
+  document.getElementById("hogou").value = p.hogou || "";
+  document.getElementById("origin").value = p.origin || "";
+  document.getElementById("category").value = p.category || "";
+  document.getElementById("affiliation").value = p.affiliation || "";
+  document.getElementById("castle").value = p.castle || "";
+  document.getElementById("rank").value = p.rank || "";
+  document.getElementById("office").value = p.office || "";
+  document.getElementById("history").value = p.history || "";
+  document.getElementById("description").value = p.description || "";
+  document.getElementById("source").value = (p.source || []).join(", ");
+  document.getElementById("father_name").value =
+    p.father_id ? getNameById(p.father_id) : "";
+  document.getElementById("mother_name").value =
+    p.mother_id ? getNameById(p.mother_id) : "";
+  document.getElementById("siblings_names").value =
+    p.siblings
+      ? p.siblings.split(",").map(id => getNameById(id)).join(", ")
+      : "";
+  document.getElementById("memo1").value = p.memo1 || "";
+  document.getElementById("memo2").value = p.memo2 || "";
+  document.getElementById("memo3").value = p.memo3 || "";
+  document.getElementById("memo4").value = p.memo4 || "";
+  document.getElementById("memo5").value = p.memo5 || "";
+  document.getElementById("memo6").value = p.memo6 || "";
+  document.getElementById("memo7").value = p.memo7 || "";
+  document.getElementById("memo8").value = p.memo8 || "";
+  document.getElementById("memo9").value = p.memo9 || "";
+  document.getElementById("memo10").value = p.memo10 || "";
+
+}
+
+/* 保存 */
+async function savePerson() {
+
+  const id = document.getElementById("personId").value;  // ★これ追加
+
+  const source = document.getElementById("source").value
+  .split(",").map(s => s.trim()).filter(Boolean);
+
+  // ✅ ★ここに追加！！（これが答え）
+  const fatherName = document.getElementById("father_name").value;
+  const motherName = document.getElementById("mother_name").value;
+
+  // ✅ そのあと
+  const fatherId = getIdByName(fatherName);
+  const motherId = getIdByName(motherName);
+
+  // ✅ チェック
+  if (fatherName && !fatherId) {
+    alert("父の名前が見つかりません");
+    return;
+  }
+
+  if (motherName && !motherId) {
+    alert("母の名前が見つかりません");
+    return;
+  }
+
+
+  // ✅ 兄弟（複数）
+  let siblingsIds = "";
+  const siblingNames = document.getElementById("siblings_names").value;
+
+  if (siblingNames) {
+    const ids = [];
+    const names = siblingNames.split(",");
+
+    for (let n of names) {
+      const id = getIdByName(n.trim());
+
+      if (!id) {
+        alert("兄弟姉妹の名前が見つかりません：" + n);
+        return;
+      }
+
+      ids.push(id);
+    }
+
+    siblingsIds = ids.join(",");
+  }
+
+
+  const data = {
+    name: document.getElementById("name").value,
+    yomi: document.getElementById("yomi").value,
+    birth: document.getElementById("birth").value,
+    death: document.getElementById("death").value,
+    childhood_name: document.getElementById("childhood_name").value,
+    imina: document.getElementById("imina").value,
+    tsusho: document.getElementById("tsusho").value,
+    hogou: document.getElementById("hogou").value,
+    origin: document.getElementById("origin").value,
+    category: document.getElementById("category").value,
+    affiliation: document.getElementById("affiliation").value,
+    castle: document.getElementById("castle").value,
+    rank: document.getElementById("rank").value,
+    office: document.getElementById("office").value,
+    history: document.getElementById("history").value,
+    description: document.getElementById("description").value,
+    source: source,
+    father_id: fatherId,
+    mother_id: motherId,
+    siblings: siblingsIds,
+    memo1: document.getElementById("memo1").value,
+    memo2: document.getElementById("memo2").value,
+    memo3: document.getElementById("memo3").value,
+    memo4: document.getElementById("memo4").value,
+    memo5: document.getElementById("memo5").value,
+    memo6: document.getElementById("memo6").value,
+    memo7: document.getElementById("memo7").value,
+    memo8: document.getElementById("memo8").value,
+    memo9: document.getElementById("memo9").value,
+    memo10: document.getElementById("memo10").value,
+  };
+
+  if (!data.name) {
+    alert("名前必須");
+    return;
+  }
+
+  // ✅ ★ここが③（重要）
+  const method = id ? "PUT" : "POST";
+  const url = id ? `/person/${id}` : `/person`;
+
+  const res = await fetch(url, {
+    method,                          // ←ここも変更
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify(data)
+  });
+
+  if (!res.ok) {
+    alert("保存失敗");
+    return;
+  }
+
+  alert("保存OK");
+
+  // ✅ 編集解除（重要）
+  document.getElementById("personId").value = "";
+  clearForm();
+  searchPersons();
+
+
+
+}
+
+function clearForm() {
+  document.getElementById("personId").value = "";
+  document.getElementById("name").value = "";
+  document.getElementById("yomi").value = "";
+  document.getElementById("birth").value = "";
+  document.getElementById("death").value = "";
+  document.getElementById("childhood_name").value = "";
+  document.getElementById("imina").value = "";
+  document.getElementById("tsusho").value = "";
+  document.getElementById("hogou").value = "";
+  document.getElementById("origin").value = "";
+  document.getElementById("category").value = "";
+  document.getElementById("affiliation").value = "";
+  document.getElementById("castle").value = "";
+  document.getElementById("rank").value = "";
+  document.getElementById("office").value = "";
+  document.getElementById("description").value = "";
+  document.getElementById("source").value = "";
+  document.getElementById("father_name").value = "";
+  document.getElementById("mother_name").value = "";
+  document.getElementById("siblings_names").value = "";
+  document.getElementById("memo1").value = "";
+  document.getElementById("memo2").value = "";
+  document.getElementById("memo3").value = "";
+  document.getElementById("memo4").value = "";
+  document.getElementById("memo5").value = "";
+  document.getElementById("memo6").value = "";
+  document.getElementById("memo7").value = "";
+  document.getElementById("memo8").value = "";
+  document.getElementById("memo9").value = "";
+  document.getElementById("memo10").value = "";
+}
+
+async function deletePerson(id) {
+  if (!confirm("削除していい？")) return;
+
+  const res = await fetch(`/person/${id}`, {
+    method: "DELETE"
+  });
+
+  if (!res.ok) {
+    alert("削除失敗");
+    return;
+  }
+
+  alert("削除OK");
+
+  searchPersons();  // 一覧更新
+}
+
+// ✅ ★ここに追加！！
+function toggleMemo() {
+  const box = document.getElementById("memoSection");
+
+  if (box.style.display === "none") {
+    box.style.display = "block";
+  } else {
+    box.style.display = "none";
+  }
+}
+
+document.addEventListener("keydown", e => {
+  const modal = document.getElementById("detailModal");
+  if (e.key === "Escape" && modal.style.display === "flex") {
+    closeDetail();
+  }
+});
+
+function getNameById(id) {
+  const person = allPersonsCache.find(p => String(p.id) === String(id));
+  return person ? person.name : "(不明)";
+}
+
+function getIdByName(name) {
+  const person = allPersonsCache.find(p => p.name === name);
+  return person ? person.id : null;
+}
+
+function closeDetail() {
+  document.getElementById("detailModal").style.display = "none";
+}
+
+let currentCategory = "";
+
+function filterCategory(category) {
+  currentCategory = category;
+
+  document.querySelectorAll("#filterBar button")
+    .forEach(btn => btn.classList.remove("active"));
+
+  event.target.classList.add("active");
+
+  searchPersons();
+}
+
+function resetFilter() {
+  currentCategory = "";
+  currentAffiliation = "";
+
+  // ✅ active解除（これ重要）
+  document.querySelectorAll("#filterBar button")
+    .forEach(btn => btn.classList.remove("active"));
+
+  document.querySelectorAll("#filterAffiliation button")
+    .forEach(btn => btn.classList.remove("active"));
+
+  searchPersons();
+}
+
+function showSiblingSuggestions(keyword) {
+  const box = document.getElementById("siblingSuggestions");
+
+  // ✅ 最後に入力している単語だけ取得
+  const parts = keyword.split(",");
+  const last = parts[parts.length - 1].trim();
+
+  if (!last) {
+    box.style.display = "none";
+    return;
+  }
+
+  const list = allPersonsCache.filter(p =>
+    p.name && p.name.includes(last)
+  );
+
+  box.innerHTML = "";
+
+  list.forEach(p => {
+    const div = document.createElement("div");
+    div.className = "autocomplete-item";
+    div.textContent = p.name;
+
+    div.onclick = () => {
+      parts[parts.length - 1] = p.name;
+      document.getElementById("siblings_names").value = parts.join(", ");
+      box.style.display = "none";
+    };
+
+    box.appendChild(div);
+  });
+
+  box.style.display = "block";
+}
+
+
+function showFatherSuggestions(keyword) {
+  const box = document.getElementById("fatherSuggestions");
+
+  if (!keyword) {
+    box.style.display = "none";
+    return;
+  }
+
+  const list = allPersonsCache.filter(p =>
+    p.name && p.name.includes(keyword)
+  );
+
+  box.innerHTML = "";
+
+  list.forEach(p => {
+    const div = document.createElement("div");
+    div.className = "autocomplete-item";
+    div.textContent = p.name;
+
+    div.onclick = () => {
+      document.getElementById("father_name").value = p.name;
+      box.style.display = "none";
+    };
+
+    box.appendChild(div);
+  });
+
+  box.style.display = "block";
+}
+
+</script>
+
+</body>
+</html>
