@@ -337,7 +337,11 @@ async function editPerson(id) {
   document.getElementById("memo3").value = p.memo3 || "";
   document.getElementById("memo4").value = p.memo4 || "";
   document.getElementById("memo5").value = p.memo5 || "";
-
+  document.getElementById("memo6").value = p.memo6 || "";
+  document.getElementById("memo7").value = p.memo7 || "";
+  document.getElementById("memo8").value = p.memo8 || "";
+  document.getElementById("memo9").value = p.memo9 || "";
+  document.getElementById("memo10").value = p.memo10 || "";
 }
 
 /* 保存 */
@@ -367,8 +371,13 @@ async function savePerson() {
     description: document.getElementById("description").value,
     source: source,
 
-    father_id: document.getElementById("father_id").value || null,
-    mother_id: document.getElementById("mother_id").value || null,
+    father_id: document.getElementById("father_id").value
+      ? Number(document.getElementById("father_id").value)
+      : null,
+
+    mother_id: document.getElementById("mother_id").value 
+      ? Number(document.getElementById("mother_id").value)
+      : null,
     siblings: null,
 
     memo1: document.getElementById("memo1").value,
@@ -437,6 +446,11 @@ function clearForm() {
   document.getElementById("memo3").value = "";
   document.getElementById("memo4").value = "";
   document.getElementById("memo5").value = "";
+  document.getElementById("memo6").value = "";
+  document.getElementById("memo7").value = "";
+  document.getElementById("memo8").value = "";
+  document.getElementById("memo9").value = "";
+  document.getElementById("memo10").value = "";
 }
 
 async function deletePerson(id) {
