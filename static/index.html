@@ -349,7 +349,13 @@ async function savePerson() {
 
   const id = document.getElementById("personId").value;  // ★これ追加
 
-  const source = document.getElementById("source").value || "";
+  const source = document.getElementById("source").value
+    ? document.getElementById("source").value
+        .split(",")
+        .map(s => s.trim())
+        .filter(Boolean)
+    : [];
+
 
   const data = {
     name: document.getElementById("name").value,
@@ -369,7 +375,7 @@ async function savePerson() {
     history: document.getElementById("history").value || null,
     description: document.getElementById("description").value,
     source: source,
-
+    
     father_id: document.getElementById("father_id").value
       ? Number(document.getElementById("father_id").value)
       : null,
