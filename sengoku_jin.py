@@ -96,6 +96,9 @@ def normalize_person(person: Person):
         else:
             person.source = [s.strip() for s in person.source.split(",") if s.strip()]
 
+    if not person.source:
+        person.source = []
+
     if person.yomi == "":
         person.yomi = None
     if person.birth == "":
