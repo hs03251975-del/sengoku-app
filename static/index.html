@@ -356,6 +356,8 @@ async function savePerson() {
         .filter(Boolean)
     : [];
 
+  const fatherVal = document.getElementById("father_id").value;
+  const motherVal = document.getElementById("mother_id").value;
 
   const data = {
     name: document.getElementById("name").value,
@@ -375,7 +377,7 @@ async function savePerson() {
     history: document.getElementById("history").value || null,
     description: document.getElementById("description").value,
     source: source,
-    
+
     father_id: document.getElementById("father_id").value
       ? Number(document.getElementById("father_id").value)
       : null,
