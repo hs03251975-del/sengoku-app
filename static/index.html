@@ -349,8 +349,7 @@ async function savePerson() {
 
   const id = document.getElementById("personId").value;  // ★これ追加
 
-  const source = document.getElementById("source").value
-    .split(",").map(s => s.trim()).filter(Boolean);
+  const source = document.getElementById("source").value || "";
 
   const data = {
     name: document.getElementById("name").value,
