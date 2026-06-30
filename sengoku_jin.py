@@ -1,5 +1,6 @@
-import requests
-import sqlite3
+import psycopg2
+import psycopg2.extras
+import os
 import json
 from typing import Optional, List
 
@@ -10,20 +11,6 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
 DB_PATH = "sengoku.db"
-
-
-
-# -----------------------------
-# ngrok の URL を取得
-# -----------------------------
-def get_ngrok_url():
-    try:
-        data = requests.get("http://127.0.0.1:4040/api/tunnels").json()
-        for tunnel in data["tunnels"]:
-            if tunnel["proto"] == "https":
-                return tunnel["public_url"]
-    except:
-        return None
 
 
 # -----------------------------
@@ -49,12 +36,8 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 # -----------------------------
 @app.get("/", response_class=HTMLResponse)
 def root():
-    ngrok_url = get_ngrok_url() or "http://localhost:8000"
-
     with open("static/index.html", "r", encoding="utf-8") as f:
         html = f.read()
-
-    html = html.replace("API_BASE_PLACEHOLDER", ngrok_url)
     return html
 
 
@@ -62,8 +45,7 @@ def root():
 # DB 接続
 # -----------------------------
 def get_db():
-    conn = sqlite3.connect(DB_PATH)
-    conn.row_factory = sqlite3.Row
+    conn = psycopg2.connect(os.environ["DATABASE_URL"])
     return conn
 
 
@@ -97,6 +79,11 @@ class Person(BaseModel):
     memo3: Optional[str] = None
     memo4: Optional[str] = None
     memo5: Optional[str] = None
+    memo6: Optional[str] = None
+    memo7: Optional[str] = None
+    memo8: Optional[str] = None
+    memo9: Optional[str] = None
+    memo10: Optional[str] = None
 
 
 # -----------------------------
@@ -126,7 +113,7 @@ def normalize_person(person: Person):
 @app.get("/persons")
 def list_persons():
     conn = get_db()
-    cur = conn.cursor()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     cur.execute("SELECT * FROM persons")
     rows = cur.fetchall()
     conn.close()
@@ -149,8 +136,8 @@ def list_persons():
 @app.get("/person/{person_id}")
 def get_person(person_id: int):
     conn = get_db()
-    cur = conn.cursor()
-    cur.execute("SELECT * FROM persons WHERE id=?", (person_id,))
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    cur.execute("SELECT * FROM persons WHERE id=%s", (person_id,))
     row = cur.fetchone()
     conn.close()
 
@@ -174,7 +161,7 @@ def create_person(person: Person = Body(...)):
     normalize_person(person)
 
     conn = get_db()
-    cur = conn.cursor()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
     cur.execute("""
         INSERT INTO persons (
@@ -184,9 +171,11 @@ def create_person(person: Person = Body(...)):
             rank, office,
             history, description, source,
             memo1, memo2, memo3, memo4, memo5,
+            memo6, memo7, memo8, memo9, memo10,
             father_id, mother_id, siblings
         )
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,  
+                %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
     """, (
         person.name, person.yomi, person.birth, person.death,
         person.childhood_name, person.imina, person.tsusho, person.hogou,
@@ -194,9 +183,12 @@ def create_person(person: Person = Body(...)):
         person.rank, person.office,
         person.history, person.description, json.dumps(person.source),
 
-        person.memo1, person.memo2, person.memo3, person.memo4, person.memo5,
+        person.memo1, person.memo2, person.memo3, person.memo4, person.memo5, person.memo6, 
+        person.memo7, person.memo8, person.memo9, person.memo10,
+
         person.father_id, person.mother_id, person.siblings
     ))
+
 
     conn.commit()
     conn.close()
@@ -208,18 +200,19 @@ def update_person(person_id: int, person: Person = Body(...)):
     normalize_person(person)
 
     conn = get_db()
-    cur = conn.cursor()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
     cur.execute("""
         UPDATE persons SET
-            name=?, yomi=?, birth=?, death=?,
-            childhood_name=?, imina=?, tsusho=?, hogou=?,
-            origin=?, category=?, affiliation=?, castle=?,
-            rank=?, office=?,
-            history=?, description=?, source=?,
-            memo1=?, memo2=?, memo3=?, memo4=?, memo5=?,
-            father_id=?, mother_id=?, siblings=?
-        WHERE id=?
+            name=%s, yomi=%s, birth=%s, death=%s,
+            childhood_name=%s, imina=%s, tsusho=%s, hogou=%s,
+            origin=%s, category=%s, affiliation=%s, castle=%s,
+            rank=%s, office=%s,
+            history=%s, description=%s, source=%s,
+            memo1=%s, memo2=%s, memo3=%s, memo4=%s, memo5=%s, memo6=%s, 
+            memo7=%s, memo8=%s, memo9=%s, memo10=%s,
+            father_id=%s, mother_id=%s, siblings=%s
+        WHERE id=%s
     """, (
         person.name, person.yomi, person.birth, person.death,
         person.childhood_name, person.imina, person.tsusho, person.hogou,
@@ -227,7 +220,8 @@ def update_person(person_id: int, person: Person = Body(...)):
         person.rank, person.office,
         person.history, person.description, json.dumps(person.source),
 
-        person.memo1, person.memo2, person.memo3, person.memo4, person.memo5,
+        person.memo1, person.memo2, person.memo3, person.memo4, person.memo5, person.memo6, 
+        person.memo7, person.memo8, person.memo9, person.memo10,
 
         person.father_id, person.mother_id, person.siblings,
         person_id
@@ -242,8 +236,8 @@ def update_person(person_id: int, person: Person = Body(...)):
 @app.delete("/person/{person_id}")
 def delete_person(person_id: int):
     conn = get_db()
-    cur = conn.cursor()
-    cur.execute("DELETE FROM persons WHERE id=?", (person_id,))
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    cur.execute("DELETE FROM persons WHERE id=%s", (person_id,))
     conn.commit()
     conn.close()
     return {"status": "ok"}
@@ -255,8 +249,8 @@ def delete_person(person_id: int):
 @app.get("/search")
 def search_persons(q: str):
     conn = get_db()
-    cur = conn.cursor()
-    cur.execute("SELECT * FROM persons WHERE name LIKE ?", (f"%{q}%",))
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    cur.execute("SELECT * FROM persons WHERE name LIKE %s", (f"%{q}%",))
     rows = cur.fetchall()
     conn.close()
 
