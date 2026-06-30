@@ -359,6 +359,9 @@ async function savePerson() {
   const fatherVal = document.getElementById("father_id").value;
   const motherVal = document.getElementById("mother_id").value;
 
+  const father_id = fatherVal ? parseInt(fatherVal, 10) : null;
+  const mother_id = motherVal ? parseInt(motherVal, 10) : null;
+
   const data = {
     name: document.getElementById("name").value,
     yomi: document.getElementById("yomi").value,
@@ -378,13 +381,9 @@ async function savePerson() {
     description: document.getElementById("description").value,
     source: source,
 
-    father_id: document.getElementById("father_id").value
-      ? Number(document.getElementById("father_id").value)
-      : null,
-
-    mother_id: document.getElementById("mother_id").value 
-      ? Number(document.getElementById("mother_id").value)
-      : null,
+    // ✅ ここが修正ポイント
+    father_id: father_id,
+    mother_id: mother_id,
     siblings: null,
 
     memo1: document.getElementById("memo1").value,
