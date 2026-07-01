@@ -50,7 +50,7 @@ def root():
 # -----------------------------
 def get_db():
     return psycopg2.connect(
-        "postgresql://postgres.aypqupjunrzamrodcaan:xUFWRwobHcWiu7It@aws-1-ap-northeast-1.pooler.supabase.com:6543/postgres"
+        "postgresql://postgres:xUFWRwobHcWiu7It@db.aypqupjunrzamrodcaan.supabase.co:5432/postgres"
     )
 
 
@@ -330,5 +330,6 @@ def search_persons(q: str):
         result.append(d)
 
     return result
+
 
 
