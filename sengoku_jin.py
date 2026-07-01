@@ -183,7 +183,15 @@ def create_person(person: Person = Body(...)):
         import os
         print("DATABASE_URL =", os.environ.get("DATABASE_URL"))
 
-        conn = get_db()
+        import psycopg2
+
+        print("TRY CONNECT")
+
+        conn = psycopg2.connect(
+            "postgresql://postgres.aypqupjunrzamrodcaan:tvy2fze3@aws-1-ap-northeast-1.pooler.supabase.com:6543/postgres"
+        )
+
+        print("CONNECTED OK")
         cur = conn.cursor()
 
         cur.execute("""
