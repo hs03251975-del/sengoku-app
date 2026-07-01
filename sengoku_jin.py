@@ -54,7 +54,8 @@ def get_db():
         port=6543,
         database="postgres",
         user="postgres.aypqupjunrzamrodcaan",
-        password="xUFWRwobHcWiu7It"
+        password="xUFWRwobHcWiu7It",
+        sslmode="require"
     )
 
 
@@ -335,6 +336,5 @@ def search_persons(q: str):
         result.append(d)
 
     return result
-
 
 
