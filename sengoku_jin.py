@@ -50,8 +50,13 @@ def root():
 # -----------------------------
 def get_db():
     return psycopg2.connect(
-        "postgresql://postgres:xUFWRwobHcWiu7It@db.aypqupjunrzamrodcaan.supabase.co:5432/postgres"
+        host="aws-1-ap-northeast-1.pooler.supabase.com",
+        port=6543,
+        database="postgres",
+        user="postgres.aypqupjunrzamrodcaan",
+        password="xUFWRwobHcWiu7It"
     )
+
 
 
 # -----------------------------
