@@ -180,6 +180,9 @@ def create_person(person: Person = Body(...)):
     try:
         normalize_person(person)
 
+        import os
+        print("DATABASE_URL =", os.environ.get("DATABASE_URL"))
+
         conn = get_db()
         cur = conn.cursor()
 
@@ -318,3 +321,4 @@ def search_persons(q: str):
         result.append(d)
 
     return result
+
