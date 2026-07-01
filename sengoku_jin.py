@@ -49,8 +49,9 @@ def root():
 # DB 接続
 # -----------------------------
 def get_db():
-    conn = psycopg2.connect(os.environ["DATABASE_URL"])
-    return conn
+    return psycopg2.connect(
+        "postgresql://postgres.aypqupjunrzamrodcaan:xUFWRwobHcWiu7It@aws-1-ap-northeast-1.pooler.supabase.com:6543/postgres"
+    )
 
 
 # -----------------------------
@@ -329,4 +330,5 @@ def search_persons(q: str):
         result.append(d)
 
     return result
+
 
