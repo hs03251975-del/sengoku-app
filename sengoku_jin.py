@@ -21,7 +21,7 @@ app = FastAPI()
 @app.get("/debug")
 def debug():
     return {"version": "latest"}
-    
+
 # CORS（スマホアクセス用）
 app.add_middleware(
     CORSMiddleware,
@@ -183,23 +183,7 @@ def create_person(person: Person = Body(...)):
         conn = get_db()
         cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
-        cur.execute("""
-            INSERT INTO persons (
-                name, yomi, birth, death,
-                childhood_name, imina, tsusho, hogou,
-                origin, category, affiliation, castle,
-                rank, office,
-                history, description, source,
-                memo1, memo2, memo3, memo4, memo5,
-                memo6, memo7, memo8, memo9, memo10,
-                father_id, mother_id, siblings
-            )
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s,
-                    %s, %s, %s, %s, %s,
-                    %s, %s,
-                    %s, %s, %s, %s, %s, %s, %s, %s, %s,
-                    %s, %s, %s)
-        """, (
+        values = (
             person.name, person.yomi, person.birth, person.death,
             person.childhood_name, person.imina, person.tsusho, person.hogou,
             person.origin, person.category, person.affiliation, person.castle,
@@ -208,7 +192,24 @@ def create_person(person: Person = Body(...)):
             person.memo1, person.memo2, person.memo3, person.memo4, person.memo5,
             person.memo6, person.memo7, person.memo8, person.memo9, person.memo10,
             person.father_id, person.mother_id, person.siblings
-        ))
+        )
+
+        placeholders = ", ".join(["%s"] * len(values))
+
+        query = f"""
+        INSERT INTO persons (
+            name, yomi, birth, death,
+            childhood_name, imina, tsusho, hogou,
+            origin, category, affiliation, castle,
+            rank, office,
+            history, description, source,
+            memo1, memo2, memo3, memo4, memo5,
+            memo6, memo7, memo8, memo9, memo10,
+            father_id, mother_id, siblings
+        ) VALUES ({placeholders})
+        """
+
+        cur.execute(query, values)
 
         conn.commit()
         conn.close()
