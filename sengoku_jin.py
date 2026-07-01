@@ -183,20 +183,7 @@ def create_person(person: Person = Body(...)):
         conn = get_db()
         cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
-        values = (
-            person.name, person.yomi, person.birth, person.death,
-            person.childhood_name, person.imina, person.tsusho, person.hogou,
-            person.origin, person.category, person.affiliation, person.castle,
-            person.rank, person.office,
-            person.history, person.description, json.dumps(person.source),
-            person.memo1, person.memo2, person.memo3, person.memo4, person.memo5,
-            person.memo6, person.memo7, person.memo8, person.memo9, person.memo10,
-            person.father_id, person.mother_id, person.siblings
-        )
-
-        placeholders = ", ".join(["%s"] * len(values))
-
-        query = f"""
+        cur.execute("""
         INSERT INTO persons (
             name, yomi, birth, death,
             childhood_name, imina, tsusho, hogou,
@@ -206,10 +193,48 @@ def create_person(person: Person = Body(...)):
             memo1, memo2, memo3, memo4, memo5,
             memo6, memo7, memo8, memo9, memo10,
             father_id, mother_id, siblings
-        ) VALUES ({placeholders})
-        """
-
-        cur.execute(query, values)
+        ) VALUES (
+            %(name)s, %(yomi)s, %(birth)s, %(death)s,
+            %(childhood_name)s, %(imina)s, %(tsusho)s, %(hogou)s,
+            %(origin)s, %(category)s, %(affiliation)s, %(castle)s,
+            %(rank)s, %(office)s,
+            %(history)s, %(description)s, %(source)s,
+            %(memo1)s, %(memo2)s, %(memo3)s, %(memo4)s, %(memo5)s,
+            %(memo6)s, %(memo7)s, %(memo8)s, %(memo9)s, %(memo10)s,
+            %(father_id)s, %(mother_id)s, %(siblings)s
+        )
+        """, {
+            "name": person.name,
+            "yomi": person.yomi,
+            "birth": person.birth,
+            "death": person.death,
+            "childhood_name": person.childhood_name,
+            "imina": person.imina,
+            "tsusho": person.tsusho,
+            "hogou": person.hogou,
+            "origin": person.origin,
+            "category": person.category,
+            "affiliation": person.affiliation,
+            "castle": person.castle,
+            "rank": person.rank,
+            "office": person.office,
+            "history": person.history,
+            "description": person.description,
+            "source": json.dumps(person.source),
+            "memo1": person.memo1,
+            "memo2": person.memo2,
+            "memo3": person.memo3,
+            "memo4": person.memo4,
+            "memo5": person.memo5,
+            "memo6": person.memo6,
+            "memo7": person.memo7,
+            "memo8": person.memo8,
+            "memo9": person.memo9,
+            "memo10": person.memo10,
+            "father_id": person.father_id,
+            "mother_id": person.mother_id,
+            "siblings": person.siblings
+        })
 
         conn.commit()
         conn.close()
