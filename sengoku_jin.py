@@ -181,7 +181,7 @@ def create_person(person: Person = Body(...)):
         normalize_person(person)
 
         conn = get_db()
-        cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+        cur = conn.cursor()
 
         cur.execute("""
         INSERT INTO persons (
