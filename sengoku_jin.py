@@ -18,6 +18,10 @@ DB_PATH = "sengoku.db"
 # -----------------------------
 app = FastAPI()
 
+@app.get("/debug")
+def debug():
+    return {"version": "latest"}
+    
 # CORS（スマホアクセス用）
 app.add_middleware(
     CORSMiddleware,
