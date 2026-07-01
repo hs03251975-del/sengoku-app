@@ -408,7 +408,7 @@ async function savePerson() {
   const url = id ? `/person/${id}` : `/person`;
 
   const res = await fetch(url, {
-    method,                          // ←ここも変更
+    method: method,                          // ←ここも変更
     headers: {"Content-Type": "application/json"},
     body: JSON.stringify(data)
   });
