@@ -22,6 +22,18 @@ body {
   margin-bottom: 10px;
   background: #fff;
 }
+
+.info-box {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  margin-bottom: 8px;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background: #fff;
+}
+
 .card-title {
   font-weight: bold;
   font-size: 18px;
@@ -162,15 +174,14 @@ h3 {
 <input id="mother_id" placeholder="母ID">
 
 <!-- ✅ 子ども表示 -->
-<div id="childrenBox">
+<div class="info-box">
   <b>子ども：</b>
-  <span id="childrenList">-</span>
+  <div id="childrenList">-</div>
 </div>
 
-<!-- ✅ 兄弟姉妹表示 -->
-<div id="siblingsBox">
+<div class="info-box">
   <b>兄弟姉妹：</b>
-  <span id="siblingsList">-</span>
+  <div id="siblingsList">-</div>
 </div>
 
 <h3 onclick="toggleMemo()" style="cursor:pointer;">
