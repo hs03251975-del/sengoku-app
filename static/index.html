@@ -272,6 +272,26 @@ async function showDetail(id) {
   const res = await fetch(`/person/${id}`);
   const p = await res.json();
 
+  // ✅ 子ども取得
+  const childrenRes = await fetch(`/person/${id}/children`);
+  const children = await childrenRes.json();
+
+  // ✅ 兄弟姉妹取得
+  const sibRes = await fetch(`/person/${id}/siblings`);
+  const siblings = await sibRes.json();
+
+  const childrenHtml = children.length
+    ? children.map(c =>
+        `<span class="link-like" onclick="showDetail(${c.id})">${c.name}</span>`
+      ).join(", ")
+    : "-";
+
+  const siblingsHtml = siblings.length
+    ? siblings.map(s =>
+        `<span class="link-like" onclick="showDetail(${s.id})">${s.name}</span>`
+      ).join(", ")
+    : "-";
+
   document.getElementById("detailContent").innerHTML = `
     <h2>${p.name}</h2>
     <p style="color:#666;">${p.yomi || ""}</p>
@@ -298,6 +318,13 @@ async function showDetail(id) {
 
     <h3>説明</h3>
     <p>${(p.description || "").replace(/\n/g, "<br>")}</p>
+
+    
+    <h3>子ども</h3>
+    <p>${childrenHtml}</p>
+
+    <h3>兄弟姉妹</h3>
+    <p>${siblingsHtml}</p>
 
     <button class="btn" onclick="closeDetail()">閉じる</button>
   `;
