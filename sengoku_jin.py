@@ -52,8 +52,8 @@ def get_db():
     return psycopg2.connect(
         host="aws-1-ap-northeast-1.pooler.supabase.com",
         port=6543,
-        dbname="postgres",
-        user="postgres",
+        database="postgres",
+        user="postgres.aypqupjunrzamrodcaan",
         password="xUFWRwobHcWiu7It",
         sslmode="require"
     )
@@ -186,20 +186,9 @@ def get_person(person_id: int):
 def create_person(person: Person = Body(...)):
     try:
         normalize_person(person)
-
-        import os
-        print("DATABASE_URL =", os.environ.get("DATABASE_URL"))
-
-        import psycopg2
-
-        print("TRY CONNECT")
-
-        conn = psycopg2.connect(
-            "postgresql://postgres.aypqupjunrzamrodcaan:tvy2fze3@aws-1-ap-northeast-1.pooler.supabase.com:6543/postgres"
-        )
-
-        print("CONNECTED OK")
-        cur = conn.cursor()
+        
+        conn = get_db()
+        cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
         cur.execute("""
         INSERT INTO persons (
@@ -336,6 +325,7 @@ def search_persons(q: str):
         result.append(d)
 
     return result
+
 
 
 
