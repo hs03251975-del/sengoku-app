@@ -290,6 +290,46 @@ def update_person(person_id: int, person: Person = Body(...)):
     conn.close()
     return {"status": "ok"}
 
+@app.get("/person/{person_id}/children")
+def get_children(person_id: int):
+    conn = get_db()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+
+    cur.execute("""
+        SELECT id, name
+        FROM persons
+        WHERE father_id = %s OR mother_id = %s
+    """, (person_id, person_id))
+
+    children = cur.fetchall()
+    conn.close()
+
+    return children
+
+@app.get("/person/{person_id}/siblings")
+def get_siblings(person_id: int):
+    conn = get_db()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+
+    cur.execute("SELECT father_id, mother_id FROM persons WHERE id=%s", (person_id,))
+    row = cur.fetchone()
+
+    if not row:
+        return []
+
+    father_id = row["father_id"]
+    mother_id = row["mother_id"]
+
+    cur.execute("""
+        SELECT id, name FROM persons
+        WHERE id != %s
+        AND (father_id = %s OR mother_id = %s)
+    """, (person_id, father_id, mother_id))
+
+    siblings = cur.fetchall()
+    conn.close()
+
+    return siblings
 
 @app.delete("/person/{person_id}")
 def delete_person(person_id: int):
