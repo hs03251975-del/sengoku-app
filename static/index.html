@@ -88,15 +88,25 @@ input, select, textarea {
   border: 1px solid #ccc;
   background: #fff;
   display: none;
-  max-height: 150px;
+  max-height: 200px;
   overflow-y: auto;
+  position: absolute;
+  width: 100%;
+  z-index: 1000;
+  box-sizing: border-box;
 }
+
 .autocomplete-item {
   padding: 8px;
   cursor: pointer;
 }
+
 .autocomplete-item:hover {
   background: #eef;
+}
+
+.autocomplete-container {
+  position: relative;
 }
 
 /* 家系 */
@@ -278,14 +288,16 @@ h3 {
 
 <div class="form-grid">
 
-  <div>
+  <div class="autocomplete-container">
     <label for="father_name">父</label>
-    <input id="father_name">
+    <input id="father_name" autocomplete="off">
+    <div id="father_suggest" class="autocomplete-box"></div>
   </div>
 
-  <div>
+  <div class="autocomplete-container">
     <label for="mother_name">母</label>
-    <input id="mother_name">
+    <input id="mother_name" autocomplete="off">
+    <div id="mother_suggest" class="autocomplete-box"></div>
   </div>
 
   <div>
@@ -365,6 +377,47 @@ async function searchPersons() {
 
   renderResults(list);
 }
+
+
+// ✅ オートコンプリート
+function setupAutocomplete(inputId, boxId) {
+  const input = document.getElementById(inputId);
+  const box = document.getElementById(boxId);
+
+  input.addEventListener("input", () => {
+
+    const keyword = input.value.trim();
+
+    if (!keyword) {
+      box.style.display = "none";
+      return;
+    }
+
+    const matches = allPersonsCache.filter(
+      p => p.name && p.name.includes(keyword)
+    );
+
+    if (matches.length === 0) {
+      box.style.display = "none";
+      return;
+    }
+
+    box.innerHTML = matches.map(p => `
+      <div class="autocomplete-item"
+           onclick="selectPerson('${inputId}','${boxId}','${p.name}')">
+        ${p.name}
+      </div>
+    `).join("");
+
+    box.style.display = "block";
+  });
+}
+
+function selectPerson(inputId, boxId, name) {
+  document.getElementById(inputId).value = name;
+  document.getElementById(boxId).style.display = "none";
+}
+
 
 /* 描画 */
 function renderResults(list) {
@@ -719,6 +772,11 @@ function toggleMemo() {
     box.style.display = "none";
   }
 }
+
+loadAllPersons().then(() => {
+  setupAutocomplete("father_name", "father_suggest");
+  setupAutocomplete("mother_name", "mother_suggest");
+});
 
 </script>
 
