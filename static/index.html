@@ -279,13 +279,13 @@ h3 {
 <div class="form-grid">
 
   <div>
-    <label for="father_id">父ID</label>
-    <input id="father_id">
+    <label for="father_name">父</label>
+    <input id="father_name">
   </div>
 
   <div>
-    <label for="mother_id">母ID</label>
-    <input id="mother_id">
+    <label for="mother_name">母</label>
+    <input id="mother_name">
   </div>
 
   <div>
@@ -507,6 +507,24 @@ async function editPerson(id) {
   const res = await fetch(`/person/${id}`);
   const p = await res.json();
 
+  // 父の名前表示
+  if (p.father_id) {
+    const fatherRes = await fetch(`/person/${p.father_id}`);
+    const father = await fatherRes.json();
+    document.getElementById("father_name").value = father.name;
+  } else {
+    document.getElementById("father_name").value = "";
+  }
+
+  // 母の名前表示
+  if (p.mother_id) {
+    const motherRes = await fetch(`/person/${p.mother_id}`);
+    const mother = await motherRes.json();
+    document.getElementById("mother_name").value = mother.name;
+  } else {
+    document.getElementById("mother_name").value = "";
+  }
+
   document.getElementById("personId").value = p.id;
   document.getElementById("name").value = p.name || "";
   document.getElementById("yomi").value = p.yomi || "";
@@ -540,6 +558,8 @@ async function editPerson(id) {
 /* 保存 */
 async function savePerson() {
 
+  await loadAllPersons();
+
   const id = document.getElementById("personId").value;  // ★これ追加
 
   const source = document.getElementById("source").value
@@ -549,11 +569,29 @@ async function savePerson() {
         .filter(Boolean)
     : [];
 
-  const fatherVal = document.getElementById("father_id").value;
-  const motherVal = document.getElementById("mother_id").value;
+  const fatherName = document.getElementById("father_name").value.trim();
+  const motherName = document.getElementById("mother_name").value.trim();
 
-  const father_id = fatherVal ? parseInt(fatherVal, 10) : null;
-  const mother_id = motherVal ? parseInt(motherVal, 10) : null;
+  let father_id = null;
+  let mother_id = null;
+
+  // 父を検索
+  const fatherPerson = allPersonsCache.find(
+    p => p.name === fatherName
+  );
+
+  if (fatherPerson) {
+    father_id = fatherPerson.id;
+  }
+
+  // 母を検索
+  const motherPerson = allPersonsCache.find(
+    p => p.name === motherName
+  );
+
+  if (motherPerson) {
+    mother_id = motherPerson.id;
+  }
 
   const data = {
     name: document.getElementById("name").value,
@@ -640,6 +678,8 @@ function clearForm() {
   document.getElementById("office").value = "";
   document.getElementById("description").value = "";
   document.getElementById("source").value = "";
+  document.getElementById("father_name").value = "";
+  document.getElementById("mother_name").value = "";
   document.getElementById("memo1").value = "";
   document.getElementById("memo2").value = "";
   document.getElementById("memo3").value = "";
