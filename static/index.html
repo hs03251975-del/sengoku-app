@@ -177,7 +177,32 @@ h1 {
   width: 250px;
 }
 
+.family-tree {
+  text-align: center;
+  overflow-x: auto;
+}
 
+.tree-card {
+  display: inline-block;
+  padding: 10px 15px;
+  margin: 5px;
+  border: 1px solid #aaa;
+  border-radius: 8px;
+  background: #fff;
+  min-width: 120px;
+}
+
+.tree-arrow {
+  font-size: 24px;
+  margin: 5px 0;
+}
+
+.tree-children {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
 
 h3 {
   margin-top: 12px;
@@ -525,25 +550,48 @@ async function showDetail(id) {
     }
   }
 
-  let treeHtml = "";
+  let treeHtml = `<div class="family-tree">`;
 
   if (grandfatherName !== "-") {
-    treeHtml += `${grandfatherName}<br>`;
+    treeHtml += `
+      <div class="tree-card">${grandfatherName}</div>
+      <div class="tree-arrow">↓</div>
+    `;
   }
 
   if (fatherName !== "-") {
-    treeHtml += `└─ ${fatherName}<br>`;
+    treeHtml += `
+      <div class="tree-card">${fatherName}</div>
+      <div class="tree-arrow">↓</div>
+    `;
   }
 
-  siblings.forEach(s => {
-    treeHtml += `&nbsp;&nbsp;&nbsp;&nbsp;├─ ${s.name}<br>`;
-  });
+  treeHtml += `
+    <div class="tree-card">
+      <b>${p.name}</b>
+    </div>
+  `;
 
-  treeHtml += `&nbsp;&nbsp;&nbsp;&nbsp;├─ <b>${p.name}</b><br>`;
+  if (children.length > 0) {
 
-  children.forEach(c => {
-    treeHtml += `&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└─ ${c.name}<br>`;
-  });
+    treeHtml += `
+      <div class="tree-arrow">↓</div>
+      <div class="tree-children">
+    `;
+
+    children.forEach(c => {
+      treeHtml += `
+        <div class="tree-card">
+          <span class="link-like"
+            onclick="showDetail(${c.id})">${c.name}</span>
+        </div>
+      `;
+    });
+
+    treeHtml += `</div>`;
+  }
+
+  treeHtml += `</div>`;
 
   const childrenHtml = children.length
     ? children.map(c =>
