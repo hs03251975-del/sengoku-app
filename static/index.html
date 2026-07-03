@@ -406,6 +406,7 @@ function setupAutocomplete(inputId, boxId) {
       <div class="autocomplete-item"
            onclick="selectPerson('${inputId}','${boxId}','${p.name}')">
         ${p.name}
+        （${p.birth || "?"}-${p.death || "?"}／${p.affiliation || "所属不明"}）
       </div>
     `).join("");
 
