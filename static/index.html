@@ -204,6 +204,22 @@ h1 {
   flex-wrap: wrap;
 }
 
+
+.tree-parent,
+.tree-siblings,
+.tree-children {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.tree-center {
+  background: #eef;
+  font-weight: bold;
+}
+
+
 h3 {
   margin-top: 12px;
   border-bottom: 1px solid #ccc;
@@ -561,16 +577,38 @@ async function showDetail(id) {
 
   if (fatherName !== "-") {
     treeHtml += `
-      <div class="tree-card">${fatherName}</div>
+      <div class="tree-card">
+        <span class="link-like"
+          onclick="showDetail(${p.father_id})">
+          ${fatherName}
+        </span>
+      </div>
+
       <div class="tree-arrow">↓</div>
     `;
   }
 
+  // 本人＋兄弟姉妹
+  treeHtml += `<div class="tree-siblings">`;
+
+  siblings.forEach(s => {
+    treeHtml += `
+      <div class="tree-card">
+        <span class="link-like"
+          onclick="showDetail(${s.id})">
+          ${s.name}
+        </span>
+      </div>
+    `;
+  });
+
   treeHtml += `
-    <div class="tree-card">
-      <b>${p.name}</b>
+    <div class="tree-card tree-center">
+      ${p.name}
     </div>
   `;
+
+  treeHtml += `</div>`;
 
   if (children.length > 0) {
 
@@ -583,7 +621,9 @@ async function showDetail(id) {
       treeHtml += `
         <div class="tree-card">
           <span class="link-like"
-            onclick="showDetail(${c.id})">${c.name}</span>
+            onclick="showDetail(${c.id})">
+            ${c.name}
+          </span>
         </div>
       `;
     });
