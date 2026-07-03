@@ -505,17 +505,44 @@ async function showDetail(id) {
     motherName = mother.name;
   }
 
-  // ✅ 家系図作成
-  let treeHtml = "";
+  let grandfatherName = "-";
+  let grandmotherName = "-";
 
-  if (fatherName !== "-") {
-    treeHtml += `${fatherName}<br>`;
+  if (p.father_id) {
+    const fatherRes = await fetch(`/person/${p.father_id}`);
+    const father = await fatherRes.json();
+
+    if (father.father_id) {
+      const gfRes = await fetch(`/person/${father.father_id}`);
+      const grandfather = await gfRes.json();
+      grandfatherName = grandfather.name;
+    }
+
+    if (father.mother_id) {
+      const gmRes = await fetch(`/person/${father.mother_id}`);
+      const grandmother = await gmRes.json();
+      grandmotherName = grandmother.name;
+    }
   }
 
-  treeHtml += `└─ <b>${p.name}</b><br>`;
+  let treeHtml = "";
+
+  if (grandfatherName !== "-") {
+    treeHtml += `${grandfatherName}<br>`;
+  }
+
+  if (fatherName !== "-") {
+    treeHtml += `└─ ${fatherName}<br>`;
+  }
+
+  siblings.forEach(s => {
+    treeHtml += `&nbsp;&nbsp;&nbsp;&nbsp;├─ ${s.name}<br>`;
+  });
+
+  treeHtml += `&nbsp;&nbsp;&nbsp;&nbsp;├─ <b>${p.name}</b><br>`;
 
   children.forEach(c => {
-    treeHtml += `&nbsp;&nbsp;&nbsp;&nbsp;├─ ${c.name}<br>`;
+    treeHtml += `&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└─ ${c.name}<br>`;
   });
 
   const childrenHtml = children.length
@@ -561,33 +588,25 @@ async function showDetail(id) {
 
     
     <h3>家族関係</h3>
-    <p>
-      父：
-      ${
-        p.father_id
-          ? `<span class="link-like" onclick="showDetail(${p.father_id})">${fatherName}</span>`
-          : "-"
-      }
-    </p>
 
     <p>
-      母：
-      ${
-        p.mother_id
-          ? `<span class="link-like" onclick="showDetail(${p.mother_id})">${motherName}</span>`
-          : "-"
-      }
+    祖父：${grandfatherName}<br>
+    祖母：${grandmotherName}<br>
+    父：
+    ${p.father_id
+      ? `<span class="link-like" onclick="showDetail(${p.father_id})">${fatherName}</span>`
+      : "-"
+    }<br>
+    母：
+    ${p.mother_id
+      ? `<span class="link-like" onclick="showDetail(${p.mother_id})">${motherName}</span>`
+      : "-"
+    }
     </p>
 
-    <p>
-      子供：
-      ${childrenHtml}
-    </p>
+    <p>${childrenHtml}</p>
 
-    <p>
-      兄弟姉妹：
-      ${siblingsHtml}
-    </p>
+    <p>${siblingsHtml}</p>
 
     <h3>家系図</h3>
 
