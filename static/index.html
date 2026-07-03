@@ -140,6 +140,11 @@ h1 {
   min-height: 250px;
 }
 
+.long-field {
+  width: 100%;
+  margin-bottom: 12px;
+}
+
 .memo-grid {
   display: grid;
   grid-template-columns: 1fr;
@@ -250,20 +255,24 @@ h3 {
     <label for="office">官職</label>
     <input id="office">
   </div>
-  <div>
-    <label for="history">戦歴</label>
-    <textarea id="history" class="large-text"></textarea>
-  </div>
-  <div>
-    <label for="description">説明</label>
-    <textarea id="description" class="large-text"></textarea>
-  </div>
-  <div>
-    <label for="source">出典</label>
-    <textarea id="source" class="large-text"></textarea>
-  </div>
-
 </div>
+
+  
+<div class="long-field">
+  <label for="history">戦歴</label>
+  <textarea id="history"></textarea>
+</div>
+
+<div class="long-field">
+  <label for="description">説明</label>
+  <textarea id="description"></textarea>
+</div>
+
+<div class="long-field">
+  <label for="source">出典</label>
+  <input id="source">
+</div>
+
 
 <h3>家族関係</h3>
 
