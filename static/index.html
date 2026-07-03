@@ -133,16 +133,15 @@ h1 {
 
 .memo-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   gap: 20px;
   width: 100%;
 }
 
 #memoSection textarea {
   width: 100%;
-  min-height: 200px;
+  min-height: 250px;
 }
-
 
 .save-area {
   text-align: center;
@@ -261,23 +260,22 @@ h3 {
     <input id="mother_id">
   </div>
 
-<!-- ✅ 子ども表示 -->
-<div class="info-box">
-  <b>子ども：</b>
-  <div id="childrenList">-</div>
-</div>
+  <div class="info-box">
+    <b>子ども：</b>
+    <div id="childrenList">-</div>
+  </div>
 
-<div class="info-box">
-  <b>兄弟姉妹：</b>
-  <div id="siblingsList">-</div>
+  <div class="info-box">
+    <b>兄弟姉妹：</b>
+    <div id="siblingsList">-</div>
+  </div>
+
 </div>
 
 <h3 onclick="toggleMemo()">メモ（クリックで開閉）</h3>
 
 <div id="memoSection" class="memo-grid">
 
-
-<div id="memoSection" class="memo-grid">
 
   <textarea id="memo1" placeholder="メモ①（『戦国人名辞典』吉川弘文館）"></textarea>
   <textarea id="memo2" placeholder="メモ②（『戦国人名事典』新人物往来社）"></textarea>
