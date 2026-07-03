@@ -142,36 +142,80 @@ h3 {
 <input id="personId" type="hidden">
 
 <div class="form-grid">
-  <input id="name" placeholder="名前">
-  <input id="yomi" placeholder="よみ">
-  <input id="birth" placeholder="生年">
-  <input id="death" placeholder="没年">
-  <input id="childhood_name" placeholder="幼名">
-  <input id="imina" placeholder="諱">
-  <input id="tsusho" placeholder="通称">
-  <input id="hogou" placeholder="法号">
-  <input id="origin" placeholder="出身">
-  <select id="category">
-    <option value="">--分類--</option>
-    <option>戦国大名</option>
-    <option>国衆</option>
-    <option>家臣</option>
-    <option>僧・文化人</option>
-    <option>その他</option>
-  </select>
-
+  <div>
+    <label for="name">名前</label>
+    <input id="name">
+  </div>
+  <div>
+    <label for="yomi">よみ</label>
+    <input id="yomi">
+  </div>
+  <div>
+    <label for="birth">生年</label>
+    <input id="birth">
+  </div>
+  <div>
+    <label for="death">没年</label>
+    <input id="death">
+  </div>
+  <div>
+    <label for="childhood_name">幼名</label>
+    <input id="childhood_name">
+  </div>
+  <div>
+    <label for="imina">諱</label>
+    <input id="imina">
+  </div>
+  <div>
+    <label for="tsusho">通称</label>
+    <input id="tsusho">
+  </div>
+  <div>
+    <label for="hogou">法号</label>
+    <input id="hogou">
+  </div>
+  <div>
+    <label for="origin">出身</label>
+    <input id="origin">
+  </div>
+  <div>
+    <label for="category">分類</label>
+    <select id="category">
+      <option value="">--分類--</option>
+      <option>戦国大名</option>
+      <option>国衆</option>
+      <option>家臣</option>
+      <option>僧・文化人</option>
+      <option>その他</option>
+    </select>
 </div>
 
-<input id="affiliation" placeholder="所属（例：織田家）">
-<input id="castle" placeholder="居城（例：安土城）">
-<input id="rank" placeholder="官位">
-<input id="office" placeholder="官職">
-<textarea id="history" placeholder="戦歴（例：桶狭間の戦い）"></textarea>
-<textarea id="description" placeholder="説明"></textarea>
-<input id="source" placeholder="出典（カンマ区切り）">
+<label for="affiliation">所属</label>
+<input id="affiliation">
 
-<input id="father_id" placeholder="父ID">
-<input id="mother_id" placeholder="母ID">
+<label for="castle">居城</label>
+<input id="castle">
+
+<label for="rank">官位</label>
+<input id="rank">
+
+<label for="office">官職</label>
+<input id="office">
+
+<label for="history">戦歴</label>
+<textarea id="history"></textarea>
+
+<label for="description">説明</label>
+<textarea id="description"></textarea>
+
+<label for="source">出典</label>
+<input id="source">
+
+<label for="father_id">父ID</label>
+<input id="father_id">
+
+<label for="mother_id">母ID</label>
+<input id="mother_id">
 
 <!-- ✅ 子ども表示 -->
 <div class="info-box">
