@@ -136,6 +136,9 @@ h1 {
   border-radius: 6px;
 }
 
+.large-text {
+  min-height: 250px;
+}
 
 .memo-grid {
   display: grid;
@@ -249,15 +252,15 @@ h3 {
   </div>
   <div>
     <label for="history">戦歴</label>
-    <textarea id="history"></textarea>
+    <textarea id="history" class="large-text"></textarea>
   </div>
   <div>
     <label for="description">説明</label>
-    <textarea id="description"></textarea>
+    <textarea id="description" class="large-text"></textarea>
   </div>
   <div>
     <label for="source">出典</label>
-    <input id="source">
+    <textarea id="source" class="large-text"></textarea>
   </div>
 
 </div>
