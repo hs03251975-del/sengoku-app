@@ -385,25 +385,6 @@ function renderResults(list) {
         生年：${p.birth || "-"} / 没年：${p.death || "-"}
       </div>
 
-      <div style="margin-top:8px;">
-        <b>【名前】</b><br>
-        幼名：${p.childhood_name || "-"}<br>
-        諱：${p.imina || "-"}<br>
-        通称：${p.tsusho || "-"}<br>
-        法号：${p.hogou || "-"}
-      </div>
-
-      <div style="margin-top:8px;">
-        <b>【情報】</b><br>
-        出身：${p.origin || "-"}<br>
-
-        分類：${p.category || "-"}<br>
-
-        官位：${p.rank || "-"}<br>
-        官職：${p.office || "-"}
-        戦歴：${(p.history || "").replace(/\n/g, "<br>")}</p>
-      </div>
-
       <button class="btn" onclick="event.stopPropagation(); showDetail(${p.id})">詳細</button>
       <button class="btn" onclick="event.stopPropagation(); editPerson(${p.id})">編集</button>
       <button class="btn" onclick="event.stopPropagation(); deletePerson(${p.id})">削除</button>
