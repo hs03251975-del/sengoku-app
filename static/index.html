@@ -285,6 +285,7 @@ h3 {
 
 
 <h3>家族関係</h3>
+<div id="familyTree"></div>
 
 <div class="form-grid">
 
@@ -504,6 +505,19 @@ async function showDetail(id) {
     motherName = mother.name;
   }
 
+  // ✅ 家系図作成
+  let treeHtml = "";
+
+  if (fatherName !== "-") {
+    treeHtml += `${fatherName}<br>`;
+  }
+
+  treeHtml += `└─ <b>${p.name}</b><br>`;
+
+  children.forEach(c => {
+    treeHtml += `&nbsp;&nbsp;&nbsp;&nbsp;├─ ${c.name}<br>`;
+  });
+
   const childrenHtml = children.length
     ? children.map(c =>
         `<span class="link-like" onclick="showDetail(${c.id})">${c.name}</span>`
@@ -574,6 +588,12 @@ async function showDetail(id) {
       兄弟姉妹：
       ${siblingsHtml}
     </p>
+
+    <h3>家系図</h3>
+
+    <div class="info-box">
+      ${treeHtml}
+    </div>
 
     <button class="btn" onclick="closeDetail()">閉じる</button>
   `;
