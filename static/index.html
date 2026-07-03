@@ -289,7 +289,7 @@ h3 {
   </div>
 
   <div>
-    <label>子ども</label>
+    <label>子供</label>
     <div class="info-box">
       <div id="childrenList">-</div>
     </div>
@@ -398,13 +398,28 @@ async function showDetail(id) {
   const res = await fetch(`/person/${id}`);
   const p = await res.json();
 
-  // ✅ 子ども取得
+  // ✅ 子供取得
   const childrenRes = await fetch(`/person/${id}/children`);
   const children = await childrenRes.json();
 
   // ✅ 兄弟姉妹取得
   const sibRes = await fetch(`/person/${id}/siblings`);
   const siblings = await sibRes.json();
+  
+  let fatherName = "-";
+  let motherName = "-";
+
+  if (p.father_id) {
+    const fatherRes = await fetch(`/person/${p.father_id}`);
+    const father = await fatherRes.json();
+    fatherName = father.name;
+  }
+
+  if (p.mother_id) {
+    const motherRes = await fetch(`/person/${p.mother_id}`);
+    const mother = await motherRes.json();
+    motherName = mother.name;
+  }
 
   const childrenHtml = children.length
     ? children.map(c =>
@@ -448,11 +463,34 @@ async function showDetail(id) {
     <p>${(p.description || "").replace(/\n/g, "<br>")}</p>
 
     
-    <h3>子ども</h3>
-    <p>${childrenHtml}</p>
+    <h3>家族関係</h3>
+    <p>
+      父：
+      ${
+        p.father_id
+          ? `<span class="link-like" onclick="showDetail(${p.father_id})">${fatherName}</span>`
+          : "-"
+      }
+    </p>
 
-    <h3>兄弟姉妹</h3>
-    <p>${siblingsHtml}</p>
+    <p>
+      母：
+      ${
+        p.mother_id
+          ? `<span class="link-like" onclick="showDetail(${p.mother_id})">${motherName}</span>`
+          : "-"
+      }
+    </p>
+
+    <p>
+      子供：
+      ${childrenHtml}
+    </p>
+
+    <p>
+      兄弟姉妹
+      ${siblingsHtml}
+    </p>
 
     <button class="btn" onclick="closeDetail()">閉じる</button>
   `;
