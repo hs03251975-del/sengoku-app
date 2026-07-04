@@ -492,9 +492,55 @@ function setupAutocomplete(inputId, boxId) {
   });
 }
 
+async function updateFamilyInfo() {
+
+  await loadAllPersons();
+
+  const fatherName =
+    document.getElementById("father_name").value.trim();
+
+  const motherName =
+    document.getElementById("mother_name").value.trim();
+
+  const father = allPersonsCache.find(
+    p => p.name === fatherName
+  );
+
+  const mother = allPersonsCache.find(
+    p => p.name === motherName
+  );
+
+  let parentId = null;
+
+  if (father) {
+    parentId = father.id;
+  } else if (mother) {
+    parentId = mother.id;
+  }
+
+  if (!parentId) {
+    document.getElementById("childrenList").innerHTML = "-";
+    document.getElementById("siblingsList").innerHTML = "-";
+    return;
+  }
+
+  const childRes =
+    await fetch(`/person/${parentId}/children`);
+
+  const children =
+    await childRes.json();
+
+  document.getElementById("childrenList").innerHTML =
+    children.length
+      ? children.map(c => c.name).join("、")
+      : "-";
+}
+
 function selectPerson(inputId, boxId, name) {
   document.getElementById(inputId).value = name;
   document.getElementById(boxId).style.display = "none";
+
+  updateFamilyInfo();
 }
 
 
@@ -770,6 +816,8 @@ async function editPerson(id) {
   document.getElementById("memo8").value = p.memo8 || "";
   document.getElementById("memo9").value = p.memo9 || "";
   document.getElementById("memo10").value = p.memo10 || "";
+
+  updateFamilyInfo();
 }
 
 /* 保存 */
