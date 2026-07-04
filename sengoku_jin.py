@@ -40,28 +40,35 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 def login_page():
     return """
     <h2>戦国人物データベース</h2>
-    <form method="post">
-        <input type="password" name="password" placeholder="パスワード">
-        <button type="submit">ログイン</button>
+
+    /login
+        <input type="password"
+               name="password"
+               placeholder="パスワード">
+
+        <button type="submit">
+            ログイン
+        </button>
     </form>
     """
 
 @app.post("/login")
 def login(password: str = Form(...)):
 
-    print("入力 =", password)
-    print("設定 =", PASSWORD)
+    print("入力=", password)
+    print("設定=", PASSWORD)
 
     if password.strip() == PASSWORD.strip():
+        print("ログイン成功")
+
         response = RedirectResponse("/", status_code=302)
         response.set_cookie("auth", "ok")
         return response
 
+    print("ログイン失敗")
+
     return HTMLResponse(
-        """
-        <h3>パスワードが違います</h3>
-        /loginログイン画面へ戻る</a>
-        """
+        "<h3>パスワードが違います</h3>"
     )
 
 # -----------------------------
