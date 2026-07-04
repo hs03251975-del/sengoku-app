@@ -4,11 +4,13 @@ import os
 import json
 from typing import Optional, List
 
-from fastapi import FastAPI, HTTPException, Body
+from fastapi import FastAPI, HTTPException, Body, Request, Form
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
+
+PASSWORD = os.getenv("APP_PASSWORD")
 
 DB_PATH = "sengoku.db"
 
@@ -34,14 +36,42 @@ app.add_middleware(
 # static フォルダ公開
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
+@app.get("/login", response_class=HTMLResponse)
+def login_page():
+    return """
+    <h2>戦国人物データベース</h2>
+    <form method="post">
+        <input type="password" name="password" placeholder="パスワード">
+        <button type="submit">ログイン</button>
+    </form>
+    """
+
+@app.post("/login")
+def login(password: str = Form(...)):
+    if password == PASSWORD:
+        response = RedirectResponse("/", status_code=302)
+        response.set_cookie("auth", "ok")
+        return response
+
+    return HTMLResponse(
+        """
+        <h3>パスワードが違います</h3>
+        <aoginログイン画面へ戻る</a>
+        """
+    )
 
 # -----------------------------
 # index.html を返す（API_BASE 置換）
 # -----------------------------
 @app.get("/", response_class=HTMLResponse)
-def root():
+def root(request: Request):
+
+    if request.cookies.get("auth") != "ok":
+        return RedirectResponse("/login")
+
     with open("static/index.html", "r", encoding="utf-8") as f:
         html = f.read()
+
     return html
 
 
@@ -366,7 +396,6 @@ def search_persons(q: str):
         result.append(d)
 
     return result
-
 
 
 
