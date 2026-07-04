@@ -12,8 +12,6 @@ from pydantic import BaseModel, Field
 
 PASSWORD = os.getenv("APP_PASSWORD")
 
-print("PASSWORD =", PASSWORD)
-
 DB_PATH = "sengoku.db"
 
 
@@ -50,7 +48,11 @@ def login_page():
 
 @app.post("/login")
 def login(password: str = Form(...)):
-    if password == PASSWORD:
+
+    print("入力 =", password)
+    print("設定 =", PASSWORD)
+
+    if password.strip() == PASSWORD.strip():
         response = RedirectResponse("/", status_code=302)
         response.set_cookie("auth", "ok")
         return response
@@ -58,7 +60,7 @@ def login(password: str = Form(...)):
     return HTMLResponse(
         """
         <h3>パスワードが違います</h3>
-        <aoginログイン画面へ戻る</a>
+        /loginログイン画面へ戻る</a>
         """
     )
 
