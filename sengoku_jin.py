@@ -12,6 +12,8 @@ from pydantic import BaseModel, Field
 
 PASSWORD = os.getenv("APP_PASSWORD")
 
+print("PASSWORD =", PASSWORD)
+
 DB_PATH = "sengoku.db"
 
 
