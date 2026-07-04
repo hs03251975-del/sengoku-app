@@ -42,6 +42,7 @@ def login_page():
     <h2>戦国人物データベース</h2>
 
     /login
+
         <input type="password"
                name="password"
                placeholder="パスワード">
@@ -49,6 +50,7 @@ def login_page():
         <button type="submit">
             ログイン
         </button>
+
     </form>
     """
 
