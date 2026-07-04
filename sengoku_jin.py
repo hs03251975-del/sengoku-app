@@ -42,15 +42,14 @@ def login_page():
     <h2>戦国人物データベース</h2>
 
     /login
-
-        <input type="password"
-               name="password"
-               placeholder="パスワード">
+        <input
+            type="password"
+            name="password"
+            placeholder="パスワード">
 
         <button type="submit">
             ログイン
         </button>
-
     </form>
     """
 
@@ -60,11 +59,13 @@ def login(password: str = Form(...)):
     print("入力=", password)
     print("設定=", PASSWORD)
 
-    if password.strip() == PASSWORD.strip():
+    if PASSWORD and password.strip() == PASSWORD.strip():
+
         print("ログイン成功")
 
         response = RedirectResponse("/", status_code=302)
         response.set_cookie("auth", "ok")
+
         return response
 
     print("ログイン失敗")
@@ -409,6 +410,5 @@ def search_persons(q: str):
         result.append(d)
 
     return result
-
 
 
