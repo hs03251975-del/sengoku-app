@@ -170,6 +170,10 @@ h1 {
   min-height: 250px;
 }
 
+.wide-column {
+  grid-column: span 2;
+}
+
 .save-area {
   text-align: center;
   margin-top: 20px;
@@ -301,11 +305,11 @@ h3 {
     <label for="castle">居城</label>
     <input id="castle">
   </div>
-  <div>
+  <div class="wide-column">
     <label for="rank">官位</label>
     <input id="rank">
   </div>
-  <div>
+  <div class="wide-column">
     <label for="office">官職</label>
     <input id="office">
   </div>
