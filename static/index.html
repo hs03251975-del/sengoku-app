@@ -534,6 +534,18 @@ async function updateFamilyInfo() {
     children.length
       ? children.map(c => c.name).join("、")
       : "-";
+  
+  const sibRes =
+    await fetch(`/person/${parentId}/siblings`);
+
+  const siblings =
+    await sibRes.json();
+
+  document.getElementById("siblingsList").innerHTML =
+    siblings.length
+      ? siblings.map(s => s.name).join("、")
+      : "-";
+
 }
 
 function selectPerson(inputId, boxId, name) {
