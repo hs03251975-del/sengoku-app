@@ -23,7 +23,8 @@ app = FastAPI()
 @app.get("/debug")
 def debug():
     return {
-        "password": PASSWORD,
+        "password_global": PASSWORD,
+        "password_env": os.getenv("APP_PASSWORD"),
         "test": "AAAA"
     }
     
