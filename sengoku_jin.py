@@ -65,18 +65,6 @@ def login_page():
 @app.post("/login")
 def login(password: str = Form(...)):
 
-    print("入力=", repr(password))
-    print("設定=", repr(PASSWORD))
-
-    if PASSWORD and password.strip() == PASSWORD.strip():
-
-        print("ログイン成功")
-
-        response = RedirectResponse("/", status_code=302)
-        response.set_cookie("auth", "ok")
-
-        return response
-
     return HTMLResponse(
         f"<h3>入力={repr(password)} 設定={repr(PASSWORD)}</h3>"
     )
