@@ -66,10 +66,10 @@ def login_page():
 @app.post("/login")
 def login(password: str = Form(...)):
 
-    PASSWORD = os.getenv("APP_PASSWORD")
+    env_password = os.getenv("APP_PASSWORD")
 
     return HTMLResponse(
-        f"<h3>入力={repr(password)} 設定={repr(PASSWORD)}</h3>"
+        f"<h3>入力={repr(password)} 設定={repr(env_password)}</h3>"
     )
 # -----------------------------
 # index.html を返す（API_BASE 置換）
