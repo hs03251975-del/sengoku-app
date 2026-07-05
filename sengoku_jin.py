@@ -23,7 +23,8 @@ app = FastAPI()
 @app.get("/debug")
 def debug():
     return {
-        "password": PASSWORD
+        "password": PASSWORD,
+        "test": "AAAA"
     }
     
 # CORS（スマホアクセス用）
