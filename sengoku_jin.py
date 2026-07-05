@@ -44,7 +44,7 @@ def login_page():
 
     <h2>テスト画面</h2>
 
-    /login
+    <formn
 
         <input type="password" name="password">
 
