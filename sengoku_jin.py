@@ -39,10 +39,13 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 @app.get("/login", response_class=HTMLResponse)
 def login_page():
     return """
+    <!DOCTYPE html>
+    <html>
+    <body>
+
     <h2>戦国人物データベース</h2>
 
     /login
-
         <input
             type="password"
             name="password"
@@ -51,8 +54,10 @@ def login_page():
         <button type="submit">
             ログイン
         </button>
-
     </form>
+
+    </body>
+    </html>
     """
 
 @app.post("/login")
