@@ -42,6 +42,7 @@ def login_page():
     <h2>戦国人物データベース</h2>
 
     /login
+
         <input
             type="password"
             name="password"
@@ -50,6 +51,7 @@ def login_page():
         <button type="submit">
             ログイン
         </button>
+
     </form>
     """
 
@@ -410,5 +412,4 @@ def search_persons(q: str):
         result.append(d)
 
     return result
-
 
