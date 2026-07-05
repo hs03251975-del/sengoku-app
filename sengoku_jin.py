@@ -41,15 +41,21 @@ def login_page():
     return """
     <html>
     <body>
-        <h2>テスト画面</h2>
-        /login
-            <input type="password" name="password">
-            <button type="submit">ログイン</button>
-        </form>
+
+    <h2>テスト画面</h2>
+
+    /login
+
+        <input type="password" name="password">
+
+        <button type="submit">
+            ログイン
+        </button>
+    </form>
+
     </body>
     </html>
     """
-
 
 @app.post("/login")
 def login(password: str = Form(...)):
@@ -408,4 +414,5 @@ def search_persons(q: str):
         result.append(d)
 
     return result
+
 
