@@ -63,8 +63,8 @@ def login_page():
 @app.post("/login")
 def login(password: str = Form(...)):
 
-    print("入力=", password)
-    print("設定=", PASSWORD)
+    print("入力=", repr(password))
+    print("設定=", repr(PASSWORD))
 
     if PASSWORD and password.strip() == PASSWORD.strip():
 
