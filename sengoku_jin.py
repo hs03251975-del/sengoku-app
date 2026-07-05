@@ -75,10 +75,8 @@ def login(password: str = Form(...)):
 
         return response
 
-    print("ログイン失敗")
-
     return HTMLResponse(
-        "<h3>パスワードが違います</h3>"
+        f"<h3>入力={repr(password)} 設定={repr(PASSWORD)}</h3>"
     )
 
 # -----------------------------
