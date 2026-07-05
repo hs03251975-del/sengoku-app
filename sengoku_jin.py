@@ -47,9 +47,9 @@ def login_page():
     <form action="/login" method="post">
 
         <input
-            type="text"
+            type="password"
             name="password"
-            placeholder="テスト入力">
+            placeholder="パスワードを入力">
             
         <button type="submit">
             ログイン
