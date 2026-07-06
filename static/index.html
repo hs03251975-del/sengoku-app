@@ -836,7 +836,9 @@ async function editPerson(id) {
   document.getElementById("memo10").value = p.memo10 || "";
 
   updateFamilyInfo();
-}
+
+  document.getElementById("name").focus();
+　}
 
 /* 保存 */
 async function savePerson() {
