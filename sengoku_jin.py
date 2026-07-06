@@ -63,12 +63,12 @@ def login_page():
 @app.post("/login")
 def login(password: str = Form(...)):
 
-    env_password = os.getenv("APP_PASSWORD")
+    if PASSWORD and password.strip() == PASSWORD.strip():
+        response = RedirectResponse("/", status_code=302)
+        response.set_cookie("auth", "ok")
+        return response
 
-    if env_password:
-        return HTMLResponse("OK")
-
-    return HTMLResponse("NG")
+    return HTMLResponse("<h3>パスワードが違います</h3>")
 # -----------------------------
 # index.html を返す（API_BASE 置換）
 # -----------------------------
