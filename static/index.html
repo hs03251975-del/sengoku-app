@@ -837,8 +837,13 @@ async function editPerson(id) {
 
   updateFamilyInfo();
 
+  document.getElementById("name").scrollIntoView({
+      behavior: "smooth",
+      block: "center"
+  });
+
   document.getElementById("name").focus();
-　}
+  }
 
 /* 保存 */
 async function savePerson() {
