@@ -568,11 +568,17 @@ function renderResults(list) {
     div.onclick = () => showDetail(p.id);
 
     div.innerHTML = `
-      <div class="card-title">${p.name}</div>
-      <div style="color:#666;">${p.yomi || ""}</div>
+      <div style="display:flex; justify-content:space-between; align-items:center;">
 
-      <div style="margin-top:8px;">
-        生年：${p.birth || "-"} / 没年：${p.death || "-"}
+        <div>
+          <div class="card-title">${p.name}</div>
+          <div style="color:#666;">${p.yomi || ""}</div>
+        </div>
+
+        <div style="text-align:right; white-space:nowrap;">
+          ${p.birth || "-"} ～ ${p.death || "-"}
+        </div>
+
       </div>
 
       <button class="btn" onclick="event.stopPropagation(); showDetail(${p.id})">詳細</button>
