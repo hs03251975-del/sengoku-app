@@ -65,15 +65,18 @@ def login(password: str = Form(...)):
 
     env_password = os.getenv("APP_PASSWORD")
 
-    return HTMLResponse(
-        f"""
-        <h3>
-        入力={repr(password)}<br>
-        設定={repr(env_password)}<br>
-        比較結果={password.strip() == env_password.strip()}
-        </h3>
-        """
-    )
+   return HTMLResponse(
+       f"""
+       <h3>
+       入力={repr(password)}<br>
+       設定={repr(env_password)}<br>
+       比較結果={
+           env_password is not None and
+           password.strip() == env_password.strip()
+       }
+       </h3>
+       """
+   )
 # -----------------------------
 # index.html を返す（API_BASE 置換）
 # -----------------------------
