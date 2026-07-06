@@ -568,22 +568,35 @@ function renderResults(list) {
     div.onclick = () => showDetail(p.id);
 
     div.innerHTML = `
-      <div style="display:flex; justify-content:space-between; align-items:center;">
+    <div style="display:flex; align-items:center; gap:10px;">
 
-        <div>
-          <div class="card-title">${p.name}</div>
-          <div style="color:#666;">${p.yomi || ""}</div>
-        </div>
-
-        <div style="text-align:right; white-space:nowrap;">
-          ${p.birth || "-"} ～ ${p.death || "-"}
-        </div>
-
+      <div style="width:140px;">
+        ${p.birth || "-"} ～ ${p.death || "-"}
       </div>
 
-      <button class="btn" onclick="event.stopPropagation(); showDetail(${p.id})">詳細</button>
-      <button class="btn" onclick="event.stopPropagation(); editPerson(${p.id})">編集</button>
-      <button class="btn" onclick="event.stopPropagation(); deletePerson(${p.id})">削除</button>
+      <div style="flex:1;">
+        <b>${p.name}</b>
+        <span style="color:#666;">
+          （${p.yomi || ""}）
+        </span>
+      </div>
+
+      <button class="btn"
+        onclick="event.stopPropagation(); showDetail(${p.id})">
+        詳細
+      </button>
+
+      <button class="btn"
+        onclick="event.stopPropagation(); editPerson(${p.id})">
+        編集
+      </button>
+
+      <button class="btn"
+        onclick="event.stopPropagation(); deletePerson(${p.id})">
+        削除
+      </button>
+
+    </div>
     `;
     box.appendChild(div);
   });
