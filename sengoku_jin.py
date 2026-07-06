@@ -65,13 +65,12 @@ def login(password: str = Form(...)):
 
     env_password = os.getenv("APP_PASSWORD")
 
-    return HTMLResponse(
-        f"""
-        password={repr(password)}<br>
-        env={repr(env_password)}<br>
-        result={password.strip() == env_password.strip()}
-        """
-    )
+    if env_password and password.strip() == env_password.strip():
+        response = RedirectResponse("/", status_code=302)
+        response.set_cookie("auth", "ok")
+        return response
+
+    return HTMLResponse("<h3>パスワードが違います</h3>")
 # -----------------------------
 # index.html を返す（API_BASE 置換）
 # -----------------------------
