@@ -568,32 +568,33 @@ function renderResults(list) {
     div.onclick = () => showDetail(p.id);
 
     div.innerHTML = `
-    <div style="display:flex; align-items:center; gap:10px;">
-
-      <div style="width:140px;">
-        ${p.birth || "-"} ～ ${p.death || "-"}
-      </div>
+    <div style="display:flex; align-items:center;">
 
       <div style="flex:1;">
         <b>${p.name}</b>
+
         <span style="color:#666;">
           （${p.yomi || ""}）
+        </span>
+
+        <span style="margin-left:20px;">
+          ${p.birth || "-"} ～ ${p.death || "-"}
         </span>
       </div>
 
       <button class="btn"
-        onclick="event.stopPropagation(); showDetail(${p.id})">
-        詳細
+          onclick="event.stopPropagation(); showDetail(${p.id})">
+          詳細
       </button>
 
       <button class="btn"
-        onclick="event.stopPropagation(); editPerson(${p.id})">
-        編集
+          onclick="event.stopPropagation(); editPerson(${p.id})">
+          編集
       </button>
 
       <button class="btn"
-        onclick="event.stopPropagation(); deletePerson(${p.id})">
-        削除
+          onclick="event.stopPropagation(); deletePerson(${p.id})">
+          削除
       </button>
 
     </div>
