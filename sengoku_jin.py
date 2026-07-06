@@ -22,11 +22,7 @@ app = FastAPI()
 
 @app.get("/debug")
 def debug():
-    return {
-        "password_global": PASSWORD,
-        "password_env": os.getenv("APP_PASSWORD"),
-        "test": "AAAA"
-    }
+    return {"version": "latest"}
     
 # CORS（スマホアクセス用）
 app.add_middleware(
@@ -70,19 +66,11 @@ def login(password: str = Form(...)):
     env_password = os.getenv("APP_PASSWORD")
 
     if env_password and password.strip() == env_password.strip():
-
         response = RedirectResponse("/", status_code=302)
-
-        response.set_cookie(
-            key="auth",
-            value="ok"
-        )
-
+        response.set_cookie("auth", "ok")
         return response
 
-    return HTMLResponse(
-        "<h3>パスワードが違います</h3>"
-    )
+    return HTMLResponse("<h3>パスワードが違います</h3>")
 # -----------------------------
 # index.html を返す（API_BASE 置換）
 # -----------------------------
