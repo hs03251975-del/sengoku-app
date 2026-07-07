@@ -460,12 +460,11 @@ async function searchPersons() {
   }
 
   list.sort((a, b) =>
-      (a.name || "").localeCompare(
-          b.name || "",
+      (a.yomi || "").localeCompare(
+          b.yomi || "",
           "ja"
       )
   );
-
   
   renderResults(list);
 
