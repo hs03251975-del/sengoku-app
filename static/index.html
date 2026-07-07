@@ -47,6 +47,13 @@ body {
   font-size: 16px;
 }
 
+.list-btn {
+  padding: 4px 8px;
+  margin-left: 4px;
+  width: auto;
+  font-size: 14px;
+}
+
 /* 入力 */
 input, select, textarea {
   width: 100%;
@@ -582,17 +589,17 @@ function renderResults(list) {
         </span>
       </div>
 
-      <button class="btn"
+      <button class="list-btn"
           onclick="event.stopPropagation(); showDetail(${p.id})">
           詳細
       </button>
 
-      <button class="btn"
+      <button class="list-btn"
           onclick="event.stopPropagation(); editPerson(${p.id})">
           編集
       </button>
 
-      <button class="btn"
+      <button class="list-btn"
           onclick="event.stopPropagation(); deletePerson(${p.id})">
           削除
       </button>
