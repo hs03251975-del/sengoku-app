@@ -460,8 +460,13 @@ async function searchPersons() {
   }
 
   renderResults(list);
-}
 
+  document.getElementById("results").scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+  });
+  
+}
 
 // ✅ オートコンプリート
 function setupAutocomplete(inputId, boxId) {
