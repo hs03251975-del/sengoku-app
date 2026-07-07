@@ -568,6 +568,13 @@ function renderResults(list) {
   box.innerHTML = "";
 
   list.forEach(p => {
+    
+    let years = "";
+
+    if (p.birth || p.death) {
+        years = `${p.birth || "？"}～${p.death || "？"}`;
+    }
+
     const div = document.createElement("div");
     div.className = "card";
 
@@ -584,7 +591,7 @@ function renderResults(list) {
         </span>
 
         <span style="margin-left:20px;">
-          ${p.birth || "-"} ～ ${p.death || "-"}
+          ${years}
         </span>
       </div>
 
