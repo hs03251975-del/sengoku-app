@@ -459,6 +459,14 @@ async function searchPersons() {
     );
   }
 
+  list.sort((a, b) =>
+      (a.name || "").localeCompare(
+          b.name || "",
+          "ja"
+      )
+  );
+
+  
   renderResults(list);
 
   document.getElementById("results").scrollIntoView({
