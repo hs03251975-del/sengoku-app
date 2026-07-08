@@ -261,6 +261,8 @@ h3 {
 <input id="search" placeholder="検索">
 <button class="btn" onclick="searchPersons()">検索</button>
 
+<div id="recentEditBox"></div>
+  
 <hr>
 
 <h2>登録</h2>
@@ -850,6 +852,17 @@ async function editPerson(id) {
   const res = await fetch(`/person/${id}`);
   const p = await res.json();
 
+  localStorage.setItem(
+    "recentEdit",
+    JSON.stringify({
+      id: p.id,
+      name: p.name
+    })
+  );
+
+  showRecentEdit();
+
+  
   // 父の名前表示
   if (p.father_id) {
     const fatherRes = await fetch(`/person/${p.father_id}`);
@@ -1075,8 +1088,28 @@ function toggleMemo() {
 loadAllPersons().then(() => {
   setupAutocomplete("father_name", "father_suggest");
   setupAutocomplete("mother_name", "mother_suggest");
+
+  showRecentEdit();
 });
 
+function showRecentEdit() {
+
+  const item =
+    localStorage.getItem("recentEdit");
+
+  if (!item) return;
+
+  const p = JSON.parse(item);
+
+  document.getElementById(
+    "recentEditBox"
+  ).innerHTML =
+    `最近編集：
+     <span class="link-like"
+       onclick="editPerson(${p.id})">
+       ${p.name}
+     </span>`;
+}
 
 function scrollToTop() {
   window.scrollTo({
