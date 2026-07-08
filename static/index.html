@@ -53,6 +53,19 @@ body {
   width: auto;
 }
 
+#topBtn {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  padding: 10px 15px;
+  font-size: 14px;
+  border-radius: 8px;
+  border: 1px solid #999;
+  background: white;
+  cursor: pointer;
+  z-index: 9999;
+}
+  
 /* 入力 */
 input, select, textarea {
   width: 100%;
@@ -430,6 +443,10 @@ h3 {
 <div id="detailModal" onclick="closeDetail()">
   <div id="detailContent"></div>
 </div>
+
+<button id="topBtn" onclick="scrollToTop()">
+  ↑TOP
+</button>
 
 <script>
 const API_BASE = "";
@@ -1059,6 +1076,14 @@ loadAllPersons().then(() => {
   setupAutocomplete("father_name", "father_suggest");
   setupAutocomplete("mother_name", "mother_suggest");
 });
+
+
+function scrollToTop() {
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
+}
 
 </script>
 
