@@ -90,7 +90,7 @@ def get_db():
         port=6543,
         database="postgres",
         user="postgres.aypqupjunrzamrodcaan",
-        password=os.getenv("DB_PASSWORD"),
+        password="xUFWRwobHcWiu7It",
         sslmode="require"
     )
 
