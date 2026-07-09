@@ -834,6 +834,15 @@ async function showDetail(id) {
       : "-"
     }
     </p>
+    配偶者：
+    ${p.spouse_id
+      ? `<span class="link-like"
+           onclick="showDetail(${p.spouse_id})">
+           ${spouseName}
+         </span>`
+      : "-"
+    }
+    <br>
 
     <p>
     <b>子供：</b>
