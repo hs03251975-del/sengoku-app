@@ -123,6 +123,7 @@ class Person(BaseModel):
     source: List[str] = Field(default_factory=list)
     father_id: Optional[int] = None
     mother_id: Optional[int] = None
+    spouse_id: Optional[int] = None
     siblings: Optional[str] = None
     memo1: Optional[str] = None
     memo2: Optional[str] = None
