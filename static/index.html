@@ -783,9 +783,12 @@ async function showDetail(id) {
     : "-";
 
   const siblingsHtml = siblings.length
-    ? siblings.map(s =>
-        `<span class="link-like" onclick="showDetail(${s.id})">${s.name}</span>`
-      ).join(", ")
+    ? siblings.map((s, i) =>
+        `${i + 1}. <span class="link-like"
+            onclick="showDetail(${s.id})">
+            ${s.name}
+         </span>`
+      ).join("<br>")
     : "-";
 
   document.getElementById("detailContent").innerHTML = `
