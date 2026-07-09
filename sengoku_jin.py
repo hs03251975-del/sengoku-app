@@ -385,24 +385,45 @@ def delete_person(person_id: int):
 # -----------------------------
 @app.get("/search")
 def search_persons(q: str):
+
+    keyword = f"%{q}%"
+
     conn = get_db()
-    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-    cur.execute("SELECT * FROM persons WHERE name LIKE %s", (f"%{q}%",))
+    cur = conn.cursor(
+        cursor_factory=psycopg2.extras.RealDictCursor
+    )
+
+    cur.execute("""
+        SELECT
+            id,
+            name,
+            yomi,
+            category,
+            affiliation,
+            castle
+        FROM persons
+        WHERE
+            name ILIKE %s
+            OR yomi ILIKE %s
+            OR childhood_name ILIKE %s
+            OR imina ILIKE %s
+            OR tsusho ILIKE %s
+            OR hogou ILIKE %s
+        ORDER BY name
+        LIMIT 100
+    """, (
+        keyword,
+        keyword,
+        keyword,
+        keyword,
+        keyword,
+        keyword
+    ))
+
     rows = cur.fetchall()
+
+    cur.close()
     conn.close()
 
-    result = []
-    for row in rows:
-        d = dict(row)
-        if d.get("source"):
-            try:
-                d["source"] = json.loads(d["source"])
-            except:
-                d["source"] = []
-        else:
-            d["source"] = []
-        result.append(d)
-
-    return result
-
+    return rows
 
