@@ -668,7 +668,15 @@ async function showDetail(id) {
   
   let fatherName = "-";
   let motherName = "-";
+　
+  let spouseName = "-";
 
+  if (p.spouse_id) {
+    const spouseRes = await fetch(`/person/${p.spouse_id}`);
+    const spouse = await spouseRes.json();
+    spouseName = spouse.name;
+  }
+  
   if (p.father_id) {
     const fatherRes = await fetch(`/person/${p.father_id}`);
     const father = await fatherRes.json();
