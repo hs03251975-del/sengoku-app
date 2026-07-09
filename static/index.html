@@ -962,9 +962,11 @@ async function savePerson() {
 
   const fatherName = document.getElementById("father_name").value.trim();
   const motherName = document.getElementById("mother_name").value.trim();
+  const spouseName = document.getElementById("spouse_name").value.trim();
 
   let father_id = null;
   let mother_id = null;
+  let spouse_id = null;
 
   // 父を検索
   const fatherPerson = allPersonsCache.find(
@@ -982,6 +984,15 @@ async function savePerson() {
 
   if (motherPerson) {
     mother_id = motherPerson.id;
+  }
+
+  // 配偶者を検索
+  const spousePerson = allPersonsCache.find(
+    p => p.name === spouseName
+  );
+
+  if (spousePerson) {
+    spouse_id = spousePerson.id;
   }
 
   const data = {
@@ -1006,6 +1017,7 @@ async function savePerson() {
     // ✅ ここが修正ポイント
     father_id: father_id,
     mother_id: mother_id,
+    spouse_id: spouse_id,
     siblings: null,
 
     memo1: document.getElementById("memo1").value,
