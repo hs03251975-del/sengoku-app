@@ -121,6 +121,7 @@ class Person(BaseModel):
     father_id: Optional[int] = None
     mother_id: Optional[int] = None
     spouse_id: Optional[int] = None
+    sibling_order: Optional[int] = None
     siblings: Optional[str] = None
     memo1: Optional[str] = None
     memo2: Optional[str] = None
@@ -132,7 +133,6 @@ class Person(BaseModel):
     memo8: Optional[str] = None
     memo9: Optional[str] = None
     memo10: Optional[str] = None
-
 
 # -----------------------------
 # 空文字 → None に変換
@@ -236,7 +236,7 @@ def create_person(person: Person = Body(...)):
             history, description, source,
             memo1, memo2, memo3, memo4, memo5,
             memo6, memo7, memo8, memo9, memo10,
-            father_id, mother_id, spouse_id, siblings
+            father_id, mother_id, spouse_id, sibling_order, siblings
         ) VALUES (
             %(name)s, %(yomi)s, %(birth)s, %(death)s,
             %(childhood_name)s, %(imina)s, %(tsusho)s, %(hogou)s,
@@ -245,7 +245,7 @@ def create_person(person: Person = Body(...)):
             %(history)s, %(description)s, %(source)s,
             %(memo1)s, %(memo2)s, %(memo3)s, %(memo4)s, %(memo5)s,
             %(memo6)s, %(memo7)s, %(memo8)s, %(memo9)s, %(memo10)s,
-            %(father_id)s, %(mother_id)s, %(spouse_id)s, %(siblings)s
+            %(father_id)s, %(mother_id)s, %(spouse_id)s, sibling_order=%s, %(siblings)s
         )
         """, {
             "name": person.name,
