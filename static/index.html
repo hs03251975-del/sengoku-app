@@ -471,9 +471,11 @@ async function loadAllPersons() {
 async function searchPersons() {
   const q = document.getElementById("search").value.trim();
 
-  await loadAllPersons();
+  const res =
+    await fetch(`/search?q=${encodeURIComponent(q)}`);
 
-  let list = allPersonsCache;
+  const list =
+    await res.json();
 
   if (q) {
   list = list.filter(p =>
@@ -850,6 +852,12 @@ async function showDetail(id) {
          </span>`
       : "-"
     }
+    
+    <div>
+      <label for="sibling_order">出生順位</label>
+      <input id="sibling_order" type="number" min="1">
+    </div>
+    
     <br>
 
     <p>
