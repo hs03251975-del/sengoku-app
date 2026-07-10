@@ -245,7 +245,7 @@ def create_person(person: Person = Body(...)):
             %(history)s, %(description)s, %(source)s,
             %(memo1)s, %(memo2)s, %(memo3)s, %(memo4)s, %(memo5)s,
             %(memo6)s, %(memo7)s, %(memo8)s, %(memo9)s, %(memo10)s,
-            %(father_id)s, %(mother_id)s, %(spouse_id)s, sibling_order=%s, %(siblings)s
+            %(father_id)s, %(mother_id)s, %(spouse_id)s, %(sibling_order)s, %(siblings)s
         )
         """, {
             "name": person.name,
@@ -278,6 +278,7 @@ def create_person(person: Person = Body(...)):
             "father_id": person.father_id,
             "mother_id": person.mother_id,
             "spouse_id": person.spouse_id,
+            "sibling_order": person.sibling_order,
             "siblings": person.siblings
         })
 
@@ -307,7 +308,7 @@ def update_person(person_id: int, person: Person = Body(...)):
             history=%s, description=%s, source=%s,
             memo1=%s, memo2=%s, memo3=%s, memo4=%s, memo5=%s, memo6=%s, 
             memo7=%s, memo8=%s, memo9=%s, memo10=%s,
-            father_id=%s, mother_id=%s, spouse_id=%s, siblings=%s
+            father_id=%s, mother_id=%s, spouse_id=%s, sibling_order=%s, siblings=%s
         WHERE id=%s
     """, (
         person.name, person.yomi, person.birth, person.death,
@@ -319,7 +320,7 @@ def update_person(person_id: int, person: Person = Body(...)):
         person.memo1, person.memo2, person.memo3, person.memo4, person.memo5, person.memo6, 
         person.memo7, person.memo8, person.memo9, person.memo10,
 
-        person.father_id, person.mother_id, person.spouse_id, person.siblings,
+        person.father_id, person.mother_id, person.spouse_id, person.sibling_order, person.siblings,
         person_id
     ))
 
@@ -398,6 +399,8 @@ def search_persons(q: str):
             id,
             name,
             yomi,
+            birth,
+            death,
             category,
             affiliation,
             castle
