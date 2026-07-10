@@ -401,9 +401,15 @@ def search_persons(q: str):
             yomi,
             birth,
             death,
+            childhood_name,
+            imina,
+            tsusho,
+            hogou,
             category,
             affiliation,
-            castle
+            castle,
+            origin,
+            description
         FROM persons
         WHERE
             name ILIKE %s
