@@ -492,20 +492,6 @@ async function searchPersons() {
 
   let list = await res.json();
 
-  if (q) {
-  list = list.filter(p =>
-    (p.name && p.name.includes(q)) ||
-    (p.yomi && p.yomi.includes(q)) ||
-    (p.childhood_name && p.childhood_name.includes(q)) ||
-    (p.imina && p.imina.includes(q)) ||
-    (p.tsusho && p.tsusho.includes(q)) ||
-    (p.hogou && p.hogou.includes(q)) ||
-    (p.affiliation && p.affiliation.includes(q)) ||
-    (p.castle && p.castle.includes(q)) ||
-    (p.origin && p.origin.includes(q)) ||
-    (p.description && p.description.includes(q))
-  );
-}
   list.sort((a, b) =>
       (a.yomi || "").localeCompare(
           b.yomi || "",
