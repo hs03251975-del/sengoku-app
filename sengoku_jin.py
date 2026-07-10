@@ -2,11 +2,14 @@ import psycopg2
 import psycopg2.extras
 import os
 import json
+import csv
+from io import StringIO
+
 from typing import Optional, List
 
 from fastapi import FastAPI, HTTPException, Body, Request, Form
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi.responses import HTMLResponse, RedirectResponse, Response
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
@@ -380,6 +383,47 @@ def delete_person(person_id: int):
     conn.close()
     return {"status": "ok"}
 
+
+# -----------------------------
+# CSVバックアップ
+# -----------------------------
+@app.get("/export")
+def export_csv():
+
+    conn = get_db()
+
+    cur = conn.cursor(
+        cursor_factory=psycopg2.extras.RealDictCursor
+    )
+
+    cur.execute("SELECT * FROM persons")
+
+    rows = cur.fetchall()
+
+    conn.close()
+
+    output = StringIO()
+
+    if rows:
+
+        writer = csv.DictWriter(
+            output,
+            fieldnames=rows[0].keys()
+        )
+
+        writer.writeheader()
+
+        for row in rows:
+            writer.writerow(dict(row))
+
+    return Response(
+        content=output.getvalue(),
+        media_type="text/csv",
+        headers={
+            "Content-Disposition":
+            "attachment; filename=sengoku_persons.csv"
+        }
+    )
 
 # -----------------------------
 # 名前検索 API
