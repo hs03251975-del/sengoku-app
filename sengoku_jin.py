@@ -425,8 +425,8 @@ def export_csv():
             writer.writerow(dict(row))
 
     return Response(
-        content="\ufeff" + output.getvalue()
-        media_type="text/csv",
+        content="\ufeff" + output.getvalue(),
+        media_type="text/csv; charset=utf-8",
         headers={
             "Content-Disposition":
             "attachment; filename=sengoku_persons.csv"
