@@ -116,10 +116,6 @@ class Person(BaseModel):
     yomi: Optional[str] = None
     birth: Optional[str] = None
     death: Optional[str] = None
-    childhood_name: Optional[str] = None
-    imina: Optional[str] = None      # ★追加
-    tsusho: Optional[str] = None     # ★追加
-    hogou: Optional[str] = None      # ★追加
     origin: Optional[str] = None
     category: Optional[str] = None   # ★追加
     affiliation: Optional[str] = None  # 所属
@@ -242,7 +238,6 @@ def create_person(person: Person = Body(...)):
         cur.execute("""
         INSERT INTO persons (
             name, yomi, birth, death,
-            childhood_name, imina, tsusho, hogou,
             origin, category, affiliation, castle,
             rank, office,
             history, description, source,
@@ -251,7 +246,6 @@ def create_person(person: Person = Body(...)):
             father_id, mother_id, spouse_id, sibling_order, siblings
         ) VALUES (
             %(name)s, %(yomi)s, %(birth)s, %(death)s,
-            %(childhood_name)s, %(imina)s, %(tsusho)s, %(hogou)s,
             %(origin)s, %(category)s, %(affiliation)s, %(castle)s,
             %(rank)s, %(office)s,
             %(history)s, %(description)s, %(source)s,
@@ -264,10 +258,6 @@ def create_person(person: Person = Body(...)):
             "yomi": person.yomi,
             "birth": person.birth,
             "death": person.death,
-            "childhood_name": person.childhood_name,
-            "imina": person.imina,
-            "tsusho": person.tsusho,
-            "hogou": person.hogou,
             "origin": person.origin,
             "category": person.category,
             "affiliation": person.affiliation,
@@ -333,7 +323,6 @@ def update_person(person_id: int, person: Person = Body(...)):
     cur.execute("""
         UPDATE persons SET
             name=%s, yomi=%s, birth=%s, death=%s,
-            childhood_name=%s, imina=%s, tsusho=%s, hogou=%s,
             origin=%s, category=%s, affiliation=%s, castle=%s,
             rank=%s, office=%s,
             history=%s, description=%s, source=%s,
@@ -343,7 +332,6 @@ def update_person(person_id: int, person: Person = Body(...)):
         WHERE id=%s
     """, (
         person.name, person.yomi, person.birth, person.death,
-        person.childhood_name, person.imina, person.tsusho, person.hogou,
         person.origin, person.category, person.affiliation, person.castle,
         person.rank, person.office,
         person.history, person.description, json.dumps(person.source),
