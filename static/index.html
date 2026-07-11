@@ -259,7 +259,20 @@ h3 {
 <h1>戦国人物データベース</h1>
 
 <input id="search" placeholder="検索">
-<button class="btn" onclick="searchPersons()">検索</button>
+
+<button class="btn" onclick="searchPersons()">
+  検索
+</button>
+
+<button class="btn"
+        onclick="window.location='/export'">
+  CSVバックアップ
+</button>
+
+<button class="btn"
+        onclick="window.location='/export_json'">
+  JSONバックアップ
+</button>
 
 <div id="recentEditBox"></div>
   
