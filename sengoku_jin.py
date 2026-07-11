@@ -425,7 +425,7 @@ def export_csv():
             writer.writerow(dict(row))
 
     return Response(
-        content=output.getvalue(),
+        content="\ufeff" + output.getvalue()
         media_type="text/csv",
         headers={
             "Content-Disposition":
