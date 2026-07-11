@@ -443,11 +443,25 @@ def export_json():
 
     conn.close()
 
+    data = []
+
+    for row in rows:
+        item = dict(row)
+
+        if item.get("source"):
+            try:
+                item["source"] = json.loads(item["source"])
+            except:
+                pass
+
+        data.append(item)
+
     return Response(
         content=json.dumps(
-            [dict(row) for row in rows],
+            data,
             ensure_ascii=False,
-            indent=2
+            indent=2,
+            default=str
         ),
         media_type="application/json",
         headers={
