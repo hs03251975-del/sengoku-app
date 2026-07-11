@@ -333,22 +333,6 @@ h3 {
     <input id="death">
   </div>
   <div>
-    <label for="childhood_name">幼名</label>
-    <input id="childhood_name">
-  </div>
-  <div>
-    <label for="imina">諱</label>
-    <input id="imina">
-  </div>
-  <div>
-    <label for="tsusho">通称</label>
-    <input id="tsusho">
-  </div>
-  <div>
-    <label for="hogou">法号</label>
-    <input id="hogou">
-  </div>
-  <div>
     <label for="origin">出身</label>
     <input id="origin">
   </div>
@@ -1108,10 +1092,6 @@ async function editPerson(id) {
   document.getElementById("yomi").value = p.yomi || "";
   document.getElementById("birth").value = p.birth || "";
   document.getElementById("death").value = p.death || "";
-  document.getElementById("childhood_name").value = p.childhood_name || "";
-  document.getElementById("imina").value = p.imina || "";
-  document.getElementById("tsusho").value = p.tsusho || "";
-  document.getElementById("hogou").value = p.hogou || "";
   document.getElementById("origin").value = p.origin || "";
   document.getElementById("category").value = p.category || "";
   document.getElementById("affiliation").value = p.affiliation || "";
@@ -1199,10 +1179,6 @@ async function savePerson() {
     yomi: document.getElementById("yomi").value,
     birth: document.getElementById("birth").value,
     death: document.getElementById("death").value,
-    childhood_name: document.getElementById("childhood_name").value,
-    imina: document.getElementById("imina").value,
-    tsusho: document.getElementById("tsusho").value,
-    hogou: document.getElementById("hogou").value,
     origin: document.getElementById("origin").value,
     category: document.getElementById("category").value,
     affiliation: document.getElementById("affiliation").value,
@@ -1272,10 +1248,6 @@ function clearForm() {
   document.getElementById("yomi").value = "";
   document.getElementById("birth").value = "";
   document.getElementById("death").value = "";
-  document.getElementById("childhood_name").value = "";
-  document.getElementById("imina").value = "";
-  document.getElementById("tsusho").value = "";
-  document.getElementById("hogou").value = "";
   document.getElementById("origin").value = "";
   document.getElementById("category").value = "";
   document.getElementById("affiliation").value = "";
