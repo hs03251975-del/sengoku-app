@@ -1231,6 +1231,19 @@ loadAllPersons().then(() => {
   showRecentEdit();
 });
 
+function toggleAdmin() {
+
+  const box =
+    document.getElementById("adminMenu");
+
+  if (box.style.display === "none") {
+    box.style.display = "block";
+  } else {
+    box.style.display = "none";
+  }
+
+}
+
 function showRecentEdit() {
 
   const item =
