@@ -144,6 +144,7 @@ class Person(BaseModel):
     memo8: Optional[str] = None
     memo9: Optional[str] = None
     memo10: Optional[str] = None
+    aliases: Optional[list] = []
 
 # -----------------------------
 # 空文字 → None に変換
@@ -293,6 +294,25 @@ def create_person(person: Person = Body(...)):
             "siblings": person.siblings
         })
 
+        cur.execute("SELECT currval(pg_get_serial_sequence('persons','id'))")
+        person_id = cur.fetchone()["currval"]
+
+        for a in person.aliases or []:
+
+            cur.execute("""
+                INSERT INTO person_aliases
+                (
+                   person_id,
+                   alias_name,
+                   alias_type
+                )
+                VALUES (%s,%s,%s)
+            """, (
+                person_id,
+                a.get("alias_name"),
+                a.get("alias_type")
+            ))
+
         conn.commit()
         conn.close()
 
@@ -333,6 +353,27 @@ def update_person(person_id: int, person: Person = Body(...)):
 
         person.father_id, person.mother_id, person.spouse_id, person.sibling_order, person.siblings,
         person_id
+    ))
+
+    cur.execute("""
+        DELETE FROM person_aliases
+        WHERE person_id = %s
+    """, (person_id,))
+
+    for a in person.aliases or []:
+
+    cur.execute("""
+        INSERT INTO person_aliases
+        (
+            person_id,
+            alias_name,
+            alias_type
+        )
+        VALUES (%s,%s,%s)
+    """, (
+        person_id,
+        a.get("alias_name"),
+        a.get("alias_type")
     ))
 
 
