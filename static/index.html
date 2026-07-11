@@ -454,7 +454,33 @@ h3 {
 
 </div>
 
-<h3 onclick="toggleMemo()">メモ（クリックで開閉）</h3>
+<h3>別名</h3>
+
+<input
+  id="alias_name"
+  placeholder="別名">
+
+<select id="alias_type">
+  <option>官途名</option>
+  <option>受領名</option>
+  <option>官位</option>
+  <option>改名前</option>
+  <option>改名後</option>
+  <option>異称</option>
+  <option>その他</option>
+</select>
+
+<button
+  type="button"
+  onclick="addAlias()">
+  別名追加
+</button>
+
+<div id="aliasList"></div>
+
+<h3 onclick="toggleMemo()">
+  メモ（クリックで開閉）
+</h3>
 
 <div id="memoSection" class="memo-grid">
 
@@ -1345,6 +1371,67 @@ async function importJson() {
   );
 
   searchPersons();
+}
+
+let aliasData = [];
+
+function addAlias() {
+
+  const name =
+    document.getElementById("alias_name")
+      .value.trim();
+
+  const type =
+    document.getElementById("alias_type")
+      .value;
+
+  if (!name) {
+    alert("別名を入力してください");
+    return;
+  }
+
+  aliasData.push({
+    alias_name: name,
+    alias_type: type
+  });
+
+  renderAliasList();
+
+  document.getElementById("alias_name")
+    .value = "";
+}
+
+function renderAliasList() {
+
+  const box =
+    document.getElementById("aliasList");
+
+  if (aliasData.length === 0) {
+    box.innerHTML = "-";
+    return;
+  }
+
+  box.innerHTML =
+    aliasData.map((a, i) => `
+      <div>
+        ${a.alias_type}：
+        ${a.alias_name}
+
+        <button
+          type="button"
+          onclick="removeAlias(${i})">
+          削除
+        </button>
+
+      </div>
+    `).join("");
+}
+
+function removeAlias(index) {
+
+  aliasData.splice(index, 1);
+
+  renderAliasList();
 }
 
 // ✅ ★ここに追加！！
