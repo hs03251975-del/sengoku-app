@@ -362,19 +362,19 @@ def update_person(person_id: int, person: Person = Body(...)):
 
     for a in person.aliases or []:
 
-    cur.execute("""
-        INSERT INTO person_aliases
-        (
+        cur.execute("""
+            INSERT INTO person_aliases
+            (
+                person_id,
+                alias_name,
+                alias_type
+            )
+            VALUES (%s,%s,%s)
+        """, (
             person_id,
-            alias_name,
-            alias_type
-        )
-        VALUES (%s,%s,%s)
-    """, (
-        person_id,
-        a.get("alias_name"),
-        a.get("alias_type")
-    ))
+            a.get("alias_name"),
+            a.get("alias_type")
+        ))
 
 
     conn.commit()
