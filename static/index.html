@@ -709,20 +709,41 @@ function renderResults(list) {
 
 /* 詳細 */
 async function showDetail(id) {
+
   const res = await fetch(`/person/${id}`);
   const p = await res.json();
 
-  // ✅ 子供取得
-  const childrenRes = await fetch(`/person/${id}/children`);
-  const children = await childrenRes.json();
+  // 子供取得
+  const childrenRes =
+    await fetch(`/person/${id}/children`);
 
-  // ✅ 兄弟姉妹取得
-  const sibRes = await fetch(`/person/${id}/siblings`);
-  const siblings = await sibRes.json();
-  
+  const children =
+    await childrenRes.json();
+
+  // 兄弟姉妹取得
+  const sibRes =
+    await fetch(`/person/${id}/siblings`);
+
+  const siblings =
+    await sibRes.json();
+
+  // ★別名取得
+  const aliasRes =
+    await fetch(`/person/${id}/aliases`);
+
+  const aliases =
+    await aliasRes.json();
+
+  const aliasesHtml =
+    aliases.length
+      ? aliases.map(a =>
+          `・${a.alias_name}
+           （${a.alias_type || "分類なし"}）`
+        ).join("<br>")
+      : "-";
+
   let fatherName = "-";
   let motherName = "-";
-　
   let spouseName = "-";
 
   if (p.spouse_id) {
@@ -730,6 +751,8 @@ async function showDetail(id) {
     const spouse = await spouseRes.json();
     spouseName = spouse.name;
   }
+
+  
   
   if (p.father_id) {
     const fatherRes = await fetch(`/person/${p.father_id}`);
@@ -859,6 +882,11 @@ async function showDetail(id) {
       諱：${p.imina || "-"}<br>
       通称：${p.tsusho || "-"}<br>
       法号：${p.hogou || "-"}
+    </p>
+
+    <h3>別名</h3>
+    <p>
+      ${aliasesHtml}
     </p>
 
     <h3>情報</h3>
