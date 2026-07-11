@@ -588,6 +588,35 @@ async def import_json(file: UploadFile = File(...)):
     }
 
 # -----------------------------
+# 別名取得
+# -----------------------------
+@app.get("/person/{person_id}/aliases")
+def get_aliases(person_id: int):
+
+    conn = get_db()
+
+    cur = conn.cursor(
+        cursor_factory=psycopg2.extras.RealDictCursor
+    )
+
+    cur.execute("""
+        SELECT
+            id,
+            alias_name,
+            alias_type,
+            memo
+        FROM person_aliases
+        WHERE person_id = %s
+        ORDER BY id
+    """, (person_id,))
+
+    rows = cur.fetchall()
+
+    conn.close()
+
+    return rows
+
+# -----------------------------
 # 名前検索 API
 # -----------------------------
 @app.get("/search")
