@@ -898,12 +898,30 @@ async function showDetail(id) {
     <p>生年：${p.birth || "-"}　没年：${p.death || "-"}</p>
 
     <h3>名前</h3>
-    <p>
-      幼名：${p.childhood_name || "-"}<br>
-      諱：${p.imina || "-"}<br>
-      通称：${p.tsusho || "-"}<br>
-      法号：${p.hogou || "-"}
-    </p>
+
+    <table style="border-collapse:collapse;">
+
+      <tr>
+        <td style="padding:4px 12px 4px 0;"><b>幼名</b></td>
+        <td>${p.childhood_name || "-"}</td>
+      </tr>
+
+      <tr>
+        <td style="padding:4px 12px 4px 0;"><b>諱</b></td>
+        <td>${p.imina || "-"}</td>
+      </tr>
+
+      <tr>
+        <td style="padding:4px 12px 4px 0;"><b>通称</b></td>
+        <td>${p.tsusho || "-"}</td>
+      </tr>
+
+      <tr>
+        <td style="padding:4px 12px 4px 0;"><b>法号</b></td>
+        <td>${p.hogou || "-"}</td>
+      </tr>
+
+    </table>
 
     <h3>別名</h3>
 
