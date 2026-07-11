@@ -7,7 +7,15 @@ from io import StringIO
 
 from typing import Optional, List
 
-from fastapi import FastAPI, HTTPException, Body, Request, Form
+from fastapi import (
+    FastAPI,
+    HTTPException,
+    Body,
+    Request,
+    Form,
+    UploadFile,
+    File
+)
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse, RedirectResponse, Response
 from fastapi.staticfiles import StaticFiles
@@ -469,6 +477,115 @@ def export_json():
             "attachment; filename=sengoku_persons.json"
         }
     )
+
+# -----------------------------
+# JSON復元
+# -----------------------------
+@app.post("/import_json")
+async def import_json(file: UploadFile = File(...)):
+
+    content = await file.read()
+
+    data = json.loads(
+        content.decode("utf-8")
+    )
+
+    conn = get_db()
+
+    cur = conn.cursor(
+        cursor_factory=psycopg2.extras.RealDictCursor
+    )
+
+    for person in data:
+
+        cur.execute("""
+            INSERT INTO persons (
+                id,
+                name,
+                yomi,
+                birth,
+                death,
+                childhood_name,
+                imina,
+                tsusho,
+                hogou,
+                origin,
+                category,
+                affiliation,
+                castle,
+                rank,
+                office,
+                history,
+                description,
+                source,
+                father_id,
+                mother_id,
+                spouse_id,
+                sibling_order,
+                siblings,
+                memo1,
+                memo2,
+                memo3,
+                memo4,
+                memo5,
+                memo6,
+                memo7,
+                memo8,
+                memo9,
+                memo10
+            )
+            VALUES (
+                %(id)s,
+                %(name)s,
+                %(yomi)s,
+                %(birth)s,
+                %(death)s,
+                %(childhood_name)s,
+                %(imina)s,
+                %(tsusho)s,
+                %(hogou)s,
+                %(origin)s,
+                %(category)s,
+                %(affiliation)s,
+                %(castle)s,
+                %(rank)s,
+                %(office)s,
+                %(history)s,
+                %(description)s,
+                %(source)s,
+                %(father_id)s,
+                %(mother_id)s,
+                %(spouse_id)s,
+                %(sibling_order)s,
+                %(siblings)s,
+                %(memo1)s,
+                %(memo2)s,
+                %(memo3)s,
+                %(memo4)s,
+                %(memo5)s,
+                %(memo6)s,
+                %(memo7)s,
+                %(memo8)s,
+                %(memo9)s,
+                %(memo10)s
+            )
+            ON CONFLICT (id)
+            DO UPDATE SET
+                name=EXCLUDED.name
+        """, {
+            **person,
+            "source": json.dumps(
+                person.get("source", [])
+            )
+        })
+
+    conn.commit()
+    conn.close()
+
+    return {
+        "status": "ok",
+        "count": len(data)
+    }
 
 # -----------------------------
 # 名前検索 API
