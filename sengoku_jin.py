@@ -534,10 +534,6 @@ async def import_json(file: UploadFile = File(...)):
                 yomi,
                 birth,
                 death,
-                childhood_name,
-                imina,
-                tsusho,
-                hogou,
                 origin,
                 category,
                 affiliation,
@@ -569,10 +565,6 @@ async def import_json(file: UploadFile = File(...)):
                 %(yomi)s,
                 %(birth)s,
                 %(death)s,
-                %(childhood_name)s,
-                %(imina)s,
-                %(tsusho)s,
-                %(hogou)s,
                 %(origin)s,
                 %(category)s,
                 %(affiliation)s,
@@ -665,10 +657,6 @@ def search_persons(q: str):
             yomi,
             birth,
             death,
-            childhood_name,
-            imina,
-            tsusho,
-            hogou,
             category,
             affiliation,
             castle,
@@ -678,17 +666,9 @@ def search_persons(q: str):
         WHERE
             name ILIKE %s
             OR yomi ILIKE %s
-            OR childhood_name ILIKE %s
-            OR imina ILIKE %s
-            OR tsusho ILIKE %s
-            OR hogou ILIKE %s
         ORDER BY name
         LIMIT 100
     """, (
-        keyword,
-        keyword,
-        keyword,
-        keyword,
         keyword,
         keyword
     ))
