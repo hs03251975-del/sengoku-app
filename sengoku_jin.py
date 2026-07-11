@@ -302,9 +302,9 @@ def create_person(person: Person = Body(...)):
             cur.execute("""
                 INSERT INTO person_aliases
                 (
-                   person_id,
-                   alias_name,
-                   alias_type
+                    person_id,
+                    alias_name,
+                    alias_type
                 )
                 VALUES (%s,%s,%s)
             """, (
