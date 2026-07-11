@@ -264,6 +264,18 @@ h3 {
   検索
 </button>
 
+<input
+  type="file"
+  id="jsonFile"
+  accept=".json"
+>
+
+<button
+  class="btn"
+  onclick="importJson()">
+  JSON復元
+</button>
+  
 <button class="btn"
         onclick="window.location='/export'">
   CSVバックアップ
@@ -1138,6 +1150,47 @@ async function deletePerson(id) {
   alert("削除OK");
 
   searchPersons();  // 一覧更新
+}
+
+async function importJson() {
+
+  const file =
+    document.getElementById("jsonFile")
+      .files[0];
+
+  if (!file) {
+    alert("JSONを選択してください");
+    return;
+  }
+
+  const formData = new FormData();
+
+  formData.append(
+    "file",
+    file
+  );
+
+  const res = await fetch(
+    "/import_json",
+    {
+      method: "POST",
+      body: formData
+    }
+  );
+
+  if (!res.ok) {
+    alert("復元失敗");
+    return;
+  }
+
+  const result =
+    await res.json();
+
+  alert(
+    `${result.count}件復元しました`
+  );
+
+  searchPersons();
 }
 
 // ✅ ★ここに追加！！
