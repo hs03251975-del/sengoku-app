@@ -1092,6 +1092,14 @@ async function editPerson(id) {
   const res = await fetch(`/person/${id}`);
   const p = await res.json();
 
+  const aliasRes =
+    await fetch(`/person/${id}/aliases`);
+
+  aliasData =
+    await aliasRes.json();
+
+  renderAliasList();
+
   localStorage.setItem(
     "recentEdit",
     JSON.stringify({
@@ -1315,6 +1323,11 @@ function clearForm() {
   document.getElementById("memo8").value = "";
   document.getElementById("memo9").value = "";
   document.getElementById("memo10").value = "";
+  aliasData = [];
+
+  renderAliasList();
+
+  document.getElementById("alias_name").value = "";
 }
 
 async function deletePerson(id) {
