@@ -728,18 +728,33 @@ async function showDetail(id) {
     await sibRes.json();
 
   // ★別名取得
-  const aliasRes =
-    await fetch(`/person/${id}/aliases`);
-
-  const aliases =
-    await aliasRes.json();
-
   const aliasesHtml =
-    aliases.length
-      ? aliases.map(a =>
-          `・${a.alias_name}
-           （${a.alias_type || "分類なし"}）`
-        ).join("<br>")
+    aliases
+      .filter(a =>
+        !["幼名", "通称", "諱", "法号"]
+          .includes(a.alias_type)
+      )
+      .map(a =>
+      `
+        <tr>
+          <td style="padding:4px 10px 4px 0;">
+            ${a.alias_type || "分類なし"}
+          </td>
+          <td>
+            ${a.alias_name}
+          </td>
+        </tr>
+        `
+      )
+      .join("");
+
+  const aliasesTable =
+    aliasesHtml
+      ? `
+        <table>
+          ${aliasesHtml}
+        </table>
+        `
       : "-";
 
   let fatherName = "-";
@@ -885,9 +900,8 @@ async function showDetail(id) {
     </p>
 
     <h3>別名</h3>
-    <p>
-      ${aliasesHtml}
-    </p>
+
+    ${aliasesTable}
 
     <h3>情報</h3>
     <p>
