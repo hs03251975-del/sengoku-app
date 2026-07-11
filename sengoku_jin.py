@@ -426,6 +426,37 @@ def export_csv():
     )
 
 # -----------------------------
+# JSONバックアップ
+# -----------------------------
+@app.get("/export_json")
+def export_json():
+
+    conn = get_db()
+
+    cur = conn.cursor(
+        cursor_factory=psycopg2.extras.RealDictCursor
+    )
+
+    cur.execute("SELECT * FROM persons")
+
+    rows = cur.fetchall()
+
+    conn.close()
+
+    return Response(
+        content=json.dumps(
+            [dict(row) for row in rows],
+            ensure_ascii=False,
+            indent=2
+        ),
+        media_type="application/json",
+        headers={
+            "Content-Disposition":
+            "attachment; filename=sengoku_persons.json"
+        }
+    )
+
+# -----------------------------
 # 名前検索 API
 # -----------------------------
 @app.get("/search")
