@@ -1533,8 +1533,16 @@ async function saveCastle() {
 
   alert("城保存OK");
 
+  // フォームクリア
+  document.getElementById("castleName").value = "";
+  document.getElementById("castleYomi").value = "";
+  document.getElementById("castleProvince").value = "";
+  document.getElementById("castleLocation").value = "";
+  document.getElementById("castleDescription").value = "";
+
+  // 再読込
   await loadAllCastles();
-　await loadCastleList();
+  await loadCastleList();
 }
 
 function clearForm() {
