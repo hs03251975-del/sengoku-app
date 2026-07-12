@@ -680,6 +680,36 @@ def get_offices(person_id: int):
     return rows
 
 # -----------------------------
+# 城一覧取得
+# -----------------------------
+@app.get("/castles")
+def get_castles():
+
+    conn = get_db()
+
+    cur = conn.cursor(
+        cursor_factory=psycopg2.extras.RealDictCursor
+    )
+
+    cur.execute("""
+        SELECT
+            id,
+            name,
+            yomi,
+            province,
+            location,
+            description
+        FROM castles
+        ORDER BY name
+    """)
+
+    rows = cur.fetchall()
+
+    conn.close()
+
+    return rows
+
+# -----------------------------
 # 名前検索 API
 # -----------------------------
 @app.get("/search")
