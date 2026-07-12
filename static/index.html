@@ -342,29 +342,41 @@ h3 {
 
 <h2>登録</h2>
 
+<!-- 大タブ -->
 <div class="tab-menu">
 
-  <button onclick="showTab('tabBasic')">
-    基本情報
+  <button onclick="showMainTab('personTab')">
+    人物
   </button>
 
-  <button onclick="showTab('tabFamily')">
-    家族
-  </button>
-
-  <button onclick="showTab('tabAlias')">
-    別名
-  </button>
-
-  <button onclick="showTab('tabMemo')">
-    メモ
-  </button>
-
-  <button onclick="showTab('tabCastle')">
-    城管理
+  <button onclick="showMainTab('castleTab')">
+    城
   </button>
 
 </div>
+
+<!-- 人物エリア -->
+<div id="personTab">
+
+  <div class="tab-menu">
+
+    <button onclick="showTab('tabBasic')">
+      基本情報
+    </button>
+
+    <button onclick="showTab('tabFamily')">
+      家族
+    </button>
+
+    <button onclick="showTab('tabAlias')">
+      別名
+    </button>
+
+    <button onclick="showTab('tabMemo')">
+      メモ
+    </button>
+
+  </div>
 
 <input id="personId" type="hidden">
 
@@ -528,6 +540,8 @@ h3 {
   別名追加
 </button>
 
+</div>
+
 <div id="aliasList"></div>
 
 <h3 onclick="toggleMemo()">
@@ -585,11 +599,9 @@ h3 {
 
 <hr>
 
-<h3 onclick="toggleCastleAdmin()">
-  城管理（クリックで開閉）
-</h3>
+<div id="castleTab" style="display:none;">
 
-<div id="castleAdmin" style="display:none;">
+  <h2>城管理</h2>
 
   <input id="castleName" placeholder="城名">
 
@@ -1772,6 +1784,7 @@ Promise.all([
 
   showRecentEdit();
 
+  showMainTab("personTab");
   showTab("tabBasic");
 });
 
@@ -1788,21 +1801,22 @@ function toggleAdmin() {
 
 }
 
-function toggleCastleAdmin() {
+function showMainTab(tabId) {
 
-  const box =
-    document.getElementById("castleAdmin");
+  document.getElementById(
+    "personTab"
+  ).style.display = "none";
 
-  if (box.style.display === "none") {
+  document.getElementById(
+    "castleTab"
+  ).style.display = "none";
 
-    box.style.display = "block";
+  document.getElementById(
+    tabId
+  ).style.display = "block";
 
-    loadCastleList();  // ←ここ
-
-  } else {
-
-    box.style.display = "none";
-
+  if (tabId === "castleTab") {
+    loadCastleList();
   }
 }
 
