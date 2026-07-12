@@ -609,15 +609,28 @@ async function loadAllPersons() {
 }
 
 // 城一覧取得
-async function loadAllCastles() {
+async function loadCastleList() {
 
   const res =
     await fetch("/castles");
 
-  allCastlesCache =
+  const castles =
     await res.json();
-}
 
+  document.getElementById(
+    "castleResults"
+  ).innerHTML = castles.map(c => `
+
+    <div class="card">
+
+      <b>${c.name}</b>
+
+      （${c.province || "-"}）
+
+    </div>
+
+  `).join("");
+}
 /* 検索 */
 async function searchPersons() {
   const q = document.getElementById("search").value.trim();
@@ -1471,6 +1484,49 @@ async function savePerson() {
 
 
 
+}
+
+async function saveCastle() {
+
+  const data = {
+
+    name:
+      document.getElementById("castleName").value,
+
+    yomi:
+      document.getElementById("castleYomi").value,
+
+    province:
+      document.getElementById("castleProvince").value,
+
+    location:
+      document.getElementById("castleLocation").value,
+
+    description:
+      document.getElementById("castleDescription").value
+
+  };
+
+  const res =
+    await fetch("/castle", {
+
+      method: "POST",
+
+      headers: {
+        "Content-Type":"application/json"
+      },
+
+      body: JSON.stringify(data)
+    });
+
+  if (!res.ok) {
+    alert("保存失敗");
+    return;
+  }
+
+  alert("城保存OK");
+
+  await loadAllCastles();
 }
 
 function clearForm() {
