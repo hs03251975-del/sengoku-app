@@ -119,6 +119,7 @@ class Person(BaseModel):
     origin: Optional[str] = None
     category: Optional[str] = None   # ★追加
     affiliation: Optional[str] = None  # 所属
+    castle_id: Optional[int] = None
     castle: Optional[str] = None       # 居城
     history: Optional[str] = None
     description: Optional[str] = None
@@ -232,14 +233,14 @@ def create_person(person: Person = Body(...)):
         cur.execute("""
         INSERT INTO persons (
             name, yomi, birth, death,
-            origin, category, affiliation, castle,
+            origin, category, affiliation, castle_id, castle,
             history, description, source,
             memo1, memo2, memo3, memo4, memo5,
             memo6, memo7, memo8, memo9, memo10,
             father_id, mother_id, spouse_id, sibling_order, siblings
         ) VALUES (
             %(name)s, %(yomi)s, %(birth)s, %(death)s,
-            %(origin)s, %(category)s, %(affiliation)s, %(castle)s,
+            %(origin)s, %(category)s, %(affiliation)s, %(castle_id)s, %(castle)s,
             %(history)s, %(description)s, %(source)s,
             %(memo1)s, %(memo2)s, %(memo3)s, %(memo4)s, %(memo5)s,
             %(memo6)s, %(memo7)s, %(memo8)s, %(memo9)s, %(memo10)s,
@@ -253,6 +254,7 @@ def create_person(person: Person = Body(...)):
             "origin": person.origin,
             "category": person.category,
             "affiliation": person.affiliation,
+            "castle_id": person.castle_id,
             "castle": person.castle,
             "history": person.history,
             "description": person.description,
@@ -313,7 +315,7 @@ def update_person(person_id: int, person: Person = Body(...)):
     cur.execute("""
         UPDATE persons SET
             name=%s, yomi=%s, birth=%s, death=%s,
-            origin=%s, category=%s, affiliation=%s, castle=%s,
+            origin=%s, category=%s, affiliation=%s, castle_id=%s, castle=%s,
             history=%s, description=%s, source=%s,
             memo1=%s, memo2=%s, memo3=%s, memo4=%s, memo5=%s, memo6=%s, 
             memo7=%s, memo8=%s, memo9=%s, memo10=%s,
@@ -321,7 +323,7 @@ def update_person(person_id: int, person: Person = Body(...)):
         WHERE id=%s
     """, (
         person.name, person.yomi, person.birth, person.death,
-        person.origin, person.category, person.affiliation, person.castle,
+        person.origin, person.category, person.affiliation, person.castle_id, person.castle,
         person.history, person.description, json.dumps(person.source),
 
         person.memo1, person.memo2, person.memo3, person.memo4, person.memo5, person.memo6, 
