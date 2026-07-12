@@ -638,6 +638,35 @@ def get_aliases(person_id: int):
     return rows
 
 # -----------------------------
+# 官位取得
+# -----------------------------
+@app.get("/person/{person_id}/ranks")
+def get_ranks(person_id: int):
+
+    conn = get_db()
+
+    cur = conn.cursor(
+        cursor_factory=psycopg2.extras.RealDictCursor
+    )
+
+    cur.execute("""
+        SELECT
+            id,
+            rank_name,
+            start_year,
+            end_year
+        FROM person_ranks
+        WHERE person_id = %s
+        ORDER BY id
+    """, (person_id,))
+
+    rows = cur.fetchall()
+
+    conn.close()
+
+    return rows
+
+# -----------------------------
 # 名前検索 API
 # -----------------------------
 @app.get("/search")
