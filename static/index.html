@@ -601,19 +601,6 @@ h3 {
     placeholder="説明">
   </textarea>
 
-  <div class="save-area">
-
-    <button
-      id="mainSaveBtn"
-      class="btn save-btn"
-      onclick="saveCurrent()">
-
-      保存
-
-    </button>
-
-  </div>
-
   <div id="castleResults"></div>
 
 </div>
@@ -1789,21 +1776,6 @@ function toggleAdmin() {
   }
 }
 
-function saveCurrent() {
-
-  if (
-    document.getElementById("personTab")
-      .style.display !== "none"
-  ) {
-
-    savePerson();
-
-  } else {
-
-    saveCastle();
-
-  }
-}
 
 function showMainTab(tabId) {
 
@@ -1816,18 +1788,8 @@ function showMainTab(tabId) {
   document.getElementById(tabId).style.display =
     "block";
 
-  const btn =
-    document.getElementById("mainSaveBtn");
-
   if (tabId === "castleTab") {
-
-    btn.textContent = "城保存";
-
     loadCastleList();
-
-  } else {
-
-    btn.textContent = "人物保存";
   }
 }
 
