@@ -546,26 +546,34 @@ h3 {
 
 <hr>
 
-<h2>城管理</h2>
+<h3 onclick="toggleCastleAdmin()">
+  城管理（クリックで開閉）
+</h3>
 
-<input id="castleName" placeholder="城名">
+<div id="castleAdmin" style="display:none;">
 
-<input id="castleYomi" placeholder="よみ">
+  <input id="castleName" placeholder="城名">
 
-<input id="castleProvince" placeholder="旧国名">
+  <input id="castleYomi" placeholder="よみ">
 
-<input id="castleLocation" placeholder="所在地">
+  <input id="castleProvince" placeholder="旧国名">
 
-<textarea
-  id="castleDescription"
-  placeholder="説明">
-</textarea>
+  <input id="castleLocation" placeholder="所在地">
 
-<button
-  class="btn"
-  onclick="saveCastle()">
-  城保存
-</button>
+  <textarea
+    id="castleDescription"
+    placeholder="説明">
+  </textarea>
+
+  <button
+    class="btn"
+    onclick="saveCastle()">
+    城保存
+  </button>
+
+  <div id="castleResults"></div>
+
+</div>
 
 <div id="castleResults"></div>
 
@@ -1665,6 +1673,24 @@ function toggleAdmin() {
     box.style.display = "none";
   }
 
+}
+
+function toggleCastleAdmin() {
+
+  const box =
+    document.getElementById("castleAdmin");
+
+  if (box.style.display === "none") {
+
+    box.style.display = "block";
+
+    loadCastleList();  // ←ここ
+
+  } else {
+
+    box.style.display = "none";
+
+  }
 }
 
 function showRecentEdit() {
