@@ -704,6 +704,38 @@ def get_offices(person_id: int):
 
     return rows
 
+@app.post("/castle")
+def create_castle(data: dict = Body(...)):
+
+    conn = get_db()
+
+    cur = conn.cursor(
+        cursor_factory=psycopg2.extras.RealDictCursor
+    )
+
+    cur.execute("""
+        INSERT INTO castles
+        (
+            name,
+            yomi,
+            province,
+            location,
+            description
+        )
+        VALUES (%s,%s,%s,%s,%s)
+    """, (
+        data.get("name"),
+        data.get("yomi"),
+        data.get("province"),
+        data.get("location"),
+        data.get("description")
+    ))
+
+    conn.commit()
+    conn.close()
+
+    return {"status":"ok"}
+
 # -----------------------------
 # 城一覧取得
 # -----------------------------
