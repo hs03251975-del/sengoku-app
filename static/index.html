@@ -551,8 +551,6 @@ async function loadAllPersons() {
   allPersonsCache = await res.json();
 }
 
-let allCastlesCache = [];
-
 // 城一覧取得
 async function loadAllCastles() {
 
@@ -657,7 +655,7 @@ function setupCastleAutocomplete() {
       matches.map(c => `
         <div
           class="autocomplete-item"
-          onclick="selectCastle('${c.name}')">
+          onclick="selectCastle(${c.id}, '${c.name}')"
 
           ${c.name}
           （${c.province || "旧国名不明"}）
@@ -669,10 +667,13 @@ function setupCastleAutocomplete() {
   });
 }
 
-function selectCastle(name) {
+function selectCastle(id, name) {
 
   document.getElementById("castle").value =
     name;
+
+  document.getElementById("castle_id").value =
+    id;
 
   document.getElementById(
     "castle_suggest"
@@ -1288,6 +1289,7 @@ async function savePerson() {
     category: document.getElementById("category").value,
     affiliation: document.getElementById("affiliation").value,
     castle: document.getElementById("castle").value,
+    castle_id:document.getElementById("castle_id").value || null,
     history: document.getElementById("history").value || null,
     description: document.getElementById("description").value,
     source: source,
