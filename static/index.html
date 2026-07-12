@@ -96,6 +96,24 @@ input, select, textarea {
   overflow: auto;
 }
 
+#castleModal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+
+#castleContent {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  width: 90%;
+  max-height: 90%;
+  overflow: auto;
+}
+
 /* 共通 */
 .link-like {
   color: blue;
@@ -533,6 +551,10 @@ h3 {
 
 <div id="detailModal" onclick="closeDetail()">
   <div id="detailContent"></div>
+</div>
+
+<div id="castleModal" onclick="closeCastleDetail()">
+  <div id="castleContent"></div>
 </div>
 
 <button id="topBtn" onclick="scrollToTop()">
@@ -1057,7 +1079,15 @@ async function showDetail(id) {
 
     <tr>
       <td><b>居城</b></td>
-      <td>${p.castle || "-"}</td>
+      <td>
+      ${p.castle_id
+        ? `<span class="link-like"
+             onclick="showCastleDetail(${p.castle_id})">
+             ${p.castle}
+           </span>`
+        : (p.castle || "-")
+      }
+      </td>
     </tr>
 
     </table>
@@ -1151,6 +1181,66 @@ async function showDetail(id) {
 
 function closeDetail() {
   document.getElementById("detailModal").style.display = "none";
+}
+
+async function showCastleDetail(castleId) {
+
+  const res =
+    await fetch(`/castle/${castleId}`);
+
+  const castle =
+    await res.json();
+
+  document.getElementById(
+    "castleContent"
+  ).innerHTML = `
+
+    <h2>${castle.name}</h2>
+
+    <table>
+
+      <tr>
+        <td><b>よみ</b></td>
+        <td>${castle.yomi || "-"}</td>
+      </tr>
+
+      <tr>
+        <td><b>旧国名</b></td>
+        <td>${castle.province || "-"}</td>
+      </tr>
+
+      <tr>
+        <td><b>所在地</b></td>
+        <td>${castle.location || "-"}</td>
+      </tr>
+
+    </table>
+
+    <h3>説明</h3>
+
+    <p>
+      ${(castle.description || "-")
+        .replace(/\n/g,"<br>")}
+    </p>
+
+    <button
+      class="btn"
+      onclick="closeCastleDetail()">
+      閉じる
+    </button>
+  `;
+
+  document.getElementById(
+    "castleModal"
+  ).style.display = "flex";
+}
+
+function closeCastleDetail() {
+
+  document.getElementById(
+    "castleModal"
+  ).style.display = "none";
+
 }
 
 // ✅ ★ここに追加！！！！
