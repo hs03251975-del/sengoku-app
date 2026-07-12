@@ -269,6 +269,18 @@ h3 {
   border-bottom: 1px solid #ccc;
   padding-bottom: 4px;
 }
+
+.tab-menu{
+  display:flex;
+  gap:5px;
+  flex-wrap:wrap;
+  margin-bottom:10px;
+}
+
+.tab-content{
+  display:none;
+}
+
 </style>
 </head>
 
@@ -329,7 +341,34 @@ h3 {
 <hr>
 
 <h2>登録</h2>
+
+<div class="tab-menu">
+
+  <button onclick="showTab('tabBasic')">
+    基本情報
+  </button>
+
+  <button onclick="showTab('tabFamily')">
+    家族
+  </button>
+
+  <button onclick="showTab('tabAlias')">
+    別名
+  </button>
+
+  <button onclick="showTab('tabMemo')">
+    メモ
+  </button>
+
+  <button onclick="showTab('tabCastle')">
+    城管理
+  </button>
+
+</div>
+
 <input id="personId" type="hidden">
+
+<div id="tabBasic" class="tab-content">
 
 <h3>基本情報</h3>
 
@@ -1732,6 +1771,8 @@ Promise.all([
   setupCastleAutocomplete();
 
   showRecentEdit();
+
+  showTab("tabBasic");
 });
 
 function toggleAdmin() {
@@ -1763,6 +1804,18 @@ function toggleCastleAdmin() {
     box.style.display = "none";
 
   }
+}
+
+function showTab(tabId) {
+
+  document
+    .querySelectorAll(".tab-content")
+    .forEach(div => {
+      div.style.display = "none";
+    });
+
+  document.getElementById(tabId)
+    .style.display = "block";
 }
 
 function showRecentEdit() {
