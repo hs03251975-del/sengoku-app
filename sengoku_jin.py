@@ -707,6 +707,12 @@ def get_offices(person_id: int):
 @app.post("/castle")
 def create_castle(data: dict = Body(...)):
 
+    if not data.get("name"):
+        raise HTTPException(
+            status_code=400,
+            detail="城名必須"
+        )
+
     conn = get_db()
 
     cur = conn.cursor(
