@@ -356,14 +356,6 @@ h3 {
     <label for="castle">居城</label>
     <input id="castle">
   </div>
-  <div class="wide-column">
-    <label for="rank">官位</label>
-    <input id="rank">
-  </div>
-  <div class="wide-column">
-    <label for="office">官職</label>
-    <input id="office">
-  </div>
 </div>
 
   
@@ -1127,8 +1119,6 @@ async function editPerson(id) {
   document.getElementById("category").value = p.category || "";
   document.getElementById("affiliation").value = p.affiliation || "";
   document.getElementById("castle").value = p.castle || "";
-  document.getElementById("rank").value = p.rank || "";
-  document.getElementById("office").value = p.office || "";
   document.getElementById("history").value = p.history || "";
   document.getElementById("description").value = p.description || "";
   document.getElementById("source").value = (p.source || []).join(", ");
@@ -1214,8 +1204,6 @@ async function savePerson() {
     category: document.getElementById("category").value,
     affiliation: document.getElementById("affiliation").value,
     castle: document.getElementById("castle").value,
-    rank: document.getElementById("rank").value,
-    office: document.getElementById("office").value,
     history: document.getElementById("history").value || null,
     description: document.getElementById("description").value,
     source: source,
@@ -1283,8 +1271,6 @@ function clearForm() {
   document.getElementById("category").value = "";
   document.getElementById("affiliation").value = "";
   document.getElementById("castle").value = "";
-  document.getElementById("rank").value = "";
-  document.getElementById("office").value = "";
   document.getElementById("description").value = "";
   document.getElementById("source").value = "";
   document.getElementById("father_name").value = "";
