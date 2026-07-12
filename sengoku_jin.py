@@ -401,6 +401,27 @@ def get_siblings(person_id: int):
 
     return siblings
 
+@app.get("/castle/{castle_id}")
+def get_castle(castle_id: int):
+
+    conn = get_db()
+
+    cur = conn.cursor(
+        cursor_factory=psycopg2.extras.RealDictCursor
+    )
+
+    cur.execute("""
+        SELECT *
+        FROM castles
+        WHERE id=%s
+    """,(castle_id,))
+
+    row = cur.fetchone()
+
+    conn.close()
+
+    return row
+
 @app.delete("/person/{person_id}")
 def delete_person(person_id: int):
     conn = get_db()
@@ -527,6 +548,7 @@ async def import_json(file: UploadFile = File(...)):
                 origin,
                 category,
                 affiliation,
+                castle_id,
                 castle,
                 history,
                 description,
@@ -556,6 +578,7 @@ async def import_json(file: UploadFile = File(...)):
                 %(origin)s,
                 %(category)s,
                 %(affiliation)s,
+                %(castle_id)s,
                 %(castle)s,
                 %(history)s,
                 %(description)s,
