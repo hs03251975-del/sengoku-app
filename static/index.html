@@ -288,12 +288,6 @@ h3 {
 
 <h1>戦国人物データベース</h1>
 
-<input id="search" placeholder="検索">
-
-<button class="btn" onclick="searchPersons()">
-  検索
-</button>
-
 <h3 onclick="toggleAdmin()">
   管理メニュー（クリックで開閉）
 </h3>
@@ -358,9 +352,22 @@ h3 {
 <!-- 人物エリア -->
 <div id="personTab">
 
-<input id="personId" type="hidden">
+  <h2>人物検索</h2>
 
-<div id="tabBasic" class="tab-content">
+  <input id="search" placeholder="人物検索">
+
+  <button
+    class="btn"
+    onclick="searchPersons()">
+    検索
+  </button>
+
+  <div id="results"></div>
+
+  <hr>
+
+  <h2>人物登録</h2>
+
 
 <h3>基本情報</h3>
 
@@ -609,8 +616,6 @@ h3 {
 </div>
 
 <hr>
-
-<div id="results"></div>
 
 <div id="detailModal" onclick="closeDetail()">
   <div id="detailContent"></div>
@@ -1767,7 +1772,6 @@ Promise.all([
   showRecentEdit();
 
   showMainTab("personTab");
-  showTab("tabBasic");
 });
 
 function toggleAdmin() {
