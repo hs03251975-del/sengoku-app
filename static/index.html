@@ -776,6 +776,35 @@ async function showDetail(id) {
         </table>
         `
       : "-";
+  const rankRes =
+    await fetch(`/person/${id}/ranks`);
+
+  const ranks =
+    await rankRes.json();
+
+  const officeRes =
+    await fetch(`/person/${id}/offices`);
+
+  const offices =
+    await officeRes.json();
+
+  const ranksHtml =
+    ranks.length
+      ? ranks.map(r => `
+          <tr>
+            <td>${r.rank_name}</td>
+          </tr>
+        `).join("")
+      : "<tr><td>-</td></tr>";
+
+  const officesHtml =
+    offices.length
+      ? offices.map(o => `
+          <tr>
+            <td>${o.office_name}</td>
+          </tr>
+        `).join("")
+      : "<tr><td>-</td></tr>";
 
   let fatherName = "-";
   let motherName = "-";
@@ -913,6 +942,18 @@ async function showDetail(id) {
 
     ${aliasesTable}
 
+    <h3>官位履歴</h3>
+
+    <table>
+      ${ranksHtml}
+    </table>
+
+    <h3>官職履歴</h3>
+
+    <table>
+      ${officesHtml}
+    </table>
+
     <h3>基本情報</h3>
 
     <table style="border-collapse:collapse;">
@@ -940,16 +981,6 @@ async function showDetail(id) {
     <tr>
       <td><b>居城</b></td>
       <td>${p.castle || "-"}</td>
-    </tr>
-
-    <tr>
-      <td><b>官位</b></td>
-      <td>${p.rank || "-"}</td>
-    </tr>
-
-    <tr>
-      <td><b>官職</b></td>
-      <td>${p.office || "-"}</td>
     </tr>
 
     </table>
