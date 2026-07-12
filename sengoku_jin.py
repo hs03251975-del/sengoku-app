@@ -646,29 +646,38 @@ def search_persons(q: str):
     keyword = f"%{q}%"
 
     conn = get_db()
+
     cur = conn.cursor(
         cursor_factory=psycopg2.extras.RealDictCursor
     )
 
     cur.execute("""
-        SELECT
-            id,
-            name,
-            yomi,
-            birth,
-            death,
-            category,
-            affiliation,
-            castle,
-            origin,
-            description
-        FROM persons
+        SELECT DISTINCT
+            p.id,
+            p.name,
+            p.yomi,
+            p.birth,
+            p.death,
+            p.category,
+            p.affiliation,
+            p.castle,
+            p.origin,
+            p.description
+        FROM persons p
+
+        LEFT JOIN person_aliases a
+            ON p.id = a.person_id
+
         WHERE
-            name ILIKE %s
-            OR yomi ILIKE %s
-        ORDER BY name
+            p.name ILIKE %s
+            OR p.yomi ILIKE %s
+            OR a.alias_name ILIKE %s
+
+        ORDER BY p.name
+
         LIMIT 100
     """, (
+        keyword,
         keyword,
         keyword
     ))
@@ -678,5 +687,5 @@ def search_persons(q: str):
     cur.close()
     conn.close()
 
-    return rows
+    return rowss
 
