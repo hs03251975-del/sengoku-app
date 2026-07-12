@@ -352,10 +352,19 @@ h3 {
     <label for="affiliation">所属</label>
     <input id="affiliation">
   </div>
-  <div>
+  <div class="autocomplete-container">
     <label for="castle">居城</label>
-    <input id="castle">
+
+    <input
+      id="castle"
+      autocomplete="off">
+
+    <div
+      id="castle_suggest"
+      class="autocomplete-box">
+    </div>
   </div>
+
 </div>
 
   
@@ -528,6 +537,7 @@ h3 {
 const API_BASE = "";
 
 let allPersonsCache = [];
+let allCastlesCache = [];
 
 /* 全取得 */
 async function loadAllPersons() {
