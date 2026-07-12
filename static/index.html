@@ -1085,7 +1085,7 @@ async function showDetail(id) {
       <td>
       ${p.castle_id
         ? `<span class="link-like"
-             onclick="showCastleDetail(${p.castle_id})">
+             onclick="event.stopPropagation(); showCastleDetail(${p.castle_id})"
              ${p.castle}
            </span>`
         : (p.castle || "-")
@@ -1296,7 +1296,8 @@ async function editPerson(id) {
   document.getElementById("origin").value = p.origin || "";
   document.getElementById("category").value = p.category || "";
   document.getElementById("affiliation").value = p.affiliation || "";
-document.getElementById("castle_id").value = p.castle_id || "";
+  document.getElementById("castle").value = p.castle || "";
+  document.getElementById("castle_id").value = p.castle_id || "";
   document.getElementById("history").value = p.history || "";
   document.getElementById("description").value = p.description || "";
   document.getElementById("source").value = (p.source || []).join(", ");
