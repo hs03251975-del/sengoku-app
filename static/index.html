@@ -545,6 +545,18 @@ async function loadAllPersons() {
   allPersonsCache = await res.json();
 }
 
+let allCastlesCache = [];
+
+// 城一覧取得
+async function loadAllCastles() {
+
+  const res =
+    await fetch("/castles");
+
+  allCastlesCache =
+    await res.json();
+}
+
 /* 検索 */
 async function searchPersons() {
   const q = document.getElementById("search").value.trim();
@@ -603,6 +615,62 @@ function setupAutocomplete(inputId, boxId) {
 
     box.style.display = "block";
   });
+}
+
+function setupCastleAutocomplete() {
+
+  const input =
+    document.getElementById("castle");
+
+  const box =
+    document.getElementById("castle_suggest");
+
+  input.addEventListener("input", () => {
+
+    const keyword =
+      input.value.trim();
+
+    if (!keyword) {
+      box.style.display = "none";
+      return;
+    }
+
+    const matches =
+      allCastlesCache.filter(
+        c =>
+          c.name &&
+          c.name.includes(keyword)
+      );
+
+    if (matches.length === 0) {
+      box.style.display = "none";
+      return;
+    }
+
+    box.innerHTML =
+      matches.map(c => `
+        <div
+          class="autocomplete-item"
+          onclick="selectCastle('${c.name}')">
+
+          ${c.name}
+          （${c.province || "旧国名不明"}）
+
+        </div>
+      `).join("");
+
+    box.style.display = "block";
+  });
+}
+
+function selectCastle(name) {
+
+  document.getElementById("castle").value =
+    name;
+
+  document.getElementById(
+    "castle_suggest"
+  ).style.display = "none";
 }
 
 async function updateFamilyInfo() {
@@ -1434,10 +1502,28 @@ function toggleMemo() {
   }
 }
 
-loadAllPersons().then(() => {
-  setupAutocomplete("father_name", "father_suggest");
-  setupAutocomplete("mother_name", "mother_suggest");
-　setupAutocomplete("spouse_name", "spouse_suggest");
+Promise.all([
+  loadAllPersons(),
+  loadAllCastles()
+]).then(() => {
+
+  setupAutocomplete(
+    "father_name",
+    "father_suggest"
+  );
+
+  setupAutocomplete(
+    "mother_name",
+    "mother_suggest"
+  );
+
+  setupAutocomplete(
+    "spouse_name",
+    "spouse_suggest"
+  );
+
+  setupCastleAutocomplete();
+
   showRecentEdit();
 });
 
