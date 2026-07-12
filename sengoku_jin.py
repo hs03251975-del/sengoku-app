@@ -120,8 +120,6 @@ class Person(BaseModel):
     category: Optional[str] = None   # ★追加
     affiliation: Optional[str] = None  # 所属
     castle: Optional[str] = None       # 居城
-    rank: Optional[str] = None
-    office: Optional[str] = None
     history: Optional[str] = None
     description: Optional[str] = None
     source: List[str] = Field(default_factory=list)
@@ -163,10 +161,6 @@ def normalize_person(person: Person):
         person.death = None
     if person.origin == "":
         person.origin = None
-    if person.rank == "":
-        person.rank = None
-    if person.office == "":
-        person.office = None
     if hasattr(person, "description") and person.description == "":
         person.description = None
     if person.father_id == "":
@@ -239,7 +233,6 @@ def create_person(person: Person = Body(...)):
         INSERT INTO persons (
             name, yomi, birth, death,
             origin, category, affiliation, castle,
-            rank, office,
             history, description, source,
             memo1, memo2, memo3, memo4, memo5,
             memo6, memo7, memo8, memo9, memo10,
@@ -247,7 +240,6 @@ def create_person(person: Person = Body(...)):
         ) VALUES (
             %(name)s, %(yomi)s, %(birth)s, %(death)s,
             %(origin)s, %(category)s, %(affiliation)s, %(castle)s,
-            %(rank)s, %(office)s,
             %(history)s, %(description)s, %(source)s,
             %(memo1)s, %(memo2)s, %(memo3)s, %(memo4)s, %(memo5)s,
             %(memo6)s, %(memo7)s, %(memo8)s, %(memo9)s, %(memo10)s,
@@ -262,8 +254,6 @@ def create_person(person: Person = Body(...)):
             "category": person.category,
             "affiliation": person.affiliation,
             "castle": person.castle,
-            "rank": person.rank,
-            "office": person.office,
             "history": person.history,
             "description": person.description,
             "source": json.dumps(person.source),
@@ -324,7 +314,6 @@ def update_person(person_id: int, person: Person = Body(...)):
         UPDATE persons SET
             name=%s, yomi=%s, birth=%s, death=%s,
             origin=%s, category=%s, affiliation=%s, castle=%s,
-            rank=%s, office=%s,
             history=%s, description=%s, source=%s,
             memo1=%s, memo2=%s, memo3=%s, memo4=%s, memo5=%s, memo6=%s, 
             memo7=%s, memo8=%s, memo9=%s, memo10=%s,
@@ -333,7 +322,6 @@ def update_person(person_id: int, person: Person = Body(...)):
     """, (
         person.name, person.yomi, person.birth, person.death,
         person.origin, person.category, person.affiliation, person.castle,
-        person.rank, person.office,
         person.history, person.description, json.dumps(person.source),
 
         person.memo1, person.memo2, person.memo3, person.memo4, person.memo5, person.memo6, 
@@ -538,8 +526,6 @@ async def import_json(file: UploadFile = File(...)):
                 category,
                 affiliation,
                 castle,
-                rank,
-                office,
                 history,
                 description,
                 source,
@@ -569,8 +555,6 @@ async def import_json(file: UploadFile = File(...)):
                 %(category)s,
                 %(affiliation)s,
                 %(castle)s,
-                %(rank)s,
-                %(office)s,
                 %(history)s,
                 %(description)s,
                 %(source)s,
