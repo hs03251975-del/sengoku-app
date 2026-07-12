@@ -554,7 +554,10 @@ h3 {
 </div>
 
 <div id="castleModal" onclick="closeCastleDetail()">
-  <div id="castleContent"></div>
+  <div
+    id="castleContent"
+    onclick="event.stopPropagation()">
+  </div>
 </div>
 
 <button id="topBtn" onclick="scrollToTop()">
@@ -673,17 +676,17 @@ function setupCastleAutocomplete() {
       return;
     }
 
-    box.innerHTML =
-      matches.map(c => `
-        <div
-          class="autocomplete-item"
-          onclick="selectCastle(${c.id}, '${c.name}')"
+   box.innerHTML =
+     matches.map(c => `
+       <div
+         class="autocomplete-item"
+         onclick="selectCastle(${c.id}, '${c.name}')">
 
-          ${c.name}
-          （${c.province || "旧国名不明"}）
+         ${c.name}
+         （${c.province || "旧国名不明"}）
 
-        </div>
-      `).join("");
+       </div>
+     `).join("");
 
     box.style.display = "block";
   });
@@ -1293,7 +1296,7 @@ async function editPerson(id) {
   document.getElementById("origin").value = p.origin || "";
   document.getElementById("category").value = p.category || "";
   document.getElementById("affiliation").value = p.affiliation || "";
-  document.getElementById("castle").value = p.castle || "";
+document.getElementById("castle_id").value = p.castle_id || "";
   document.getElementById("history").value = p.history || "";
   document.getElementById("description").value = p.description || "";
   document.getElementById("source").value = (p.source || []).join(", ");
@@ -1447,6 +1450,7 @@ function clearForm() {
   document.getElementById("category").value = "";
   document.getElementById("affiliation").value = "";
   document.getElementById("castle").value = "";
+  document.getElementById("castle_id").value = "";
   document.getElementById("description").value = "";
   document.getElementById("source").value = "";
   document.getElementById("father_name").value = "";
