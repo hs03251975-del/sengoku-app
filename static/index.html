@@ -575,8 +575,6 @@ h3 {
 
 </div>
 
-<div id="castleResults"></div>
-
 <hr>
 
 <div id="results"></div>
@@ -606,6 +604,15 @@ let allCastlesCache = [];
 async function loadAllPersons() {
   const res = await fetch("/persons");
   allPersonsCache = await res.json();
+}
+
+async function loadAllCastles() {
+
+  const res =
+    await fetch("/castles");
+
+  allCastlesCache =
+    await res.json();
 }
 
 // 城一覧取得
@@ -1130,9 +1137,9 @@ async function showDetail(id) {
       <td>
       ${p.castle_id
         ? `<span class="link-like"
-             onclick="event.stopPropagation(); showCastleDetail(${p.castle_id})"
+             onclick="event.stopPropagation(); showCastleDetail(${p.castle_id})">
              ${p.castle}
-           </span>`
+          </span>`
         : (p.castle || "-")
       }
       </td>
@@ -1527,6 +1534,7 @@ async function saveCastle() {
   alert("城保存OK");
 
   await loadAllCastles();
+　await loadCastleList();
 }
 
 function clearForm() {
