@@ -687,5 +687,5 @@ def search_persons(q: str):
     cur.close()
     conn.close()
 
-    return rowss
+    return rows
 
