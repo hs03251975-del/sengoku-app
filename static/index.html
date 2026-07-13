@@ -1841,17 +1841,18 @@ function showMainTab(tabId) {
   document.getElementById("adminTab")
     .style.display = "none";
 
-  document.getElementById("personTab").style.display =
-    "none";
+  document.getElementById("personTab")
+    .style.display = "none";
 
-  document.getElementById("castleTab").style.display =
-    "none";
+  document.getElementById("castleTab")
+    .style.display = "none";
 
-  document.getElementById(tabId).style.display =
-    "block";
+  document.getElementById(tabId)
+    .style.display = "block";
 
   if (tabId === "castleTab") {
-    loadCastleList();
+    document.getElementById("castleResults")
+      .innerHTML = "";
   }
 }
 
