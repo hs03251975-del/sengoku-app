@@ -50,7 +50,7 @@ def login_page():
     <html>
     <body>
 
-    <h2>戦国人物データベース</h2>
+    <h2>戦国データベース</h2>
 
     <form action="/login" method="post">
 
