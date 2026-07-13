@@ -288,55 +288,6 @@ h3 {
 
 <h1>戦国データベース</h1>
 
-<h3 onclick="toggleAdmin()">
-  管理メニュー（クリックで開閉）
-</h3>
-
-<div id="adminMenu" style="display:none;">
-
-  <div style="
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      align-items:center;
-      margin-top:10px;
-  ">
-
-    <input
-      type="file"
-      id="jsonFile"
-      accept=".json"
-      style="width:auto;">
-
-    <button class="btn"
-            style="width:auto;"
-            onclick="importJson()">
-      JSON復元
-    </button>
-
-    <button class="btn"
-            style="width:auto;"
-            onclick="window.location='/export'">
-      CSVバックアップ
-    </button>
-
-    <button class="btn"
-            style="width:auto;"
-            onclick="window.location='/export_json'">
-      JSONバックアップ
-    </button>
-
-  </div>
-
-</div>
-
-<div id="recentEditBox"></div>
-  
-<hr>
-
-<h2>メニュー</h2>
-
-<!-- 大タブ -->
 <div class="tab-menu">
 
   <button onclick="showMainTab('personTab')">
@@ -347,8 +298,45 @@ h3 {
     城
   </button>
 
+  <button onclick="showMainTab('adminTab')">
+    管理
+  </button>
+
+</div>
+  
+<div id="adminTab"
+     style="display:none;">
+
+  <h2>管理メニュー</h2>
+
+  <input
+    type="file"
+    id="jsonFile"
+    accept=".json">
+
+  <button
+    class="btn"
+    onclick="importJson()">
+    JSON復元
+  </button>
+
+  <button
+    class="btn"
+    onclick="window.location='/export'">
+    CSVバックアップ
+  </button>
+
+  <button
+    class="btn"
+    onclick="window.location='/export_json'">
+    JSONバックアップ
+  </button>
+
 </div>
 
+<div id="recentEditBox"></div>
+  
+<hr>
 
 
 <!-- 人物エリア -->
@@ -1804,6 +1792,9 @@ function toggleAdmin() {
 
 
 function showMainTab(tabId) {
+
+  document.getElementById("adminTab")
+    .style.display = "none";
 
   document.getElementById("personTab").style.display =
     "none";
