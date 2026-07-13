@@ -772,6 +772,87 @@ def get_castles():
 
     return rows
 
+@app.get("/castle/{castle_id}")
+def get_castle(castle_id: int):
+
+    conn = get_db()
+
+    cur = conn.cursor(
+        cursor_factory=psycopg2.extras.RealDictCursor
+    )
+
+    cur.execute("""
+        SELECT *
+        FROM castles
+        WHERE id=%s
+    """, (castle_id,))
+
+    row = cur.fetchone()
+
+    conn.close()
+
+    if not row:
+        raise HTTPException(
+            status_code=404,
+            detail="城が存在しません"
+        )
+
+    return row
+
+@app.put("/castle/{castle_id}")
+def update_castle(
+    castle_id: int,
+    data: dict = Body(...)
+):
+
+    conn = get_db()
+
+    cur = conn.cursor()
+
+    cur.execute("""
+        UPDATE castles
+        SET
+            name=%s,
+            yomi=%s,
+            province=%s,
+            location=%s,
+            description=%s
+        WHERE id=%s
+    """, (
+
+        data.get("name"),
+        data.get("yomi"),
+        data.get("province"),
+        data.get("location"),
+        data.get("description"),
+        castle_id
+
+    ))
+
+    conn.commit()
+    conn.close()
+
+    return {"status": "ok"}
+
+@app.delete("/castle/{castle_id}")
+def delete_castle(castle_id: int):
+
+    conn = get_db()
+
+    cur = conn.cursor()
+
+    cur.execute("""
+        DELETE
+        FROM castles
+        WHERE id=%s
+    """, (castle_id,))
+
+    conn.commit()
+    conn.close()
+
+    return {"status": "ok"}
+
+
 # -----------------------------
 # 名前検索 API
 # -----------------------------
