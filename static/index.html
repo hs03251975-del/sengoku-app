@@ -609,6 +609,10 @@ h3 {
 
   <h2>城登録</h2>
 
+  <input
+    type="hidden"
+    id="castleId">
+
   <input id="castleName" placeholder="城名">
 
   <input id="castleYomi" placeholder="よみ">
@@ -686,12 +690,48 @@ async function loadCastleList() {
   document.getElementById(
     "castleResults"
   ).innerHTML = castles.map(c => `
+
     <div class="card">
-      <b>${c.name}</b>
-      （${c.province || "-"}）
+
+      <div style="display:flex;align-items:center;">
+
+        <div style="flex:1;">
+
+          <b>${c.name}</b>
+
+          （${c.province || "-"}）
+
+        </div>
+
+        <button
+          class="list-btn"
+          onclick="showCastleDetail(${c.id})">
+
+          詳細
+
+        </button>
+
+        <button
+          class="list-btn"
+          onclick="editCastle(${c.id})">
+
+          編集
+
+        </button>
+
+        <button
+          class="list-btn"
+          onclick="deleteCastle(${c.id})">
+
+          削除
+
+        </button>
+
+      </div>
+
     </div>
+
   `).join("");
-}
 
 // 城検索
 async function searchCastles() {
@@ -1377,6 +1417,64 @@ async function showCastleDetail(castleId) {
   ).style.display = "flex";
 }
 
+async function editCastle(id) {
+
+  const res =
+    await fetch(`/castle/${id}`);
+
+  const c =
+    await res.json();
+
+  document.getElementById(
+    "castleId"
+  ).value = c.id;
+
+  document.getElementById(
+    "castleName"
+  ).value = c.name || "";
+
+  document.getElementById(
+    "castleYomi"
+  ).value = c.yomi || "";
+
+  document.getElementById(
+    "castleProvince"
+  ).value = c.province || "";
+
+  document.getElementById(
+    "castleLocation"
+  ).value = c.location || "";
+
+  document.getElementById(
+    "castleDescription"
+  ).value = c.description || "";
+
+}
+
+async function deleteCastle(id) {
+
+  if (!confirm("削除していい？")) {
+    return;
+  }
+
+  const res =
+    await fetch(`/castle/${id}`, {
+      method: "DELETE"
+    });
+
+  if (!res.ok) {
+
+    alert("削除失敗");
+    return;
+
+  }
+
+  alert("削除OK");
+
+  searchCastles();
+
+}
+  
 function closeCastleDetail() {
 
   document.getElementById(
@@ -1582,6 +1680,11 @@ async function savePerson() {
 
 async function saveCastle() {
 
+  const id =
+    document.getElementById(
+      "castleId"
+    ).value;
+
   const data = {
 
     name:
@@ -1600,6 +1703,56 @@ async function saveCastle() {
       document.getElementById("castleDescription").value
 
   };
+
+  if (!data.name) {
+
+    alert("城名必須");
+    return;
+
+  }
+
+  const method =
+    id ? "PUT" : "POST";
+
+  const url =
+    id ? `/castle/${id}` : "/castle";
+
+  const res =
+    await fetch(url, {
+
+      method: method,
+
+      headers: {
+        "Content-Type": "application/json"
+      },
+
+      body: JSON.stringify(data)
+
+    });
+
+  if (!res.ok) {
+
+    alert("保存失敗");
+    return;
+
+  }
+
+  alert("保存OK");
+
+  document.getElementById("castleId").value = "";
+
+  document.getElementById("castleName").value = "";
+
+  document.getElementById("castleYomi").value = "";
+
+  document.getElementById("castleProvince").value = "";
+
+  document.getElementById("castleLocation").value = "";
+
+  document.getElementById("castleDescription").value = "";
+
+  searchCastles();
+}
 
   const res =
     await fetch("/castle", {
