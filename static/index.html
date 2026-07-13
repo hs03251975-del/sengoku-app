@@ -686,17 +686,45 @@ async function loadCastleList() {
   document.getElementById(
     "castleResults"
   ).innerHTML = castles.map(c => `
-
     <div class="card">
-
       <b>${c.name}</b>
-
       （${c.province || "-"}）
-
     </div>
-
   `).join("");
 }
+
+// 城検索
+async function searchCastles() {
+
+  const keyword =
+    document.getElementById("castleSearch")
+      .value.trim();
+
+  const res =
+    await fetch("/castles");
+
+  let castles =
+    await res.json();
+
+  if (keyword) {
+
+    castles = castles.filter(c =>
+      c.name &&
+      c.name.includes(keyword)
+    );
+
+  }
+
+  document.getElementById(
+    "castleResults"
+  ).innerHTML = castles.map(c => `
+    <div class="card">
+      <b>${c.name}</b>
+      （${c.province || "-"}）
+    </div>
+  `).join("");
+}
+
 /* 検索 */
 async function searchPersons() {
   const q = document.getElementById("search").value.trim();
