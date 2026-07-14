@@ -140,8 +140,7 @@ class Person(BaseModel):
     memo9: Optional[str] = None
     memo10: Optional[str] = None
     aliases: Optional[list] = []
-    ranks: Optional[list] = []
-    offices: Optional[list] = []
+    
 
 # -----------------------------
 # 空文字 → None に変換
@@ -356,56 +355,6 @@ def update_person(person_id: int, person: Person = Body(...)):
             a.get("alias_type")
         ))
 
-    cur.execute("""
-        DELETE FROM person_ranks
-        WHERE person_id = %s
-    """, (person_id,))
-
-    for r in person.ranks or []:
-
-    cur.execute("""
-        INSERT INTO person_ranks
-        (
-            person_id,
-            rank_name,
-            start_year,
-            end_year
-        )
-        VALUES (%s,%s,%s,%s)
-    """, (
-
-        person_id,
-        r.get("rank_name"),
-        r.get("start_year"),
-        r.get("end_year")
-
-    ))
-
-    cur.execute("""
-        DELETE FROM person_offices
-        WHERE person_id = %s
-    """, (person_id,))
-
-    for o in person.offices or []:
-
-    cur.execute("""
-        INSERT INTO person_offices
-        (
-            person_id,
-            office_name,
-            start_year,
-            end_year
-        )
-        VALUES (%s,%s,%s,%s)
-    """, (
-
-        person_id,
-        o.get("office_name"),
-        o.get("start_year"),
-        o.get("end_year")
-
-    ))
-    
     conn.commit()
     conn.close()
     return {"status": "ok"}
@@ -697,64 +646,6 @@ def get_aliases(person_id: int):
             alias_type,
             memo
         FROM person_aliases
-        WHERE person_id = %s
-        ORDER BY id
-    """, (person_id,))
-
-    rows = cur.fetchall()
-
-    conn.close()
-
-    return rows
-
-# -----------------------------
-# 官位取得
-# -----------------------------
-@app.get("/person/{person_id}/ranks")
-def get_ranks(person_id: int):
-
-    conn = get_db()
-
-    cur = conn.cursor(
-        cursor_factory=psycopg2.extras.RealDictCursor
-    )
-
-    cur.execute("""
-        SELECT
-            id,
-            rank_name,
-            start_year,
-            end_year
-        FROM person_ranks
-        WHERE person_id = %s
-        ORDER BY id
-    """, (person_id,))
-
-    rows = cur.fetchall()
-
-    conn.close()
-
-    return rows
-
-# -----------------------------
-# 官職取得
-# -----------------------------
-@app.get("/person/{person_id}/offices")
-def get_offices(person_id: int):
-
-    conn = get_db()
-
-    cur = conn.cursor(
-        cursor_factory=psycopg2.extras.RealDictCursor
-    )
-
-    cur.execute("""
-        SELECT
-            id,
-            office_name,
-            start_year,
-            end_year
-        FROM person_offices
         WHERE person_id = %s
         ORDER BY id
     """, (person_id,))
