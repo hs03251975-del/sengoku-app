@@ -533,6 +533,8 @@ label {
   メモ（クリックで開閉）
 </h3>
 
+
+
 <div id="memoSection" class="memo-grid">
 
   <div>
@@ -1126,35 +1128,6 @@ async function showDetail(id) {
         </table>
         `
       : "-";
-  const rankRes =
-    await fetch(`/person/${id}/ranks`);
-
-  const ranks =
-    await rankRes.json();
-
-  const officeRes =
-    await fetch(`/person/${id}/offices`);
-
-  const offices =
-    await officeRes.json();
-
-  const ranksHtml =
-    ranks.length
-      ? ranks.map(r => `
-          <tr>
-            <td>${r.rank_name}</td>
-          </tr>
-        `).join("")
-      : "<tr><td>-</td></tr>";
-
-  const officesHtml =
-    offices.length
-      ? offices.map(o => `
-          <tr>
-            <td>${o.office_name}</td>
-          </tr>
-        `).join("")
-      : "<tr><td>-</td></tr>";
 
   let fatherName = "-";
   let motherName = "-";
@@ -1291,18 +1264,6 @@ async function showDetail(id) {
     <h3>名前・別名</h3>
 
     ${aliasesTable}
-
-    <h3>官位履歴</h3>
-
-    <table>
-      ${ranksHtml}
-    </table>
-
-    <h3>官職履歴</h3>
-
-    <table>
-      ${officesHtml}
-    </table>
 
     <h3>基本情報</h3>
 
@@ -1714,6 +1675,7 @@ async function savePerson() {
     memo10: document.getElementById("memo10").value,
     
     aliases: aliasData
+
   };
 
   if (!data.name) {
@@ -1838,6 +1800,9 @@ function clearForm() {
   document.getElementById("source").value = "";
   document.getElementById("father_name").value = "";
   document.getElementById("mother_name").value = "";
+  document.getElementById("spouse_name").value = "";
+  document.getElementById("childrenList").innerHTML = "-";
+　document.getElementById("siblingsList").innerHTML = "-";
   document.getElementById("sibling_order").value = "";
   document.getElementById("memo1").value = "";
   document.getElementById("memo2").value = "";
