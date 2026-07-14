@@ -365,10 +365,20 @@ def get_children(person_id: int):
     cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
     cur.execute("""
-        SELECT id, name FROM persons
-        WHERE father_id = %s OR mother_id = %s
-        ORDER BY sibling_order NULLS LAST, birth ASC
-    """, (person_id, person_id))
+        SELECT id, name
+        FROM persons
+        WHERE (
+            father_id = %s
+            OR mother_id = %s
+        )
+        AND id <> %s
+        ORDER BY sibling_order NULLS LAST,
+                 birth ASC
+    """, (
+        person_id,
+        person_id,
+        person_id
+    ))
 
     children = cur.fetchall()
     conn.close()
