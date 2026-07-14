@@ -985,10 +985,16 @@ async function updateFamilyInfo() {
   const children =
     await childRes.json();
 
+  const currentId =
+  document.getElementById("personId").value;
+
   document.getElementById("childrenList").innerHTML =
-    children.length
-      ? children.map(c => c.name).join("、")
-      : "-";
+    children
+      .filter(c =>
+        String(c.id) !== String(currentId)
+      )
+      .map(c => c.name)
+      .join("、") || "-";
   
   const sibRes =
     await fetch(`/person/${parentId}/siblings`);
