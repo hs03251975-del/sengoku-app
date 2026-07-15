@@ -1721,10 +1721,16 @@ async function savePerson() {
 
   alert("保存OK");
 
-  // ✅ 編集解除（重要）
   document.getElementById("personId").value = "";
+
   clearForm();
-  searchPersons();
+
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
+
+  document.getElementById("name").focus();
 
 
 
