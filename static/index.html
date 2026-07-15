@@ -1100,6 +1100,27 @@ async function showDetail(id) {
   const aliases =
     await aliasRes.json();
 
+  const aliasOrder = {
+
+    "幼名": 1,
+    "諱": 2,
+    "通称": 3,
+    "法号": 4,
+    "官途名": 5,
+    "受領名": 6,
+    "官位": 7,
+    "改名前": 8,
+    "改名後": 9,
+    "異称": 10,
+    "その他": 11
+
+};
+
+aliases.sort((a, b) =>
+  (aliasOrder[a.alias_type] || 999) -
+  (aliasOrder[b.alias_type] || 999)
+);
+
   const aliasesHtml =
     aliases
       .map(a =>
