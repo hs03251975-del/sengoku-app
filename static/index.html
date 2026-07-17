@@ -293,6 +293,23 @@ label {
 
 <body>
 
+<div
+  id="saveMessage"
+  style="
+    display:none;
+    position:fixed;
+    top:10px;
+    left:50%;
+    transform:translateX(-50%);
+    background:#4caf50;
+    color:white;
+    padding:10px 20px;
+    border-radius:8px;
+    z-index:99999;
+  ">
+  保存しました
+</div>
+
 <h1>戦国データベース</h1>
 
 <div class="tab-menu">
@@ -1719,7 +1736,7 @@ async function savePerson() {
     return;
   }
 
-  alert("保存OK");
+  showSaveMessage();
 
   document.getElementById("personId").value = "";
 
@@ -2056,6 +2073,20 @@ function showRecentEdit() {
        onclick="editPerson(${p.id})">
        ${p.name}
      </span>`;
+}
+
+function showSaveMessage(text = "保存しました") {
+
+  const box =
+    document.getElementById("saveMessage");
+
+  box.textContent = text;
+  box.style.display = "block";
+
+  setTimeout(() => {
+    box.style.display = "none";
+  }, 2000);
+
 }
 
 function scrollToTop() {
