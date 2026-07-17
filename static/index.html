@@ -529,8 +529,8 @@ label {
 
 <div id="aliasList"></div>
 
-<h3 onclick="toggleMemo()">
-  メモ（クリックで開閉）
+<h3 onclick="toggleMemo()" style="cursor:pointer;">
+  メモ ▼（クリックで開閉）
 </h3>
 
 
@@ -1732,8 +1732,6 @@ async function savePerson() {
 
   document.getElementById("name").focus();
 
-
-
 }
 
 async function saveCastle() {
@@ -1982,6 +1980,9 @@ Promise.all([
   loadAllPersons(),
   loadAllCastles()
 ]).then(() => {
+
+  document.getElementById("memoSection")
+    .style.display = "none";
 
   setupAutocomplete(
     "father_name",
