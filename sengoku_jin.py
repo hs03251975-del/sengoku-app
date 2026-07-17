@@ -411,27 +411,6 @@ def get_siblings(person_id: int):
 
     return siblings
 
-@app.get("/castle/{castle_id}")
-def get_castle(castle_id: int):
-
-    conn = get_db()
-
-    cur = conn.cursor(
-        cursor_factory=psycopg2.extras.RealDictCursor
-    )
-
-    cur.execute("""
-        SELECT *
-        FROM castles
-        WHERE id=%s
-    """,(castle_id,))
-
-    row = cur.fetchone()
-
-    conn.close()
-
-    return row
-
 @app.delete("/person/{person_id}")
 def delete_person(person_id: int):
     conn = get_db()
@@ -647,7 +626,23 @@ def get_aliases(person_id: int):
             memo
         FROM person_aliases
         WHERE person_id = %s
-        ORDER BY id
+
+        ORDER BY
+        CASE alias_type
+            WHEN '幼名' THEN 1
+            WHEN '諱' THEN 2
+            WHEN '通称' THEN 3
+            WHEN '法号' THEN 4
+            WHEN '官途名' THEN 5
+            WHEN '受領名' THEN 6
+            WHEN '官位' THEN 7
+            WHEN '改名前' THEN 8
+            WHEN '改名後' THEN 9
+            WHEN '異称' THEN 10
+            WHEN 'その他' THEN 11
+            ELSE 99
+        END,
+        id
     """, (person_id,))
 
     rows = cur.fetchall()
