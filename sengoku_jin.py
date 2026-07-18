@@ -799,6 +799,146 @@ def delete_castle(castle_id: int):
 
     return {"status": "ok"}
 
+# -----------------------------
+# 合戦一覧取得
+# -----------------------------
+@app.get("/battles")
+def get_battles():
+
+    conn = get_db()
+
+    cur = conn.cursor(
+        cursor_factory=psycopg2.extras.RealDictCursor
+    )
+
+    cur.execute("""
+        SELECT *
+        FROM battles
+        ORDER BY battle_date
+    """)
+
+    rows = cur.fetchall()
+
+    conn.close()
+
+    return rows
+
+@app.get("/battle/{battle_id}")
+def get_battle(battle_id: int):
+
+    conn = get_db()
+
+    cur = conn.cursor(
+        cursor_factory=psycopg2.extras.RealDictCursor
+    )
+
+    cur.execute("""
+        SELECT *
+        FROM battles
+        WHERE id=%s
+    """, (battle_id,))
+
+    row = cur.fetchone()
+
+    conn.close()
+
+    if not row:
+        raise HTTPException(
+            status_code=404,
+            detail="合戦が存在しません"
+        )
+
+    return row
+
+@app.post("/battle")
+def create_battle(data: dict = Body(...)):
+
+    conn = get_db()
+
+    cur = conn.cursor()
+
+    cur.execute("""
+        INSERT INTO battles
+        (
+            name,
+            battle_date,
+            province,
+            location,
+            winner,
+            description
+        )
+        VALUES (%s,%s,%s,%s,%s,%s)
+    """, (
+
+        data.get("name"),
+        data.get("battle_date"),
+        data.get("province"),
+        data.get("location"),
+        data.get("winner"),
+        data.get("description")
+
+    ))
+
+    conn.commit()
+    conn.close()
+
+    return {"status":"ok"}
+
+@app.put("/battle/{battle_id}")
+def update_battle(
+    battle_id: int,
+    data: dict = Body(...)
+):
+
+    conn = get_db()
+
+    cur = conn.cursor()
+
+    cur.execute("""
+        UPDATE battles
+        SET
+            name=%s,
+            battle_date=%s,
+            province=%s,
+            location=%s,
+            winner=%s,
+            description=%s
+        WHERE id=%s
+    """, (
+
+        data.get("name"),
+        data.get("battle_date"),
+        data.get("province"),
+        data.get("location"),
+        data.get("winner"),
+        data.get("description"),
+        battle_id
+
+    ))
+
+    conn.commit()
+    conn.close()
+
+    return {"status":"ok"}
+
+@app.delete("/battle/{battle_id}")
+def delete_battle(battle_id: int):
+
+    conn = get_db()
+
+    cur = conn.cursor()
+
+    cur.execute("""
+        DELETE
+        FROM battles
+        WHERE id=%s
+    """, (battle_id,))
+
+    conn.commit()
+    conn.close()
+
+    return {"status":"ok"}
+
 
 # -----------------------------
 # 名前検索 API
