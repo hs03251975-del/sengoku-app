@@ -754,6 +754,16 @@ label {
   </div>
 </div>
 
+<div id="battleModal" onclick="closeBattleDetail()">
+
+  <div
+    id="battleContent"
+    onclick="event.stopPropagation()">
+
+  </div>
+
+</div>
+
 <button id="topBtn" onclick="scrollToTop()">
   ↑TOP
 </button>
@@ -926,44 +936,51 @@ async function searchBattles() {
   }
 
  document.getElementById(
-  "battleResults"
-).innerHTML =
-  battles.map(b => `
+   "battleResults"
+ ).innerHTML =
+   battles.map(b => `
 
-    <div class="card">
+     <div class="card">
 
-      <div style="display:flex;align-items:center;">
+       <div style="display:flex;align-items:center;">
 
-        <div style="flex:1;">
+         <div style="flex:1;">
 
-          <b>${b.name}</b>
+           <b>${b.name}</b>
+           （${b.battle_date || "-"}）
 
-          （${b.battle_date || "-"}）
+         </div>
 
-        </div>
+         <button
+           class="list-btn"
+           onclick="showBattleDetail(${b.id})">
 
-        <button
-          class="list-btn"
-          onclick="editBattle(${b.id})">
+           詳細
 
-          編集
+         </button>
 
-        </button>
+         <button
+           class="list-btn"
+           onclick="editBattle(${b.id})">
 
-        <button
-          class="list-btn"
-          onclick="deleteBattle(${b.id})">
+           編集
 
-          削除
+         </button>
 
-        </button>
+         <button
+           class="list-btn"
+           onclick="deleteBattle(${b.id})">
 
-      </div>
+           削除
 
-    </div>
+         </button>
 
-  `).join("");
-}
+       </div>
+
+     </div>
+
+   `).join("");
+ }
 
 /* 検索 */
 async function searchPersons() {
@@ -1601,6 +1618,75 @@ async function showCastleDetail(castleId) {
   document.getElementById(
     "castleModal"
   ).style.display = "flex";
+}
+
+async function showBattleDetail(id) {
+
+  const res =
+    await fetch(`/battle/${id}`);
+
+  const b =
+    await res.json();
+
+  document.getElementById(
+    "battleContent"
+  ).innerHTML = `
+
+    <h2>${b.name}</h2>
+
+    <table>
+
+      <tr>
+        <td><b>年月</b></td>
+        <td>${b.battle_date || "-"}</td>
+      </tr>
+
+      <tr>
+        <td><b>旧国名</b></td>
+        <td>${b.province || "-"}</td>
+      </tr>
+
+      <tr>
+        <td><b>場所</b></td>
+        <td>${b.location || "-"}</td>
+      </tr>
+
+      <tr>
+        <td><b>勝者</b></td>
+        <td>${b.winner || "-"}</td>
+      </tr>
+
+    </table>
+
+    <h3>説明</h3>
+
+    <p>
+      ${(b.description || "-")
+         .replace(/\n/g,"<br>")}
+    </p>
+
+    <button
+      class="btn"
+      onclick="closeBattleDetail()">
+
+      閉じる
+
+    </button>
+
+  `;
+
+  document.getElementById(
+    "battleModal"
+  ).style.display = "flex";
+
+}
+
+function closeBattleDetail() {
+
+  document.getElementById(
+    "battleModal"
+  ).style.display = "none";
+
 }
 
 async function editCastle(id) {
