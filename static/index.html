@@ -322,6 +322,10 @@ label {
     城
   </button>
 
+  <button onclick="showMainTab('battleTab')">
+    合戦
+　</button>
+
   <button onclick="showMainTab('adminTab')">
     管理
   </button>
@@ -686,8 +690,61 @@ label {
 
 <hr>
 
-<div id="detailModal" onclick="closeDetail()">
-  <div id="detailContent"></div>
+<div id="battleTab" style="display:none;">
+
+  <h2>合戦検索</h2>
+
+  <input
+    id="battleSearch"
+    placeholder="合戦検索">
+
+  <button
+    class="btn"
+    onclick="searchBattles()">
+    検索
+  </button>
+
+  <div id="battleResults"></div>
+
+  <hr>
+
+  <h2>合戦登録</h2>
+
+  <input
+    type="hidden"
+    id="battleId">
+
+  <label>合戦名</label>
+  <input id="battleName">
+
+  <label>年月</label>
+  <input id="battleDate">
+
+  <label>旧国名</label>
+  <input id="battleProvince">
+
+  <label>場所</label>
+  <input id="battleLocation">
+
+  <label>勝者</label>
+  <input id="battleWinner">
+
+  <label>説明</label>
+  <textarea
+    id="battleDescription"></textarea>
+
+  <div class="save-area">
+
+    <button
+      class="btn save-btn"
+      onclick="saveBattle()">
+
+      合戦保存
+
+    </button>
+
+  </div>
+
 </div>
 
 <div id="castleModal" onclick="closeCastleDetail()">
@@ -2045,6 +2102,9 @@ function showMainTab(tabId) {
     .style.display = "none";
 
   document.getElementById("castleTab")
+    .style.display = "none";
+
+  document.getElementById("battleTab")
     .style.display = "none";
 
   document.getElementById(tabId)
