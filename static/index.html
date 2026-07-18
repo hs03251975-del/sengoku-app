@@ -925,21 +925,44 @@ async function searchBattles() {
 
   }
 
-  document.getElementById(
-    "battleResults"
-  ).innerHTML =
-    battles.map(b => `
+ document.getElementById(
+  "battleResults"
+).innerHTML =
+  battles.map(b => `
 
-      <div class="card">
+    <div class="card">
 
-        <b>${b.name}</b>
+      <div style="display:flex;align-items:center;">
 
-        （${b.battle_date || "-"}）
+        <div style="flex:1;">
+
+          <b>${b.name}</b>
+
+          （${b.battle_date || "-"}）
+
+        </div>
+
+        <button
+          class="list-btn"
+          onclick="editBattle(${b.id})">
+
+          編集
+
+        </button>
+
+        <button
+          class="list-btn"
+          onclick="deleteBattle(${b.id})">
+
+          削除
+
+        </button>
 
       </div>
 
-    `).join("");
+    </div>
 
+  `).join("");
 }
 
 /* 検索 */
@@ -1614,6 +1637,44 @@ async function editCastle(id) {
 
 }
 
+async function editBattle(id) {
+
+  const res =
+    await fetch(`/battle/${id}`);
+
+  const b =
+    await res.json();
+
+  document.getElementById(
+    "battleId"
+  ).value = b.id;
+
+  document.getElementById(
+    "battleName"
+  ).value = b.name || "";
+
+  document.getElementById(
+    "battleDate"
+  ).value = b.battle_date || "";
+
+  document.getElementById(
+    "battleProvince"
+  ).value = b.province || "";
+
+  document.getElementById(
+    "battleLocation"
+  ).value = b.location || "";
+
+  document.getElementById(
+    "battleWinner"
+  ).value = b.winner || "";
+
+  document.getElementById(
+    "battleDescription"
+  ).value = b.description || "";
+
+}
+
 async function deleteCastle(id) {
 
   if (!confirm("削除していい？")) {
@@ -1635,6 +1696,30 @@ async function deleteCastle(id) {
   alert("削除OK");
 
   searchCastles();
+
+}
+
+async function deleteBattle(id) {
+
+  if (!confirm("削除していい？")) {
+    return;
+  }
+
+  const res =
+    await fetch(`/battle/${id}`, {
+      method: "DELETE"
+    });
+
+  if (!res.ok) {
+
+    alert("削除失敗");
+    return;
+
+  }
+
+  alert("削除OK");
+
+  searchBattles();
 
 }
   
@@ -2207,10 +2292,10 @@ function showMainTab(tabId) {
   document.getElementById(tabId)
     .style.display = "block";
 
-  if (tabId === "castleTab") {
-    document.getElementById("castleResults")
-      .innerHTML = "";
+  if (tabId === "battleTab") {
+    searchBattles();
   }
+
 }
 
 function showRecentEdit() {
