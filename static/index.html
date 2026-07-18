@@ -1883,6 +1883,36 @@ async function saveCastle() {
 
 }
 
+async function saveBattle() {
+
+  const data = {
+
+    name:
+      document.getElementById("battleName").value,
+
+    battle_date:
+      document.getElementById("battleDate").value,
+
+    province:
+      document.getElementById("battleProvince").value,
+
+    location:
+      document.getElementById("battleLocation").value,
+
+    winner:
+      document.getElementById("battleWinner").value,
+
+    description:
+      document.getElementById("battleDescription").value
+
+  };
+
+  console.log(data);
+
+  alert("合戦保存はまだ未実装");
+
+}
+
 function clearForm() {
   document.getElementById("personId").value = "";
   document.getElementById("name").value = "";
