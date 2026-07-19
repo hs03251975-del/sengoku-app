@@ -717,29 +717,45 @@ label {
 
   <h2>合戦登録</h2>
 
-  <input
-    type="hidden"
-    id="battleId">
+<input
+  type="hidden"
+  id="battleId">
 
-  <label>合戦名</label>
-  <input id="battleName">
+<div class="form-grid">
 
-  <label>年月</label>
-  <input id="battleDate">
+  <div>
+    <label>合戦名</label>
+    <input id="battleName">
+  </div>
 
-  <label>旧国名</label>
-  <input id="battleProvince">
+  <div>
+    <label>年月</label>
+    <input id="battleDate">
+  </div>
 
-  <label>場所</label>
-  <input id="battleLocation">
+  <div>
+    <label>旧国名</label>
+    <input id="battleProvince">
+  </div>
 
-  <label>勝者</label>
-  <input id="battleWinner">
+  <div>
+    <label>場所</label>
+    <input id="battleLocation">
+  </div>
 
-  <label>説明</label>
-  <textarea
-    id="battleDescription"></textarea>
+</div>
 
+<div class="form-grid">
+
+  <div class="wide-column">
+    <label>勝者</label>
+    <input id="battleWinner">
+  </div>
+
+</div>
+
+<label>説明</label>
+<textarea id="battleDescription"></textarea>
   <div class="save-area">
 
     <button
