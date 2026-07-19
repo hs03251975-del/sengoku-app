@@ -220,16 +220,22 @@ h1 {
   width: 100%;
 }
 
-.battle-grid-top {
+.battle-grid-top,
+.battle-grid-middle {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
   gap: 10px;
 }
 
-.battle-grid-middle {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 10px;
+@media (min-width: 768px) {
+
+  .battle-grid-top {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .battle-grid-middle {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
 }
 
 #memoSection textarea {
@@ -774,7 +780,7 @@ label {
 
 <!-- 2行目 -->
 
-<div class="battle-grid-top">
+<div class="battle-grid-middle">
 
   <div>
     <label>旧国名</label>
@@ -2222,6 +2228,14 @@ async function saveBattle() {
   }
 
   showSaveMessage("合戦保存完了");
+
+  document.getElementById("battleId").value = "";
+  document.getElementById("battleName").value = "";
+  document.getElementById("battleYomi").value = "";
+  document.getElementById("battleDate").value = "";
+  document.getElementById("battleProvince").value = "";
+  document.getElementById("battleLocation").value = "";
+  document.getElementById("battleDescription").value = "";
 
 }
 
