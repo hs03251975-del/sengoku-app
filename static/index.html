@@ -114,6 +114,24 @@ input, select, textarea {
   overflow: auto;
 }
 
+#battleModal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+
+#battleContent {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  width: 90%;
+  max-height: 90%;
+  overflow: auto;
+}
+  
 /* 共通 */
 .link-like {
   color: blue;
@@ -200,6 +218,18 @@ h1 {
   grid-template-columns: 1fr;
   gap: 20px;
   width: 100%;
+}
+
+.battle-grid-top {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.battle-grid-middle {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
 }
 
 #memoSection textarea {
@@ -721,7 +751,9 @@ label {
   type="hidden"
   id="battleId">
 
-<div class="form-grid">
+<!-- 1行目 -->
+
+<div class="battle-grid-top">
 
   <div>
     <label>合戦名</label>
@@ -729,9 +761,20 @@ label {
   </div>
 
   <div>
+    <label>よみ</label>
+    <input id="battleYomi">
+  </div>
+
+  <div>
     <label>年月</label>
     <input id="battleDate">
   </div>
+
+</div>
+
+<!-- 2行目 -->
+
+<div class="form-grid">
 
   <div>
     <label>旧国名</label>
@@ -745,17 +788,18 @@ label {
 
 </div>
 
-<div class="form-grid">
+<!-- 3行目 -->
 
-  <div class="wide-column">
-    <label>勝者</label>
-    <input id="battleWinner">
-  </div>
+<div class="long-field">
+
+  <label>説明</label>
+
+  <textarea
+    id="battleDescription"
+    class="large-text">
+  </textarea>
 
 </div>
-
-<label>説明</label>
-<textarea id="battleDescription"></textarea>
   <div class="save-area">
 
     <button
@@ -1667,6 +1711,11 @@ async function showBattleDetail(id) {
     <table>
 
       <tr>
+        <td><b>よみ</b></td>
+        <td>${b.yomi || "-"}</td>
+      </tr>
+
+      <tr>
         <td><b>年月</b></td>
         <td>${b.battle_date || "-"}</td>
       </tr>
@@ -1679,11 +1728,6 @@ async function showBattleDetail(id) {
       <tr>
         <td><b>場所</b></td>
         <td>${b.location || "-"}</td>
-      </tr>
-
-      <tr>
-        <td><b>勝者</b></td>
-        <td>${b.winner || "-"}</td>
       </tr>
 
     </table>
@@ -1770,6 +1814,10 @@ async function editBattle(id) {
   ).value = b.name || "";
 
   document.getElementById(
+    "battleYomi"
+  ).value = b.yomi || "";
+
+  document.getElementById(
     "battleDate"
   ).value = b.battle_date || "";
 
@@ -1780,10 +1828,6 @@ async function editBattle(id) {
   document.getElementById(
     "battleLocation"
   ).value = b.location || "";
-
-  document.getElementById(
-    "battleWinner"
-  ).value = b.winner || "";
 
   document.getElementById(
     "battleDescription"
@@ -2132,6 +2176,9 @@ async function saveBattle() {
     name:
       document.getElementById("battleName").value,
 
+    yomi:
+      document.getElementById("battleYomi").value,
+
     battle_date:
       document.getElementById("battleDate").value,
 
@@ -2140,9 +2187,6 @@ async function saveBattle() {
 
     location:
       document.getElementById("battleLocation").value,
-
-    winner:
-      document.getElementById("battleWinner").value,
 
     description:
       document.getElementById("battleDescription").value
