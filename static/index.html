@@ -808,6 +808,18 @@ label {
 </div>
   <div class="save-area">
 
+<h3>参加勢力</h3>
+
+<div id="battleGroups"></div>
+
+<button
+  type="button"
+  onclick="addBattleGroup()">
+
+  勢力追加
+
+</button>
+
     <button
       class="btn save-btn"
       onclick="saveBattle()">
@@ -2195,7 +2207,9 @@ async function saveBattle() {
       document.getElementById("battleLocation").value,
 
     description:
-      document.getElementById("battleDescription").value
+      document.getElementById("battleDescription").value,
+
+    groups: battleGroups
 
   };
 
@@ -2360,6 +2374,43 @@ function addAlias() {
 
   document.getElementById("alias_name")
     .value = "";
+}
+
+let battleGroups = [];
+
+function addBattleGroup() {
+
+  battleGroups.push({
+    group_name: "",
+    members: []
+  });
+
+  renderBattleGroups();
+
+}
+
+function renderBattleGroups() {
+
+  const box =
+    document.getElementById("battleGroups");
+
+  box.innerHTML =
+    battleGroups.map((g, i) => `
+
+      <div class="card">
+
+        <label>勢力名</label>
+
+        <input
+          value="${g.group_name}"
+          onchange="
+            battleGroups[${i}].group_name=this.value
+          ">
+
+      </div>
+
+    `).join("");
+
 }
 
 function renderAliasList() {
