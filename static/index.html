@@ -2496,6 +2496,12 @@ function addGroupMember(groupIndex) {
 
   if (!name) return;
 
+  alert(
+    JSON.stringify(
+      allPersonsCache.map(p => p.name)
+    )
+  );
+
   const person =
     allPersonsCache.find(
       p => p.name === name
@@ -2506,17 +2512,13 @@ function addGroupMember(groupIndex) {
     return;
   }
 
-  if (!battleGroups[groupIndex].members) {
-    battleGroups[groupIndex].members = [];
-  }
-
   battleGroups[groupIndex].members.push(
     person.id
   );
 
   renderBattleGroups();
-
 }
+  
 function renderAliasList() {
 
   const box =
