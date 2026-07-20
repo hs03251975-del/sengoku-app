@@ -903,6 +903,8 @@ def create_battle(data: dict = Body(...)):
 
     return {"status":"ok"}
 
+
+
 @app.put("/battle/{battle_id}")
 def update_battle(
     battle_id: int,
@@ -982,6 +984,64 @@ def get_battle_groups(battle_id: int):
 
     return rows
 
+@app.get("/battle_group/{group_id}/persons")
+def get_battle_group_persons(group_id: int):
+
+    conn = get_db()
+
+    cur = conn.cursor(
+        cursor_factory=psycopg2.extras.RealDictCursor
+    )
+
+    cur.execute("""
+        SELECT
+            bgp.id,
+            p.id AS person_id,
+            p.name,
+            p.yomi
+        FROM battle_group_persons bgp
+
+        JOIN persons p
+             ON p.id = bgp.person_id
+
+        WHERE bgp.battle_group_id = %s
+
+        ORDER BY p.yomi
+    """, (group_id,))
+
+    rows = cur.fetchall()
+
+    conn.close()
+
+    return rows
+
+@app.post("/battle_group/{group_id}/person")
+def add_person_to_group(
+    group_id: int,
+    data: dict = Body(...)
+):
+
+    conn = get_db()
+
+    cur = conn.cursor()
+
+    cur.execute("""
+        INSERT INTO battle_group_persons
+        (
+            battle_group_id,
+            person_id
+        )
+        VALUES (%s,%s)
+    """, (
+        group_id,
+        data.get("person_id")
+    ))
+
+    conn.commit()
+    conn.close()
+
+    return {"status":"ok"}
+
 @app.delete("/battle/{battle_id}")
 def delete_battle(battle_id: int):
 
@@ -994,6 +1054,24 @@ def delete_battle(battle_id: int):
         FROM battles
         WHERE id=%s
     """, (battle_id,))
+
+    conn.commit()
+    conn.close()
+
+    return {"status":"ok"}
+
+@app.delete("/battle_group_person/{id}")
+def delete_group_person(id: int):
+
+    conn = get_db()
+
+    cur = conn.cursor()
+
+    cur.execute("""
+        DELETE
+        FROM battle_group_persons
+        WHERE id=%s
+    """, (id,))
 
     conn.commit()
     conn.close()
