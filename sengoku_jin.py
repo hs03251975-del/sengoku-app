@@ -886,6 +886,11 @@ def create_battle(data: dict = Body(...)):
 
     for g in groups:
 
+        group_name = g.get("group_name")
+
+        if not group_name:
+            continue
+
         cur.execute("""
             INSERT INTO battle_groups
             (
@@ -895,7 +900,7 @@ def create_battle(data: dict = Body(...)):
             VALUES (%s,%s)
         """, (
             battle_id,
-            g.get("group_name")
+            group_name
         ))
 
     conn.commit()
@@ -945,6 +950,11 @@ def update_battle(
 
     for g in groups:
 
+        group_name = g.get("group_name")
+
+        if not group_name:
+            continue
+
         cur.execute("""
             INSERT INTO battle_groups
             (
@@ -954,7 +964,7 @@ def update_battle(
             VALUES (%s,%s)
         """, (
             battle_id,
-            g.get("group_name")
+            group_name
         ))
 
     conn.commit()
