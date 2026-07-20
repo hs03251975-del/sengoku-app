@@ -2473,14 +2473,24 @@ function renderBattleGroups() {
             ${memberNames || "登録武将なし"}
           </div>
 
+          <select id="memberSelect${i}">
+            <option value="">武将選択</option>
+
+            ${allPersonsCache.map(p => `
+              <option value="${p.id}">
+                ${p.name}
+              </option>
+            `).join("")}
+
+          </select>
+
           <button
             type="button"
             onclick="addGroupMember(${i})">
 
-            武将追加
+            追加
 
           </button>
-
         </div>
 
       `;
