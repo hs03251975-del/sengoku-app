@@ -2412,16 +2412,16 @@ function renderBattleGroups() {
 
       const memberNames =
         (g.members || [])
-        .map(id => {
+          .map(id => {
 
-          const p =
-            allPersonsCache.find(
-              x => String(x.id) === String(id)
-            );
+            const p =
+              allPersonsCache.find(
+                x => String(x.id) === String(id)
+              );
 
-          return p ? p.name : "不明";
-        })
-        .join("、");
+            return p ? p.name : "不明";
+          })
+          .join("、");
 
       return `
 
@@ -2436,9 +2436,7 @@ function renderBattleGroups() {
             ">
 
           <div class="info-box">
-
             ${memberNames || "登録武将なし"}
-
           </div>
 
           <button
