@@ -1072,6 +1072,40 @@ def get_battle_group_persons(group_id: int):
 
     return rows
 
+@app.get("/person/{person_id}/battles")
+def get_person_battles(person_id: int):
+
+    conn = get_db()
+
+    cur = conn.cursor(
+        cursor_factory=psycopg2.extras.RealDictCursor
+    )
+
+    cur.execute("""
+        SELECT
+            b.id,
+            b.name,
+            b.battle_date,
+            bg.group_name
+        FROM battle_group_persons bgp
+
+        JOIN battle_groups bg
+          ON bg.id = bgp.battle_group_id
+
+        JOIN battles b
+          ON b.id = bg.battle_id
+
+        WHERE bgp.person_id = %s
+
+        ORDER BY b.battle_date
+    """, (person_id,))
+
+    rows = cur.fetchall()
+
+    conn.close()
+
+    return rows
+
 @app.post("/battle_group/{group_id}/person")
 def add_person_to_group(
     group_id: int,
