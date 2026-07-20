@@ -1863,18 +1863,25 @@ async function editBattle(id) {
     await fetch(`/battle/${id}/groups`);
 
   battleGroups =
-      await groupRes.json();
+    await groupRes.json();
 
-  battleGroups.forEach(g => {
+  for (const g of battleGroups) {
 
-    if (!g.members) {
-      g.members = [];
-    }
+    const personRes =
+      await fetch(
+        `/battle_group/${g.id}/persons`
+      );
 
-  });
+    const persons =
+      await personRes.json();
 
-renderBattleGroups();
+    g.members =
+      persons.map(
+        p => p.person_id
+      );
+  }
 
+  renderBattleGroups();
 }
 
 async function deleteCastle(id) {
