@@ -2267,6 +2267,12 @@ async function saveBattle() {
 
   });
 
+  alert("HTTP " + res.status);
+
+  const text = await res.text();
+
+  alert(text);
+
   if (!res.ok) {
     alert("保存失敗");
     return;
