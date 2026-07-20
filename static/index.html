@@ -2491,30 +2491,27 @@ function renderBattleGroups() {
 
 function addGroupMember(groupIndex) {
 
-  const name =
-    prompt("武将名");
+  const name = prompt("武将名");
 
   if (!name) return;
 
-  alert(
-    JSON.stringify(
-      allPersonsCache.map(p => p.name)
-    )
-  );
+  const keyword = name.trim();
 
   const person =
     allPersonsCache.find(
-      p => p.name === name
+      p => p.name && p.name.trim() === keyword
     );
 
   if (!person) {
-    alert("人物なし");
+    alert("人物なし: " + keyword);
     return;
   }
 
-  battleGroups[groupIndex].members.push(
-    person.id
-  );
+  if (!battleGroups[groupIndex].members) {
+    battleGroups[groupIndex].members = [];
+  }
+
+  battleGroups[groupIndex].members.push(person.id);
 
   renderBattleGroups();
 }
