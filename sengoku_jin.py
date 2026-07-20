@@ -898,10 +898,29 @@ def create_battle(data: dict = Body(...)):
                 group_name
             )
             VALUES (%s,%s)
+            RETURNING id
         """, (
             battle_id,
             group_name
         ))
+
+        group_id = cur.fetchone()[0]
+
+        members = g.get("members", [])
+
+        for person_id in members:
+
+            cur.execute("""
+                INSERT INTO battle_group_persons
+                (
+                    battle_group_id,
+                    person_id
+                 )
+                 VALUES (%s,%s)
+             """, (
+                group_id,
+                person_id
+             ))
 
     conn.commit()
     conn.close()
@@ -962,11 +981,30 @@ def update_battle(
                 group_name
             )
             VALUES (%s,%s)
+            RETURNING id
         """, (
             battle_id,
             group_name
         ))
 
+        group_id = cur.fetchone()[0]
+
+        members = g.get("members", [])
+
+        for person_id in members:
+
+            cur.execute("""
+                INSERT INTO battle_group_persons
+                (
+                    battle_group_id,
+                    person_id
+                )
+                VALUES (%s,%s)
+            """, (
+                group_id,
+                person_id
+            ))
+            
     conn.commit()
     conn.close()
 
