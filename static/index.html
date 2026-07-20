@@ -2491,19 +2491,24 @@ function renderBattleGroups() {
 
 function addGroupMember(groupIndex) {
 
-  const name = prompt("武将名");
+  const names =
+    allPersonsCache.map(
+      p => p.name
+    ).join("\n");
+
+  const name = prompt(
+    "武将名を入力\n\n" + names
+  );
 
   if (!name) return;
 
-  const keyword = name.trim();
-
   const person =
     allPersonsCache.find(
-      p => p.name && p.name.trim() === keyword
+      p => p.name === name.trim()
     );
 
   if (!person) {
-    alert("人物なし: " + keyword);
+    alert("人物なし");
     return;
   }
 
@@ -2511,7 +2516,9 @@ function addGroupMember(groupIndex) {
     battleGroups[groupIndex].members = [];
   }
 
-  battleGroups[groupIndex].members.push(person.id);
+  battleGroups[groupIndex].members.push(
+    person.id
+  );
 
   renderBattleGroups();
 }
