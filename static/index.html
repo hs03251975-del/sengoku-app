@@ -2420,9 +2420,58 @@ function renderBattleGroups() {
             battleGroups[${i}].group_name=this.value
           ">
 
-      </div>
+        <div id="groupMembers${i}">
+          登録武将なし
+        </div>
 
+        <button
+          type="button"
+          onclick="addGroupMember(${i})">
+
+          武将追加
+
+        </button>
+
+      </div>
+    
+    const memberNames =
+      g.members
+      .map(id => {
+
+          const p =
+           allPersonsCache.find(
+             x => x.id === id
+          );
+
+          return p ? p.name : "不明";
+
+       })
+       .join("、");
     `).join("");
+
+}
+
+function addGroupMember(groupIndex) {
+
+  const name =
+    prompt("武将名");
+
+  if (!name) return;
+
+  const person =
+    allPersonsCache.find(
+      p => p.name === name
+    );
+
+  if (!person) {
+    alert("人物なし");
+    return;
+  }
+
+  battleGroups[groupIndex]
+    .members.push(person.id);
+
+  renderBattleGroups();
 
 }
 
