@@ -1851,6 +1851,14 @@ async function editBattle(id) {
     "battleDescription"
   ).value = b.description || "";
 
+  const groupRes =
+    await fetch(`/battle/${id}/groups`);
+
+  battleGroups =
+      await groupRes.json();
+
+  renderBattleGroups();
+
 }
 
 async function deleteCastle(id) {
@@ -2209,7 +2217,9 @@ async function saveBattle() {
     description:
       document.getElementById("battleDescription").value,
 
-    groups: battleGroups
+    groups: battleGroups.filter(
+      g => g.group_name.trim()
+    )
 
   };
 
@@ -2250,6 +2260,9 @@ async function saveBattle() {
   document.getElementById("battleProvince").value = "";
   document.getElementById("battleLocation").value = "";
   document.getElementById("battleDescription").value = "";
+
+  battleGroups = [];
+  renderBattleGroups();
 
 }
 
