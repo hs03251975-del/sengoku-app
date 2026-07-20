@@ -2242,7 +2242,7 @@ async function saveBattle() {
 
   };
 
-  alert("③data完成");
+  alert(JSON.stringify(data, null, 2));
 
   if (!data.name) {
     alert("合戦名必須");
