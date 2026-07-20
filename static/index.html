@@ -2501,33 +2501,19 @@ function renderBattleGroups() {
 
 function addGroupMember(groupIndex) {
 
-  const names =
-    allPersonsCache.map(
-      p => p.name
-    ).join("\n");
+  const personId =
+    document.getElementById(
+      `memberSelect${groupIndex}`
+    ).value;
 
-  const name = prompt(
-    "武将名を入力\n\n" + names
-  );
-
-  if (!name) return;
-
-  const person =
-    allPersonsCache.find(
-      p => p.name === name.trim()
-    );
-
-  if (!person) {
-    alert("人物なし");
-    return;
-  }
+  if (!personId) return;
 
   if (!battleGroups[groupIndex].members) {
     battleGroups[groupIndex].members = [];
   }
 
   battleGroups[groupIndex].members.push(
-    person.id
+    Number(personId)
   );
 
   renderBattleGroups();
