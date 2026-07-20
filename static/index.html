@@ -1331,6 +1331,33 @@ async function showDetail(id) {
   const res = await fetch(`/person/${id}`);
   const p = await res.json();
 
+  const battleRes =
+    await fetch(`/person/${id}/battles`);
+
+  const battles =
+    await battleRes.json();
+
+  const battleHtml =
+    battles.length
+      ? battles.map(b => `
+          <div>
+
+            ${b.battle_date || ""}
+
+            <span
+              class="link-like"
+              onclick="showBattleDetail(${b.id})">
+
+              ${b.name}
+
+            </span>
+
+            （${b.group_name}）
+
+          </div>
+        `).join("")
+      : "-";
+
   // 子供取得
   const childrenRes =
     await fetch(`/person/${id}/children`);
@@ -1577,7 +1604,11 @@ aliases.sort((a, b) =>
 
     </table>
 
-    <h3>戦歴</h3>
+    <h3>参加合戦</h3>
+
+    ${battleHtml}
+
+    <h3>戦歴メモ</h3>
 
     <p>
     ${(p.history || "-").replace(/\n/g, "<br>")}
