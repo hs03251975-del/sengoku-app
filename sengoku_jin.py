@@ -861,23 +861,42 @@ def create_battle(data: dict = Body(...)):
         INSERT INTO battles
         (
             name,
+            yomi,
             battle_date,
             province,
             location,
-            winner,
             description
         )
         VALUES (%s,%s,%s,%s,%s,%s)
+        RETURNING id
     """, (
 
         data.get("name"),
+        data.get("yomi"),
         data.get("battle_date"),
         data.get("province"),
         data.get("location"),
-        data.get("winner"),
         data.get("description")
 
     ))
+
+    battle_id = cur.fetchone()[0]
+
+    groups = data.get("groups", [])
+
+    for g in groups:
+
+        cur.execute("""
+            INSERT INTO battle_groups
+            (
+                battle_id,
+                group_name
+            )
+            VALUES (%s,%s)
+        """, (
+            battle_id,
+            g.get("group_name")
+        ))
 
     conn.commit()
     conn.close()
@@ -891,35 +910,77 @@ def update_battle(
 ):
 
     conn = get_db()
-
     cur = conn.cursor()
 
     cur.execute("""
         UPDATE battles
         SET
             name=%s,
+            yomi=%s,
             battle_date=%s,
             province=%s,
             location=%s,
-            winner=%s,
             description=%s
         WHERE id=%s
     """, (
 
         data.get("name"),
+        data.get("yomi"),
         data.get("battle_date"),
         data.get("province"),
         data.get("location"),
-        data.get("winner"),
         data.get("description"),
         battle_id
 
     ))
 
+    cur.execute("""
+        DELETE FROM battle_groups
+        WHERE battle_id=%s
+    """, (battle_id,))
+
+    groups = data.get("groups", [])
+
+    for g in groups:
+
+        cur.execute("""
+            INSERT INTO battle_groups
+            (
+                battle_id,
+                group_name
+            )
+            VALUES (%s,%s)
+        """, (
+            battle_id,
+            g.get("group_name")
+        ))
+
     conn.commit()
     conn.close()
 
     return {"status":"ok"}
+
+@app.get("/battle/{battle_id}/groups")
+def get_battle_groups(battle_id: int):
+
+    conn = get_db()
+
+    cur = conn.cursor(
+        cursor_factory=psycopg2.extras.RealDictCursor
+    )
+
+    cur.execute("""
+        SELECT *
+        FROM battle_groups
+        WHERE battle_id=%s
+        ORDER BY id
+    """, (battle_id,))
+
+    rows = cur.fetchall()
+
+    conn.close()
+
+    return rows
 
 @app.delete("/battle/{battle_id}")
 def delete_battle(battle_id: int):
