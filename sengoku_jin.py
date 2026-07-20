@@ -961,10 +961,19 @@ def update_battle(
     ))
 
     cur.execute("""
+        DELETE FROM battle_group_persons
+        WHERE battle_group_id IN (
+            SELECT id
+            FROM battle_groups
+            WHERE battle_id=%s
+        )
+    """, (battle_id,))
+
+    cur.execute("""
         DELETE FROM battle_groups
         WHERE battle_id=%s
     """, (battle_id,))
-
+    
     groups = data.get("groups", [])
 
     for g in groups:
@@ -1098,8 +1107,21 @@ def delete_battle(battle_id: int):
     cur = conn.cursor()
 
     cur.execute("""
-        DELETE
-        FROM battles
+        DELETE FROM battle_group_persons
+        WHERE battle_group_id IN (
+            SELECT id
+            FROM battle_groups
+            WHERE battle_id=%s
+        )
+    """, (battle_id,))
+
+    cur.execute("""
+        DELETE FROM battle_groups
+        WHERE battle_id=%s
+    """, (battle_id,))
+
+    cur.execute("""
+        DELETE FROM battles
         WHERE id=%s
     """, (battle_id,))
 
