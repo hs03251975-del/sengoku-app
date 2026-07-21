@@ -1017,6 +1017,13 @@ async function searchCastles() {
 
 async function searchBattles() {
 
+  if (!keyword) {
+    document.getElementById(
+      "battleResults"
+    ).style.display = "none";
+    return;
+  }
+
   const keyword =
     document.getElementById("battleSearch")
       .value.trim();
@@ -1081,6 +1088,11 @@ async function searchBattles() {
      </div>
 
    `).join("");
+
+   document.getElementById(
+     "battleResults"
+   ).style.display = "block";
+  
  }
 
 /* 検索 */
@@ -2694,10 +2706,6 @@ function showMainTab(tabId) {
 
   document.getElementById(tabId)
     .style.display = "block";
-
-  if (tabId === "battleTab") {
-    searchBattles();
-  }
 
 }
 
