@@ -1049,12 +1049,11 @@ async function searchBattles() {
     b.name.includes(keyword)
   );
 
-  }
 
- document.getElementById(
-   "battleResults"
- ).innerHTML =
-   battles.map(b => `
+  document.getElementById(
+    "battleResults"
+  ).innerHTML =
+    battles.map(b => `
 
      <div class="card">
 
