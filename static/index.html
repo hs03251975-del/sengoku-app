@@ -1022,12 +1022,18 @@ async function searchBattles() {
       .value.trim();
 
   if (!keyword) {
+
+    document.getElementById(
+      "battleResults"
+    ).innerHTML = "";
+
     document.getElementById(
       "battleResults"
     ).style.display = "none";
+
     return;
   }
-
+  
   const res =
     await fetch("/battles");
 
