@@ -1021,19 +1021,16 @@ async function searchBattles() {
     document.getElementById("battleSearch")
       .value.trim();
 
-  console.log("keyword=", keyword);
+  let battles =
+    await res.json();
 
-  if (!keyword) {
+  if (keyword) {
 
-    document.getElementById(
-      "battleResults"
-    ).innerHTML = "";
+    battles = battles.filter(b =>
+      b.name &&
+      b.name.includes(keyword)
+    );
 
-    document.getElementById(
-      "battleResults"
-    ).style.display = "none";
-
-    return;
   }
   
   const res =
@@ -1042,13 +1039,10 @@ async function searchBattles() {
   let battles =
     await res.json();
 
-  console.log("battles=", battles);
-
   battles = battles.filter(b =>
     b.name &&
     b.name.includes(keyword)
   );
-
 
   document.getElementById(
     "battleResults"
