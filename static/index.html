@@ -1021,6 +1021,9 @@ async function searchBattles() {
     document.getElementById("battleSearch")
       .value.trim();
 
+  const res =
+    await fetch("/battles");
+
   let battles =
     await res.json();
 
@@ -1032,70 +1035,52 @@ async function searchBattles() {
     );
 
   }
-  
-  const res =
-    await fetch("/battles");
-
-  let battles =
-    await res.json();
-
-  battles = battles.filter(b =>
-    b.name &&
-    b.name.includes(keyword)
-  );
 
   document.getElementById(
     "battleResults"
   ).innerHTML =
     battles.map(b => `
 
-     <div class="card">
+      <div class="card">
 
-       <div style="display:flex;align-items:center;">
+        <div style="display:flex;align-items:center;">
 
-         <div style="flex:1;">
+          <div style="flex:1;">
+            <b>${b.name}</b>
+            （${b.battle_date || "-"}）
+          </div>
 
-           <b>${b.name}</b>
-           （${b.battle_date || "-"}）
+          <button
+            class="list-btn"
+            onclick="showBattleDetail(${b.id})">
+            詳細
+          </button>
 
-         </div>
+          <button
+            class="list-btn"
+            onclick="editBattle(${b.id})">
+            編集
+          </button>
 
-         <button
-           class="list-btn"
-           onclick="showBattleDetail(${b.id})">
+          <button
+            class="list-btn"
+            onclick="deleteBattle(${b.id})">
+            削除
+          </button>
 
-           詳細
+        </div>
 
-         </button>
+      </div>
 
-         <button
-           class="list-btn"
-           onclick="editBattle(${b.id})">
+    `).join("");
 
-           編集
-
-         </button>
-
-         <button
-           class="list-btn"
-           onclick="deleteBattle(${b.id})">
-
-           削除
-
-         </button>
-
-       </div>
-
-     </div>
-
-   `).join("");
-
-   document.getElementById(
-     "battleResults"
-   ).style.display = "block";
+  document.getElementById(
+    "battleResults"
+  ).style.display = battles.length
+    ? "block"
+    : "none";
+}
   
- }
-
 /* 検索 */
 async function searchPersons() {
   const q = document.getElementById("search").value.trim();
