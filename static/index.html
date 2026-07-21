@@ -1017,16 +1017,16 @@ async function searchCastles() {
 
 async function searchBattles() {
 
+  const keyword =
+    document.getElementById("battleSearch")
+      .value.trim();
+
   if (!keyword) {
     document.getElementById(
       "battleResults"
     ).style.display = "none";
     return;
   }
-
-  const keyword =
-    document.getElementById("battleSearch")
-      .value.trim();
 
   const res =
     await fetch("/battles");
