@@ -1021,6 +1021,8 @@ async function searchBattles() {
     document.getElementById("battleSearch")
       .value.trim();
 
+  console.log("keyword=", keyword);
+
   if (!keyword) {
 
     document.getElementById(
@@ -1040,12 +1042,12 @@ async function searchBattles() {
   let battles =
     await res.json();
 
-  if (keyword) {
+  console.log("battles=", battles);
 
-    battles = battles.filter(b =>
-      b.name &&
-      b.name.includes(keyword)
-    );
+  battles = battles.filter(b =>
+    b.name &&
+    b.name.includes(keyword)
+  );
 
   }
 
