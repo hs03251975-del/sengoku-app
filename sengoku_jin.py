@@ -1019,8 +1019,8 @@ def update_battle(
 
     return {"status":"ok"}
 
-@app.get("/battle/{battle_id}/groups")
-def get_battle_groups(battle_id: int):
+@app.get("/battle/{battle_id}/detail")
+def get_battle_detail(battle_id: int):
 
     conn = get_db()
 
@@ -1029,10 +1029,22 @@ def get_battle_groups(battle_id: int):
     )
 
     cur.execute("""
-        SELECT *
-        FROM battle_groups
-        WHERE battle_id=%s
-        ORDER BY id
+        SELECT
+            bg.id,
+            bg.group_name,
+            p.id AS person_id,
+            p.name
+        FROM battle_groups bg
+
+        LEFT JOIN battle_group_persons bgp
+          ON bg.id = bgp.battle_group_id
+
+        LEFT JOIN persons p
+          ON p.id = bgp.person_id
+
+        WHERE bg.battle_id = %s
+
+        ORDER BY bg.id, p.name
     """, (battle_id,))
 
     rows = cur.fetchall()
