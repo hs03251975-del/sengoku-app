@@ -65,6 +65,11 @@ body {
   cursor: pointer;
   z-index: 9999;
 }
+
+.save-area button {
+  width: auto;
+  margin: 5px;
+}
   
 /* 入力 */
 input, select, textarea {
@@ -806,29 +811,30 @@ label {
   </textarea>
 
 </div>
-  <div class="save-area">
 
 <h3>参加勢力</h3>
 
 <div id="battleGroups"></div>
 
-<button
-  type="button"
-  onclick="addBattleGroup()">
+<div class="save-area">
 
-  勢力追加
+  <button
+    type="button"
+    onclick="addBattleGroup()">
 
-</button>
-    
-<button
-  class="btn save-btn"
-  onclick="saveBattle()"
+    勢力追加
 
-  合戦保存
+  </button>
 
-</button>
-    
-  </div>
+  <button
+    class="btn save-btn"
+    onclick="saveBattle()">
+
+    合戦保存
+
+  </button>
+
+</div>
 
 </div>
 
@@ -2240,12 +2246,8 @@ async function saveCastle() {
 
 async function saveBattle() {
  
-  alert("①開始");
-
   const id =
     document.getElementById("battleId").value;
-
-  alert("②ID取得");
 
   const data = {
     name:
@@ -2272,8 +2274,6 @@ async function saveBattle() {
 
   };
 
-  alert(JSON.stringify(data, null, 2));
-
   if (!data.name) {
     alert("合戦名必須");
     return;
@@ -2297,11 +2297,7 @@ async function saveBattle() {
 
   });
 
-  alert("HTTP " + res.status);
-
   const text = await res.text();
-
-  alert(text);
 
   if (!res.ok) {
     alert("保存失敗");
