@@ -175,3 +175,10 @@ async function showCastleDetail(castleId) {
   ).style.display = "flex";
 }
 
+function closeCastleDetail() {
+
+  document.getElementById(
+    "castleModal"
+  ).style.display = "none";
+
+}
