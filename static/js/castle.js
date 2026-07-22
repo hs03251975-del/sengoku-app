@@ -122,3 +122,56 @@ async function searchCastles() {
 
   `).join("");
 }
+
+async function showCastleDetail(castleId) {
+
+  const res =
+    await fetch(`/castle/${castleId}`);
+
+  const castle =
+    await res.json();
+
+  document.getElementById(
+    "castleContent"
+  ).innerHTML = `
+
+    <h2>${castle.name}</h2>
+
+    <table>
+
+      <tr>
+        <td><b>よみ</b></td>
+        <td>${castle.yomi || "-"}</td>
+      </tr>
+
+      <tr>
+        <td><b>旧国名</b></td>
+        <td>${castle.province || "-"}</td>
+      </tr>
+
+      <tr>
+        <td><b>所在地</b></td>
+        <td>${castle.location || "-"}</td>
+      </tr>
+
+    </table>
+
+    <h3>説明</h3>
+
+    <p>
+      ${(castle.description || "-")
+        .replace(/\n/g,"<br>")}
+    </p>
+
+    <button
+      class="btn"
+      onclick="closeCastleDetail()">
+      閉じる
+    </button>
+  `;
+
+  document.getElementById(
+    "castleModal"
+  ).style.display = "flex";
+}
+
