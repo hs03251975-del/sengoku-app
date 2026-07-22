@@ -291,3 +291,27 @@ async function saveCastle() {
   document.getElementById("castleDescription").value = "";
 
 }
+
+async function deleteCastle(id) {
+
+  if (!confirm("削除していい？")) {
+    return;
+  }
+
+  const res =
+    await fetch(`/castle/${id}`, {
+      method: "DELETE"
+    });
+
+  if (!res.ok) {
+
+    alert("削除失敗");
+    return;
+
+  }
+
+  alert("削除OK");
+
+  searchCastles();
+
+}
