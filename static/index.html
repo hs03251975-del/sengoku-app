@@ -874,24 +874,6 @@ label {
 <script>
 const API_BASE = "";
 
-let allPersonsCache = [];
-let allCastlesCache = [];
-
-/* 全取得 */
-async function loadAllPersons() {
-  const res = await fetch("/persons");
-  allPersonsCache = await res.json();
-}
-
-async function loadAllCastles() {
-
-  const res =
-    await fetch("/castles");
-
-  allCastlesCache =
-    await res.json();
-}
-
 // 城一覧取得
 async function loadCastleList() {
 
@@ -2677,26 +2659,6 @@ function toggleAdmin() {
   }
 }
 
-
-function showMainTab(tabId) {
-
-  document.getElementById("adminTab")
-    .style.display = "none";
-
-  document.getElementById("personTab")
-    .style.display = "none";
-
-  document.getElementById("castleTab")
-    .style.display = "none";
-
-  document.getElementById("battleTab")
-    .style.display = "none";
-
-  document.getElementById(tabId)
-    .style.display = "block";
-
-}
-
 function showRecentEdit() {
 
   const item =
@@ -2714,27 +2676,6 @@ function showRecentEdit() {
        onclick="editPerson(${p.id})">
        ${p.name}
      </span>`;
-}
-
-function showSaveMessage(text = "保存しました") {
-
-  const box =
-    document.getElementById("saveMessage");
-
-  box.textContent = text;
-  box.style.display = "block";
-
-  setTimeout(() => {
-    box.style.display = "none";
-  }, 2000);
-
-}
-
-function scrollToTop() {
-  window.scrollTo({
-    top: 0,
-    behavior: "smooth"
-  });
 }
 
 </script>
