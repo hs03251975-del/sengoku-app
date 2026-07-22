@@ -179,7 +179,13 @@ async function showBattleDetail(id) {
 
 }
 
+function closeBattleDetail() {
 
+  document.getElementById(
+    "battleModal"
+  ).style.display = "none";
+
+}
 
 function addBattleGroup() {
 
