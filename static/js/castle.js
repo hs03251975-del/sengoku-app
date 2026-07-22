@@ -182,3 +182,37 @@ function closeCastleDetail() {
   ).style.display = "none";
 
 }
+
+async function editCastle(id) {
+
+  const res =
+    await fetch(`/castle/${id}`);
+
+  const c =
+    await res.json();
+
+  document.getElementById(
+    "castleId"
+  ).value = c.id;
+
+  document.getElementById(
+    "castleName"
+  ).value = c.name || "";
+
+  document.getElementById(
+    "castleYomi"
+  ).value = c.yomi || "";
+
+  document.getElementById(
+    "castleProvince"
+  ).value = c.province || "";
+
+  document.getElementById(
+    "castleLocation"
+  ).value = c.location || "";
+
+  document.getElementById(
+    "castleDescription"
+  ).value = c.description || "";
+
+}
