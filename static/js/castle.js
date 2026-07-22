@@ -315,3 +315,62 @@ async function deleteCastle(id) {
   searchCastles();
 
 }
+
+function setupCastleAutocomplete() {
+
+  const input =
+    document.getElementById("castle");
+
+  const box =
+    document.getElementById("castle_suggest");
+
+  input.addEventListener("input", () => {
+
+    const keyword =
+      input.value.trim();
+
+    if (!keyword) {
+      box.style.display = "none";
+      return;
+    }
+
+    const matches =
+      allCastlesCache.filter(
+        c =>
+          c.name &&
+          c.name.includes(keyword)
+      );
+
+    if (matches.length === 0) {
+      box.style.display = "none";
+      return;
+    }
+
+   box.innerHTML =
+     matches.map(c => `
+       <div
+         class="autocomplete-item"
+         onclick="selectCastle(${c.id}, '${c.name}')">
+
+         ${c.name}
+         （${c.province || "旧国名不明"}）
+
+       </div>
+     `).join("");
+
+    box.style.display = "block";
+  });
+}
+
+function selectCastle(id, name) {
+
+  document.getElementById("castle").value =
+    name;
+
+  document.getElementById("castle_id").value =
+    id;
+
+  document.getElementById(
+    "castle_suggest"
+  ).style.display = "none";
+}
