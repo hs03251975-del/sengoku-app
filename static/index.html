@@ -1708,66 +1708,6 @@ async function editCastle(id) {
 
 }
 
-async function editBattle(id) {
-
-  const res =
-    await fetch(`/battle/${id}`);
-
-  const b =
-    await res.json();
-
-  document.getElementById(
-    "battleId"
-  ).value = b.id;
-
-  document.getElementById(
-    "battleName"
-  ).value = b.name || "";
-
-  document.getElementById(
-    "battleYomi"
-  ).value = b.yomi || "";
-
-  document.getElementById(
-    "battleDate"
-  ).value = b.battle_date || "";
-
-  document.getElementById(
-    "battleProvince"
-  ).value = b.province || "";
-
-  document.getElementById(
-    "battleLocation"
-  ).value = b.location || "";
-
-  document.getElementById(
-    "battleDescription"
-  ).value = b.description || "";
-
-  const groupRes =
-    await fetch(`/battle/${id}/groups`);
-
-  battleGroups =
-    await groupRes.json();
-
-  for (const g of battleGroups) {
-
-    const personRes =
-      await fetch(
-        `/battle_group/${g.id}/persons`
-      );
-
-    const persons =
-      await personRes.json();
-
-    g.members =
-      persons.map(
-        p => p.person_id
-      );
-  }
-
-  renderBattleGroups();
-}
 
 async function deleteCastle(id) {
 
