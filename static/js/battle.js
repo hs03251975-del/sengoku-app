@@ -248,7 +248,29 @@ async function editBattle(id) {
   renderBattleGroups();
 }
 
+async function deleteBattle(id) {
 
+  if (!confirm("削除していい？")) {
+    return;
+  }
+
+  const res =
+    await fetch(`/battle/${id}`, {
+      method: "DELETE"
+    });
+
+  if (!res.ok) {
+
+    alert("削除失敗");
+    return;
+
+  }
+
+  alert("削除OK");
+
+  searchBattles();
+
+}
 
 function addBattleGroup() {
 
