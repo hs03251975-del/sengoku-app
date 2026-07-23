@@ -1,3 +1,7 @@
+const API_BASE = "";
+
+let aliasData = [];
+
 /* 検索 */
 async function searchPersons() {
   const q = document.getElementById("search").value.trim();
@@ -157,8 +161,375 @@ function renderResults(list) {
   });
 }
 
+/* 詳細 */
+async function showDetail(id) {
 
+  const res = await fetch(`/person/${id}`);
+  const p = await res.json();
 
+  const battleRes =
+    await fetch(`/person/${id}/battles`);
+
+  const battles =
+    await battleRes.json();
+
+  const battleHtml =
+    battles.length
+      ? battles.map(b => `
+          <div>
+
+            ${b.battle_date || ""}
+
+            <span
+              class="link-like"
+              onclick="showBattleDetail(${b.id})">
+
+              ${b.name}
+
+            </span>
+
+            （${b.group_name}）
+
+          </div>
+        `).join("")
+      : "-";
+
+  // 子供取得
+  const childrenRes =
+    await fetch(`/person/${id}/children`);
+
+  const children =
+    await childrenRes.json();
+
+  // 兄弟姉妹取得
+  const sibRes =
+    await fetch(`/person/${id}/siblings`);
+
+  const siblings =
+    await sibRes.json();
+
+  // ★別名取得
+  const aliasRes =
+    await fetch(`/person/${id}/aliases`);
+
+  const aliases =
+    await aliasRes.json();
+
+  const aliasOrder = {
+
+    "幼名": 1,
+    "諱": 2,
+    "通称": 3,
+    "法号": 4,
+    "官途名": 5,
+    "受領名": 6,
+    "官位": 7,
+    "改名前": 8,
+    "改名後": 9,
+    "異称": 10,
+    "その他": 11
+
+};
+
+aliases.sort((a, b) =>
+  (aliasOrder[a.alias_type] || 999) -
+  (aliasOrder[b.alias_type] || 999)
+);
+
+  const aliasesHtml =
+    aliases
+      .map(a =>
+        `
+        <tr>
+          <td style="
+            width:80px;
+            padding:4px 10px 4px 0;
+            font-weight:bold;
+          ">
+            ${a.alias_type || "分類なし"}
+          </td>
+          <td>
+            ${a.alias_name}
+          </td>
+        </tr>
+        `
+      )
+      .join("");
+
+  const aliasesTable =
+    aliasesHtml
+      ? `
+        <table>
+          ${aliasesHtml}
+        </table>
+        `
+      : "-";
+
+  let fatherName = "-";
+  let motherName = "-";
+  let spouseName = "-";
+
+  if (p.spouse_id) {
+    const spouseRes = await fetch(`/person/${p.spouse_id}`);
+    const spouse = await spouseRes.json();
+    spouseName = spouse.name;
+  }
+
+  
+  
+  if (p.father_id) {
+    const fatherRes = await fetch(`/person/${p.father_id}`);
+    const father = await fatherRes.json();
+    fatherName = father.name;
+  }
+
+  if (p.mother_id) {
+    const motherRes = await fetch(`/person/${p.mother_id}`);
+    const mother = await motherRes.json();
+    motherName = mother.name;
+  }
+
+  let grandfatherName = "-";
+  let grandmotherName = "-";
+
+  if (p.father_id) {
+    const fatherRes = await fetch(`/person/${p.father_id}`);
+    const father = await fatherRes.json();
+
+    if (father.father_id) {
+      const gfRes = await fetch(`/person/${father.father_id}`);
+      const grandfather = await gfRes.json();
+      grandfatherName = grandfather.name;
+    }
+
+    if (father.mother_id) {
+      const gmRes = await fetch(`/person/${father.mother_id}`);
+      const grandmother = await gmRes.json();
+      grandmotherName = grandmother.name;
+    }
+  }
+
+  let treeHtml = `<div class="family-tree">`;
+
+  if (grandfatherName !== "-") {
+    treeHtml += `
+      <div class="tree-card">${grandfatherName}</div>
+      <div class="tree-arrow">↓</div>
+    `;
+  }
+
+  if (fatherName !== "-") {
+    treeHtml += `
+      <div class="tree-card">
+        <span class="link-like"
+          onclick="showDetail(${p.father_id})">
+          ${fatherName}
+        </span>
+      </div>
+
+      <div class="tree-arrow">↓</div>
+    `;
+  }
+
+  // 本人＋兄弟姉妹
+  treeHtml += `<div class="tree-siblings">`;
+
+  siblings.forEach(s => {
+    treeHtml += `
+      <div class="tree-card">
+        <span class="link-like"
+          onclick="showDetail(${s.id})">
+          ${s.name}
+        </span>
+      </div>
+    `;
+  });
+
+  treeHtml += `
+    <div class="tree-card tree-center">
+      ${p.name}
+    </div>
+  `;
+
+  treeHtml += `</div>`;
+
+  if (children.length > 0) {
+
+    treeHtml += `
+      <div class="tree-arrow">↓</div>
+      <div class="tree-children">
+    `;
+
+    children.forEach(c => {
+      treeHtml += `
+        <div class="tree-card">
+          <span class="link-like"
+            onclick="showDetail(${c.id})">
+            ${c.name}
+          </span>
+        </div>
+      `;
+    });
+
+    treeHtml += `</div>`;
+  }
+
+  treeHtml += `</div>`;
+
+  const childrenHtml = children.length
+    ? children.map(c =>
+        `<span class="link-like" onclick="showDetail(${c.id})">${c.name}</span>`
+      ).join(", ")
+    : "-";
+
+  const siblingsHtml = siblings.length
+    ? siblings.map((s, i) =>
+        `${i + 1}. <span class="link-like"
+            onclick="showDetail(${s.id})">
+            ${s.name}
+         </span>`
+      ).join("<br>")
+    : "-";
+
+  document.getElementById("detailContent").innerHTML = `
+    <h2>${p.name}</h2>
+    <p style="color:#666;">${p.yomi || ""}</p>
+
+    <hr>
+
+    <h3>名前・別名</h3>
+
+    ${aliasesTable}
+
+    <h3>基本情報</h3>
+
+    <table style="border-collapse:collapse;">
+
+    <tr>
+      <td width="80"><b>生年</b></td>
+      <td>${p.birth || "-"}</td>
+    </tr>
+
+    <tr>
+      <td><b>没年</b></td>
+      <td>${p.death || "-"}</td>
+    </tr>
+
+    <tr>
+      <td><b>分類</b></td>
+      <td>${p.category || "-"}</td>
+    </tr>
+
+    <tr>
+      <td><b>所属</b></td>
+      <td>${p.affiliation || "-"}</td>
+    </tr>
+
+    <tr>
+      <td><b>居城</b></td>
+      <td>
+      ${p.castle_id
+        ? `<span class="link-like"
+             onclick="event.stopPropagation(); showCastleDetail(${p.castle_id})">
+             ${p.castle}
+          </span>`
+        : (p.castle || "-")
+      }
+      </td>
+    </tr>
+
+    </table>
+
+    <h3>参加合戦</h3>
+
+    ${battleHtml}
+
+    <h3>戦歴メモ</h3>
+
+    <p>
+    ${(p.history || "-").replace(/\n/g, "<br>")}
+    </p>
+    
+    <h3>説明</h3>
+    <p>${(p.description || "").replace(/\n/g, "<br>")}</p>
+
+    
+    <h3>家族関係</h3>
+
+    <table style="border-collapse:collapse;">
+
+    <tr>
+      <td style="width:80px;"><b>祖父</b></td>
+      <td>${grandfatherName}</td>
+    </tr>
+
+    <tr>
+      <td><b>祖母</b></td>
+      <td>${grandmotherName}</td>
+    </tr>
+
+    <tr>
+      <td><b>父</b></td>
+      <td>
+        ${p.father_id
+          ? `<span class="link-like"
+               onclick="showDetail(${p.father_id})">
+               ${fatherName}
+             </span>`
+          : "-"
+        }
+      </td>
+    </tr>
+
+    <tr>
+      <td><b>母</b></td>
+      <td>
+        ${p.mother_id
+          ? `<span class="link-like"
+               onclick="showDetail(${p.mother_id})">
+               ${motherName}
+             </span>`
+          : "-"
+        }
+      </td>
+    </tr>
+
+    <tr>
+      <td><b>配偶者</b></td>
+      <td>
+        ${p.spouse_id
+          ? `<span class="link-like"
+               onclick="showDetail(${p.spouse_id})">
+               ${spouseName}
+             </span>`
+          : "-"
+        }
+      </td>
+    </tr>
+
+    <tr>
+      <td><b>子供</b></td>
+      <td>${childrenHtml}</td>
+    </tr>
+
+    <tr>
+      <td><b>兄弟姉妹</b></td>
+      <td>${siblingsHtml}</td>
+    </tr>
+
+    </table>
+
+    <h3>家系図</h3>
+
+    <div class="info-box">
+      ${treeHtml}
+    </div>
+
+    <button class="btn" onclick="closeDetail()">閉じる</button>
+  `;
+
+  document.getElementById("detailModal").style.display = "flex";
+}
 
 function closeDetail() {
   document.getElementById("detailModal").style.display = "none";
