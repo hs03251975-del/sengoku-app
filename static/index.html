@@ -943,10 +943,12 @@ async function updateFamilyInfo() {
   await loadAllPersons();
 
   const fatherName =
-    document.getElementById("father_name").value.trim();
+    document.getElementById("father_name")
+      .value.trim();
 
   const motherName =
-    document.getElementById("mother_name").value.trim();
+    document.getElementById("mother_name")
+      .value.trim();
 
   const father = allPersonsCache.find(
     p => p.name === fatherName
@@ -956,6 +958,43 @@ async function updateFamilyInfo() {
     p => p.name === motherName
   );
 
+  const currentId =
+    document.getElementById("personId")
+      .value;
+
+  // ----------------------------
+  // 本人の子供
+  // ----------------------------
+  if (currentId) {
+
+    const myChildRes =
+      await fetch(
+        `/person/${currentId}/children`
+      );
+
+    const myChildren =
+      await myChildRes.json();
+
+    document.getElementById(
+      "childrenList"
+    ).innerHTML =
+      myChildren.length
+        ? myChildren
+            .map(c => c.name)
+            .join("、")
+        : "-";
+
+  } else {
+
+    document.getElementById(
+      "childrenList"
+    ).innerHTML = "-";
+
+  }
+
+  // ----------------------------
+  // 親を取得
+  // ----------------------------
   let parentId = null;
 
   if (father) {
@@ -964,47 +1003,36 @@ async function updateFamilyInfo() {
     parentId = mother.id;
   }
 
+  // ----------------------------
+  // 兄弟姉妹
+  // ----------------------------
   if (!parentId) {
-    document.getElementById("childrenList").innerHTML = "-";
-    document.getElementById("siblingsList").innerHTML = "-";
+
+    document.getElementById(
+      "siblingsList"
+    ).innerHTML = "-";
+
     return;
   }
 
-  const childRes =
-    await fetch(`/person/${parentId}/children`);
+  const siblingRes =
+    await fetch(
+      `/person/${parentId}/children`
+    );
 
-  const children =
-    await childRes.json();
+  const siblings =
+    await siblingRes.json();
 
-  const currentId =
-  document.getElementById("personId").value;
-
-  // 本人の子供取得
-  if (currentId) {
-
-    const myChildRes =
-      await fetch(`/person/${currentId}/children`);
-
-    const myChildren =
-      await myChildRes.json();
-
-  document.getElementById("childrenList").innerHTML =
-    myChildren.length
-      ? myChildren.map(c => c.name).join("、")
-      : "-";
-
-}
-
-  document.getElementById("siblingsList").innerHTML =
-    children
-      .filter(c =>
-        String(c.id) !== String(currentId)
+  document.getElementById(
+    "siblingsList"
+  ).innerHTML =
+    siblings
+      .filter(s =>
+        String(s.id) !== String(currentId)
       )
-      .map(c => c.name)
+      .map(s => s.name)
       .join("、") || "-";
-  
 }
-
 function selectPerson(inputId, boxId, name) {
   document.getElementById(inputId).value = name;
   document.getElementById(boxId).style.display = "none";
