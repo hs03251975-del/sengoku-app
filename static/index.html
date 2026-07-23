@@ -940,99 +940,42 @@ function setupAutocomplete(inputId, boxId) {
 
 async function updateFamilyInfo() {
 
-  await loadAllPersons();
-
-  const fatherName =
-    document.getElementById("father_name")
-      .value.trim();
-
-  const motherName =
-    document.getElementById("mother_name")
-      .value.trim();
-
-  const father = allPersonsCache.find(
-    p => p.name === fatherName
-  );
-
-  const mother = allPersonsCache.find(
-    p => p.name === motherName
-  );
-
   const currentId =
-    document.getElementById("personId")
-      .value;
+    document.getElementById("personId").value;
 
-  // ----------------------------
-  // 本人の子供
-  // ----------------------------
-  if (currentId) {
+  if (!currentId) {
 
-    const myChildRes =
-      await fetch(
-        `/person/${currentId}/children`
-      );
-
-    const myChildren =
-      await myChildRes.json();
-
-    document.getElementById(
-      "childrenList"
-    ).innerHTML =
-      myChildren.length
-        ? myChildren
-            .map(c => c.name)
-            .join("、")
-        : "-";
-
-  } else {
-
-    document.getElementById(
-      "childrenList"
-    ).innerHTML = "-";
-
-  }
-
-  // ----------------------------
-  // 親を取得
-  // ----------------------------
-  let parentId = null;
-
-  if (father) {
-    parentId = father.id;
-  } else if (mother) {
-    parentId = mother.id;
-  }
-
-  // ----------------------------
-  // 兄弟姉妹
-  // ----------------------------
-  if (!parentId) {
-
-    document.getElementById(
-      "siblingsList"
-    ).innerHTML = "-";
+    document.getElementById("childrenList").innerHTML = "-";
+    document.getElementById("siblingsList").innerHTML = "-";
 
     return;
   }
 
+  // 子供
+  const childRes =
+    await fetch(`/person/${currentId}/children`);
+
+  const children =
+    await childRes.json();
+
+  document.getElementById("childrenList").innerHTML =
+    children.length
+      ? children.map(c => c.name).join("、")
+      : "-";
+
+  // 兄弟姉妹
   const siblingRes =
-    await fetch(
-      `/person/${parentId}/children`
-    );
+    await fetch(`/person/${currentId}/siblings`);
 
   const siblings =
     await siblingRes.json();
 
-  document.getElementById(
-    "siblingsList"
-  ).innerHTML =
-    siblings
-      .filter(s =>
-        String(s.id) !== String(currentId)
-      )
-      .map(s => s.name)
-      .join("、") || "-";
+  document.getElementById("siblingsList").innerHTML =
+    siblings.length
+      ? siblings.map(s => s.name).join("、")
+      : "-";
 }
+
 function selectPerson(inputId, boxId, name) {
   document.getElementById(inputId).value = name;
   document.getElementById(boxId).style.display = "none";
