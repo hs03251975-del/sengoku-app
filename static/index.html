@@ -979,6 +979,22 @@ async function updateFamilyInfo() {
   const currentId =
   document.getElementById("personId").value;
 
+  // 本人の子供取得
+  if (currentId) {
+
+    const myChildRes =
+      await fetch(`/person/${currentId}/children`);
+
+    const myChildren =
+      await myChildRes.json();
+
+  document.getElementById("childrenList").innerHTML =
+    myChildren.length
+      ? myChildren.map(c => c.name).join("、")
+      : "-";
+
+}
+
   document.getElementById("siblingsList").innerHTML =
     children
       .filter(c =>
