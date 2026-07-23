@@ -364,5 +364,233 @@ async function savePerson() {
 
 }
 
+function clearForm() {
+  document.getElementById("personId").value = "";
+  document.getElementById("name").value = "";
+  document.getElementById("yomi").value = "";
+  document.getElementById("birth").value = "";
+  document.getElementById("death").value = "";
+  document.getElementById("origin").value = "";
+  document.getElementById("category").value = "";
+  document.getElementById("affiliation").value = "";
+  document.getElementById("castle").value = "";
+  document.getElementById("castle_id").value = "";
+  document.getElementById("description").value = "";
+  document.getElementById("source").value = "";
+  document.getElementById("father_name").value = "";
+  document.getElementById("mother_name").value = "";
+  document.getElementById("spouse_name").value = "";
+  document.getElementById("childrenList").innerHTML = "-";
+　document.getElementById("siblingsList").innerHTML = "-";
+  document.getElementById("sibling_order").value = "";
+  document.getElementById("memo1").value = "";
+  document.getElementById("memo2").value = "";
+  document.getElementById("memo3").value = "";
+  document.getElementById("memo4").value = "";
+  document.getElementById("memo5").value = "";
+  document.getElementById("memo6").value = "";
+  document.getElementById("memo7").value = "";
+  document.getElementById("memo8").value = "";
+  document.getElementById("memo9").value = "";
+  document.getElementById("memo10").value = "";
+  aliasData = [];
 
+  renderAliasList();
+
+  document.getElementById("alias_name").value = "";
+  document.getElementById("alias_type").selectedIndex = 0;
+}
+
+async function deletePerson(id) {
+  if (!confirm("削除していい？")) return;
+
+  const res = await fetch(`/person/${id}`, {
+    method: "DELETE"
+  });
+
+  if (!res.ok) {
+    alert("削除失敗");
+    return;
+  }
+
+  alert("削除OK");
+
+  searchPersons();  // 一覧更新
+}
+
+async function importJson() {
+
+  const file =
+    document.getElementById("jsonFile")
+      .files[0];
+
+  if (!file) {
+    alert("JSONを選択してください");
+    return;
+  }
+
+  const formData = new FormData();
+
+  formData.append(
+    "file",
+    file
+  );
+
+  const res = await fetch(
+    "/import_json",
+    {
+      method: "POST",
+      body: formData
+    }
+  );
+
+  if (!res.ok) {
+    alert("復元失敗");
+    return;
+  }
+
+  const result =
+    await res.json();
+
+  alert(
+    `${result.count}件復元しました`
+  );
+
+  searchPersons();
+}
+
+let aliasData = [];
+
+function addAlias() {
+
+  const name =
+    document.getElementById("alias_name")
+      .value.trim();
+
+  const type =
+    document.getElementById("alias_type")
+      .value;
+
+  if (!name) {
+    alert("別名を入力してください");
+    return;
+  }
+
+  aliasData.push({
+    alias_name: name,
+    alias_type: type
+  });
+
+  renderAliasList();
+
+  document.getElementById("alias_name")
+    .value = "";
+}
+
+
+  
+function renderAliasList() {
+
+  const box =
+    document.getElementById("aliasList");
+
+  if (aliasData.length === 0) {
+    box.innerHTML = "-";
+    return;
+  }
+
+  box.innerHTML =
+    aliasData.map((a, i) => `
+      <div>
+        ${a.alias_type}：
+        ${a.alias_name}
+
+        <button
+          type="button"
+          onclick="removeAlias(${i})">
+          削除
+        </button>
+
+      </div>
+    `).join("");
+}
+
+function removeAlias(index) {
+
+  aliasData.splice(index, 1);
+
+  renderAliasList();
+}
+
+// ✅ ★ここに追加！！
+function toggleMemo() {
+  const box = document.getElementById("memoSection");
+
+  if (box.style.display === "none") {
+    box.style.display = "block";
+  } else {
+    box.style.display = "none";
+  }
+}
+
+Promise.all([
+  loadAllPersons(),
+  loadAllCastles()
+]).then(() => {
+
+  document.getElementById("memoSection")
+    .style.display = "none";
+
+  setupAutocomplete(
+    "father_name",
+    "father_suggest"
+  );
+
+  setupAutocomplete(
+    "mother_name",
+    "mother_suggest"
+  );
+
+  setupAutocomplete(
+    "spouse_name",
+    "spouse_suggest"
+  );
+
+  setupCastleAutocomplete();
+
+  showRecentEdit();
+
+  showMainTab("personTab");
+});
+
+function toggleAdmin() {
+
+  const box =
+    document.getElementById("adminMenu");
+
+  if (box.style.display === "none") {
+    box.style.display = "block";
+  } else {
+    box.style.display = "none";
+  }
+}
+
+function showRecentEdit() {
+
+  const item =
+    localStorage.getItem("recentEdit");
+
+  if (!item) return;
+
+  const p = JSON.parse(item);
+
+  document.getElementById(
+    "recentEditBox"
+  ).innerHTML =
+    `最近編集：
+     <span class="link-like"
+       onclick="editPerson(${p.id})">
+       ${p.name}
+     </span>`;
+}
 
