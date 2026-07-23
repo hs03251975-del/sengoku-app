@@ -830,7 +830,6 @@ async function importJson() {
   searchPersons();
 }
 
-let aliasData = [];
 
 function addAlias() {
 
