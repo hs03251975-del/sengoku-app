@@ -979,7 +979,7 @@ async function updateFamilyInfo() {
   const currentId =
   document.getElementById("personId").value;
 
-  document.getElementById("childrenList").innerHTML =
+  document.getElementById("siblingsList").innerHTML =
     children
       .filter(c =>
         String(c.id) !== String(currentId)
@@ -987,6 +987,7 @@ async function updateFamilyInfo() {
       .map(c => c.name)
       .join("、") || "-";
   
+  /*
   const sibRes =
     await fetch(`/person/${parentId}/siblings`);
 
@@ -997,6 +998,7 @@ async function updateFamilyInfo() {
     siblings.length
       ? siblings.map(s => s.name).join("、")
       : "-";
+*/
 
 }
 
