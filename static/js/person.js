@@ -96,5 +96,11 @@ async function updateFamilyInfo() {
       : "-";
 }
 
+function selectPerson(inputId, boxId, name) {
+  document.getElementById(inputId).value = name;
+  document.getElementById(boxId).style.display = "none";
+
+  updateFamilyInfo();
+}
 
 
