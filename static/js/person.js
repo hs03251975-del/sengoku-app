@@ -103,4 +103,59 @@ function selectPerson(inputId, boxId, name) {
   updateFamilyInfo();
 }
 
+/* 描画 */
+function renderResults(list) {
+  const box = document.getElementById("results");
+  box.innerHTML = "";
+
+  list.forEach(p => {
+    
+    let years = "";
+
+    if (p.birth || p.death) {
+        years = `${p.birth || "？"}～${p.death || "？"}`;
+    }
+
+    const div = document.createElement("div");
+    div.className = "card";
+
+    div.onclick = () => showDetail(p.id);
+
+    div.innerHTML = `
+    <div style="display:flex; align-items:center;">
+
+      <div style="flex:1;">
+        <b>${p.name}</b>
+
+        <span style="color:#666;">
+          （${p.yomi || ""}）
+        </span>
+
+        <span style="margin-left:20px;">
+          ${years}
+        </span>
+      </div>
+
+      <button class="list-btn"
+          onclick="event.stopPropagation(); showDetail(${p.id})">
+          詳細
+      </button>
+
+      <button class="list-btn"
+          onclick="event.stopPropagation(); editPerson(${p.id})">
+          編集
+      </button>
+
+      <button class="list-btn"
+          onclick="event.stopPropagation(); deletePerson(${p.id})">
+          削除
+      </button>
+
+    </div>
+    `;
+    box.appendChild(div);
+  });
+}
+
+
 
