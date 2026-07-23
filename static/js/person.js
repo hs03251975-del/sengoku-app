@@ -159,3 +159,11 @@ function renderResults(list) {
 
 
 
+
+function closeDetail() {
+  document.getElementById("detailModal").style.display = "none";
+}
+
+
+
+
