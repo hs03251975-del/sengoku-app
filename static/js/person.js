@@ -273,9 +273,7 @@ aliases.sort((a, b) =>
     const spouseRes = await fetch(`/person/${p.spouse_id}`);
     const spouse = await spouseRes.json();
     spouseName = spouse.name;
-  }
-
-  
+  } 
   
   if (p.father_id) {
     const fatherRes = await fetch(`/person/${p.father_id}`);
@@ -318,6 +316,16 @@ aliases.sort((a, b) =>
     `;
   }
 
+  if (fatherName !== "-" || motherName !== "-") {
+
+  treeHtml += `
+    <div class="tree-parent">
+  `;
+
+  if (fatherName !== "-" || motherName !== "-") {
+
+  treeHtml += `<div class="tree-parent">`;
+
   if (fatherName !== "-") {
     treeHtml += `
       <div class="tree-card">
@@ -326,10 +334,25 @@ aliases.sort((a, b) =>
           ${fatherName}
         </span>
       </div>
-
-      <div class="tree-arrow">↓</div>
     `;
   }
+
+  if (motherName !== "-") {
+    treeHtml += `
+      <div class="tree-card">
+        <span class="link-like"
+          onclick="showDetail(${p.mother_id})">
+          ${motherName}
+        </span>
+      </div>
+    `;
+  }
+
+  treeHtml += `
+    </div>
+    <div class="tree-arrow">↓</div>
+  `;
+}
 
   // 本人＋兄弟姉妹
   treeHtml += `<div class="tree-siblings">`;
