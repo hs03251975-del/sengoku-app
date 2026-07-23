@@ -58,6 +58,43 @@ function setupAutocomplete(inputId, boxId) {
   });
 }
 
+async function updateFamilyInfo() {
+
+  const currentId =
+    document.getElementById("personId").value;
+
+  if (!currentId) {
+
+    document.getElementById("childrenList").innerHTML = "-";
+    document.getElementById("siblingsList").innerHTML = "-";
+
+    return;
+  }
+
+  // 子供
+  const childRes =
+    await fetch(`/person/${currentId}/children`);
+
+  const children =
+    await childRes.json();
+
+  document.getElementById("childrenList").innerHTML =
+    children.length
+      ? children.map(c => c.name).join("、")
+      : "-";
+
+  // 兄弟姉妹
+  const siblingRes =
+    await fetch(`/person/${currentId}/siblings`);
+
+  const siblings =
+    await siblingRes.json();
+
+  document.getElementById("siblingsList").innerHTML =
+    siblings.length
+      ? siblings.map(s => s.name).join("、")
+      : "-";
+}
 
 
 
