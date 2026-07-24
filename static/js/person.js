@@ -318,42 +318,36 @@ aliases.sort((a, b) =>
 
   if (fatherName !== "-" || motherName !== "-") {
 
-  treeHtml += `
-    <div class="tree-parent">
-  `;
+    treeHtml += `<div class="tree-parent">`;
 
-  if (fatherName !== "-" || motherName !== "-") {
+    if (fatherName !== "-") {
+      treeHtml += `
+        <div class="tree-card">
+          <span class="link-like"
+            onclick="showDetail(${p.father_id})">
+            ${fatherName}
+          </span>
+        </div>
+      `;
+    }
 
-  treeHtml += `<div class="tree-parent">`;
+    if (motherName !== "-") {
+      treeHtml += `
+        <div class="tree-card">
+          <span class="link-like"
+            onclick="showDetail(${p.mother_id})">
+            ${motherName}
+          </span>
+        </div>
+      `;
+    }
 
-  if (fatherName !== "-") {
     treeHtml += `
-      <div class="tree-card">
-        <span class="link-like"
-          onclick="showDetail(${p.father_id})">
-          ${fatherName}
-        </span>
       </div>
+      <div class="tree-arrow">↓</div>
     `;
   }
-
-  if (motherName !== "-") {
-    treeHtml += `
-      <div class="tree-card">
-        <span class="link-like"
-          onclick="showDetail(${p.mother_id})">
-          ${motherName}
-        </span>
-      </div>
-    `;
-  }
-
-  treeHtml += `
-    </div>
-    <div class="tree-arrow">↓</div>
-  `;
-}
-
+  
   // 本人＋兄弟姉妹
   treeHtml += `<div class="tree-siblings">`;
 
