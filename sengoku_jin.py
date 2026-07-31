@@ -433,7 +433,27 @@ def export_csv():
         cursor_factory=psycopg2.extras.RealDictCursor
     )
 
-    cur.execute("SELECT * FROM persons")
+    cur.execute("""
+        SELECT
+            p.*,
+
+            COALESCE(
+                STRING_AGG(
+                    a.alias_type || ':' || a.alias_name,
+                    ' | '
+                ),
+                ''
+            ) AS aliases
+
+        FROM persons p
+
+        LEFT JOIN person_aliases a
+            ON p.id = a.person_id
+
+        GROUP BY p.id
+
+        ORDER BY p.id
+    """)
 
     rows = cur.fetchall()
 
@@ -478,8 +498,6 @@ def export_json():
 
     rows = cur.fetchall()
 
-    conn.close()
-
     data = []
 
     for row in rows:
@@ -491,7 +509,27 @@ def export_json():
             except:
                 pass
 
+        # ★別名取得
+        cur2 = conn.cursor(
+            cursor_factory=psycopg2.extras.RealDictCursor
+        )
+
+        cur2.execute("""
+            SELECT
+                 alias_name,
+                 alias_type
+            FROM person_aliases
+            WHERE person_id=%s
+            ORDER BY id
+        """, (item["id"],))
+
+        item["aliases"] = cur2.fetchall()
+
+        cur2.close()
+
         data.append(item)
+
+    conn.close()
 
     return Response(
         content=json.dumps(
@@ -597,6 +635,29 @@ async def import_json(file: UploadFile = File(...)):
                 person.get("source", [])
             )
         })
+
+        cur.execute("""
+            DELETE FROM person_aliases
+            WHERE person_id=%s
+        """, (person["id"],))
+
+        aliases = person.get("aliases", [])
+
+        for a in aliases:
+
+            cur.execute("""
+                INSERT INTO person_aliases
+                (
+                    person_id,
+                    alias_name,
+                    alias_type
+                 )
+                 VALUES (%s,%s,%s)
+             """, (
+                 person["id"],
+                 a.get("alias_name"),
+                 a.get("alias_type")
+            ))
 
     conn.commit()
     conn.close()
