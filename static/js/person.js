@@ -413,24 +413,6 @@ aliases.sort((a, b) =>
 
   treeHtml += `</div>`;
 
-  if (spouseName !== "-") {
-
-    treeHtml += `
-      <div class="tree-arrow">│</div>
-
-      <div class="tree-parent">
-
-        <div class="tree-card tree-spouse">
-          <span class="link-like"
-            onclick="showDetail(${p.spouse_id})">
-            ${spouseName}
-          </span>
-        </div>
-
-      </div>
-    `;
-  }
-
   if (children.length > 0) {
 
     treeHtml += `
