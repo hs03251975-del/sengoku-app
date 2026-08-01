@@ -309,13 +309,34 @@ aliases.sort((a, b) =>
 
   let treeHtml = `<div class="family-tree">`;
 
-  if (grandfatherName !== "-") {
+  // 祖父母
+  if (grandfatherName !== "-" || grandmotherName !== "-") {
+
+    treeHtml += `<div class="tree-parent">`;
+
+    if (grandfatherName !== "-") {
+      treeHtml += `
+        <div class="tree-card">
+          ${grandfatherName}
+        </div>
+      `;
+    }
+
+    if (grandmotherName !== "-") {
+      treeHtml += `
+        <div class="tree-card">
+          ${grandmotherName}
+        </div>
+      `;
+    }
+
     treeHtml += `
-      <div class="tree-card">${grandfatherName}</div>
+      </div>
       <div class="tree-arrow">↓</div>
     `;
   }
 
+  // 父母
   if (fatherName !== "-" || motherName !== "-") {
 
     treeHtml += `<div class="tree-parent">`;
@@ -347,11 +368,12 @@ aliases.sort((a, b) =>
       <div class="tree-arrow">↓</div>
     `;
   }
-  
-  // 本人＋兄弟姉妹
+
+  // 兄弟姉妹＋本人
   treeHtml += `<div class="tree-siblings">`;
 
   siblings.forEach(s => {
+
     treeHtml += `
       <div class="tree-card">
         <span class="link-like"
@@ -370,6 +392,24 @@ aliases.sort((a, b) =>
 
   treeHtml += `</div>`;
 
+  if (spouseName !== "-") {
+
+    treeHtml += `
+      <div class="tree-arrow">│</div>
+
+      <div class="tree-parent">
+
+        <div class="tree-card tree-spouse">
+          <span class="link-like"
+            onclick="showDetail(${p.spouse_id})">
+            ${spouseName}
+          </span>
+        </div>
+
+      </div>
+    `;
+  }
+
   if (children.length > 0) {
 
     treeHtml += `
@@ -378,6 +418,7 @@ aliases.sort((a, b) =>
     `;
 
     children.forEach(c => {
+      
       treeHtml += `
         <div class="tree-card">
           <span class="link-like"
