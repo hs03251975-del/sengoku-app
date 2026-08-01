@@ -369,7 +369,7 @@ aliases.sort((a, b) =>
     `;
   }
 
-  // 兄弟姉妹＋本人
+  // 兄弟姉妹
   treeHtml += `<div class="tree-siblings">`;
 
   siblings.forEach(s => {
@@ -384,49 +384,43 @@ aliases.sort((a, b) =>
     `;
   });
 
+  treeHtml += `</div>`;
+  
   treeHtml += `
+  <div class="tree-couple">
+
     <div class="tree-card tree-center">
       ${p.name}
     </div>
+
+    ${
+      spouseName !== "-"
+        ? `
+        <div class="tree-link">─</div>
+
+        <div class="tree-card tree-spouse">
+          <span class="link-like"
+            onclick="showDetail(${p.spouse_id})">
+            ${spouseName}
+          </span>
+        </div>
+        `
+        : ""
+    }
+
+  </div>
   `;
-
-  if (spouseName !== "-") {
-
-    treeHtml += `
-    <div class="tree-couple">
-
-      <div class="tree-card tree-center">
-        ${p.name}
-      </div>
-
-      ${
-        spouseName !== "-"
-          ? `
-          <div class="tree-link">─</div>
-
-          <div class="tree-card tree-spouse">
-            <span class="link-like"
-              onclick="showDetail(${p.spouse_id})">
-              ${spouseName}
-            </span>
-          </div>
-          `
-         : ""
-      }
-
-    </div>
-    `;
-  }
 
   if (children.length > 0) {
 
     treeHtml += `
       <div class="tree-arrow">↓</div>
+
       <div class="tree-children">
     `;
 
     children.forEach(c => {
-      
+
       treeHtml += `
         <div class="tree-card">
           <span class="link-like"
