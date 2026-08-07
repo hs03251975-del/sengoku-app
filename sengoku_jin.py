@@ -121,6 +121,7 @@ class Person(BaseModel):
     affiliation: Optional[str] = None  # 所属
     castle_id: Optional[int] = None
     castle: Optional[str] = None       # 居城
+    territory: Optional[str] = None
     history: Optional[str] = None
     description: Optional[str] = None
     source: List[str] = Field(default_factory=list)
