@@ -237,14 +237,14 @@ def create_person(person: Person = Body(...)):
         INSERT INTO persons (
             name, yomi, birth, death,
             origin, category, affiliation, castle_id, castle,
-            history, description, source,
+            territory, history, description, source,
             memo1, memo2, memo3, memo4, memo5,
             memo6, memo7, memo8, memo9, memo10,
             father_id, mother_id, spouse_id, lord_id, sibling_order, siblings
         ) VALUES (
             %(name)s, %(yomi)s, %(birth)s, %(death)s,
             %(origin)s, %(category)s, %(affiliation)s, %(castle_id)s, %(castle)s,
-            %(history)s, %(description)s, %(source)s,
+            %(territory)s, %(history)s, %(description)s, %(source)s,
             %(memo1)s, %(memo2)s, %(memo3)s, %(memo4)s, %(memo5)s,
             %(memo6)s, %(memo7)s, %(memo8)s, %(memo9)s, %(memo10)s,
             %(father_id)s, %(mother_id)s, %(spouse_id)s, %(lord_id)s, %(sibling_order)s, %(siblings)s
@@ -259,6 +259,7 @@ def create_person(person: Person = Body(...)):
             "affiliation": person.affiliation,
             "castle_id": person.castle_id,
             "castle": person.castle,
+            "territory": person.territory,
             "history": person.history,
             "description": person.description,
             "source": json.dumps(person.source),
@@ -320,7 +321,7 @@ def update_person(person_id: int, person: Person = Body(...)):
         UPDATE persons SET
             name=%s, yomi=%s, birth=%s, death=%s,
             origin=%s, category=%s, affiliation=%s, castle_id=%s, castle=%s,
-            history=%s, description=%s, source=%s,
+            territory=%s, history=%s, description=%s, source=%s,
             memo1=%s, memo2=%s, memo3=%s, memo4=%s, memo5=%s, memo6=%s, 
             memo7=%s, memo8=%s, memo9=%s, memo10=%s,
             father_id=%s, mother_id=%s, spouse_id=%s, lord_id=%s, sibling_order=%s, siblings=%s
@@ -328,7 +329,7 @@ def update_person(person_id: int, person: Person = Body(...)):
     """, (
         person.name, person.yomi, person.birth, person.death,
         person.origin, person.category, person.affiliation, person.castle_id, person.castle,
-        person.history, person.description, json.dumps(person.source),
+        person.territory, person.history, person.description, json.dumps(person.source),
 
         person.memo1, person.memo2, person.memo3, person.memo4, person.memo5, person.memo6, 
         person.memo7, person.memo8, person.memo9, person.memo10,
