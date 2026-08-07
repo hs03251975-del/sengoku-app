@@ -533,6 +533,11 @@ aliases.sort((a, b) =>
       </td>
     </tr>
 
+    <tr>
+      <td><b>知行地</b></td>
+      <td>${p.territory || "-"}</td>
+    </tr>
+
     </table>
 
     <h3>参加合戦</h3>
@@ -717,6 +722,7 @@ async function editPerson(id) {
   document.getElementById("affiliation").value = p.affiliation || "";
   document.getElementById("castle").value = p.castle || "";
   document.getElementById("castle_id").value = p.castle_id || "";
+  document.getElementById("territory").value = p.territory || "";
   document.getElementById("history").value = p.history || "";
   document.getElementById("description").value = p.description || "";
   document.getElementById("source").value = (p.source || []).join(", ");
@@ -818,6 +824,7 @@ async function savePerson() {
     affiliation: document.getElementById("affiliation").value,
     castle: document.getElementById("castle").value,
     castle_id:document.getElementById("castle_id").value || null,
+    territory:document.getElementById("territory").value,
     history: document.getElementById("history").value || null,
     description: document.getElementById("description").value,
     source: source,
@@ -893,6 +900,7 @@ function clearForm() {
   document.getElementById("lord_name").value = "";
   document.getElementById("castle").value = "";
   document.getElementById("castle_id").value = "";
+  document.getElementById("territory").value = "";
   document.getElementById("description").value = "";
   document.getElementById("history").value = "";
   document.getElementById("source").value = "";
