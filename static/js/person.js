@@ -268,6 +268,18 @@ aliases.sort((a, b) =>
   let fatherName = "-";
   let motherName = "-";
   let spouseName = "-";
+  let lordName = "-";
+
+  if (p.lord_id) {
+
+    const lordRes =
+      await fetch(`/person/${p.lord_id}`);
+
+    const lord =
+      await lordRes.json();
+
+    lordName = lord.name;
+  }
 
   if (p.spouse_id) {
     const spouseRes = await fetch(`/person/${p.spouse_id}`);
@@ -493,6 +505,22 @@ aliases.sort((a, b) =>
     </tr>
 
     <tr>
+      <td><b>主君</b></td>
+      <td>
+        ${
+          p.lord_id
+            ? `
+              <span class="link-like"
+                onclick="showDetail(${p.lord_id})">
+                ${lordName}
+              </span>
+              `
+            : "-"
+        }
+      </td>
+    </tr>
+
+    <tr>
       <td><b>居城</b></td>
       <td>
       ${p.castle_id
@@ -644,6 +672,41 @@ async function editPerson(id) {
     document.getElementById("mother_name").value = "";
   }
 
+  if (p.spouse_id) {
+    const spouseRes =
+      await fetch(`/person/${p.spouse_id}`);
+
+    const spouse =
+      await spouseRes.json();
+
+    document.getElementById("spouse_name")
+      .value = spouse.name;
+
+  } else {
+
+    document.getElementById("spouse_name")
+      .value = "";
+
+  }
+
+  if (p.lord_id) {
+
+    const lordRes =
+      await fetch(`/person/${p.lord_id}`);
+
+    const lord =
+      await lordRes.json();
+
+    document.getElementById("lord_name")
+      .value = lord.name;
+
+  } else {
+
+    document.getElementById("lord_name")
+      .value = "";
+
+  }
+
   document.getElementById("personId").value = p.id;
   document.getElementById("name").value = p.name || "";
   document.getElementById("yomi").value = p.yomi || "";
@@ -730,6 +793,21 @@ async function savePerson() {
     spouse_id = spousePerson.id;
   }
 
+  const lordName =
+    document.getElementById("lord_name")
+      .value.trim();
+
+  let lord_id = null;
+
+  const lordPerson =
+    allPersonsCache.find(
+      p => p.name === lordName
+    );
+
+  if (lordPerson) {
+    lord_id = lordPerson.id;
+  }
+
   const data = {
     name: document.getElementById("name").value,
     yomi: document.getElementById("yomi").value,
@@ -748,6 +826,7 @@ async function savePerson() {
     father_id: father_id,
     mother_id: mother_id,
     spouse_id: spouse_id,
+    lord_id: lord_id,
     sibling_order:
       document.getElementById("sibling_order").value || null,
     siblings: null,
@@ -811,9 +890,11 @@ function clearForm() {
   document.getElementById("origin").value = "";
   document.getElementById("category").value = "";
   document.getElementById("affiliation").value = "";
+  document.getElementById("lord_name").value = "";
   document.getElementById("castle").value = "";
   document.getElementById("castle_id").value = "";
   document.getElementById("description").value = "";
+  document.getElementById("history").value = "";
   document.getElementById("source").value = "";
   document.getElementById("father_name").value = "";
   document.getElementById("mother_name").value = "";
@@ -991,6 +1072,11 @@ Promise.all([
   setupAutocomplete(
     "spouse_name",
     "spouse_suggest"
+  );
+
+  setupAutocomplete(
+    "lord_name",
+    "lord_suggest"
   );
 
   setupCastleAutocomplete();
